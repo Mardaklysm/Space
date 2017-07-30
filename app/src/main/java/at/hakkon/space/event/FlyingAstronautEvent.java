@@ -62,7 +62,7 @@ public class FlyingAstronautEvent extends AbsEvent {
 			}else{
 				int damage = 25 * getLevel();
 				ApplicationClass.getInstance().updateShipHealth(-damage);
-				String text = "As you open the rescue pod the monkey seems to be as dangerous as confused and imemdietly runs off with a shrieking screm\nIt takes you an hour to get ride of the crazy monkey and your ship takes " + damage + " points of damage." ;
+				String text = "As you open the rescue pod the monkey seems to be as dangerous as confused and immediately runs off with a shrieking scream\n\nIt takes an hour to get ride of the crazy monkey. The ship takes " + damage + " points of damage." ;
 				Utility.getInstance().showTextDialog(context, text);
 			}
 		}else if (hint == 1){

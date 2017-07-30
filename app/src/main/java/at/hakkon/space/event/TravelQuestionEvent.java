@@ -1,4 +1,4 @@
-package at.hakkon.space.datamodel.event;
+package at.hakkon.space.event;
 
 import android.content.Context;
 import android.util.Log;

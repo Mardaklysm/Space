@@ -1,4 +1,4 @@
-package at.hakkon.space.datamodel.event;
+package at.hakkon.space.event;
 
 /**
  * Created by Markus on 29.07.2017.

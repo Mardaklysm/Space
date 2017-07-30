@@ -20,6 +20,7 @@ public class EventGenerator {
 		ResourceBonusEvent event = new ResourceBonusEvent(level);
 		UnknownMetalBoxEvent unknownMetalBoxEvent = new UnknownMetalBoxEvent(level);
 
-		return unknownMetalBoxEvent;
+		FlyingAstronautEvent flyingAstronautEvent = new FlyingAstronautEvent(level);
+		return flyingAstronautEvent;
 	}
 }

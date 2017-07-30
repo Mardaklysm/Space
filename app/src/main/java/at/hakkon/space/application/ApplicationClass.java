@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.ship.Ship;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
@@ -41,6 +42,7 @@ public class ApplicationClass extends android.app.Application {
 		galaxy = new Galaxy("Starting Galaxy", 1);
 
 		ship = Ship.getDefault("Weinreise");
+
 
 		isInitialized = true;
 	}
@@ -125,5 +127,20 @@ public class ApplicationClass extends android.app.Application {
 
 	public void requestNotifyShipChangedEvent(){
 		notifyShipListeners(getShip());
+	}
+
+	public void updateShipMoney(int value) {
+		ship.updateMoney(value);
+		notifyShipListeners(ship);
+	}
+
+	public void updateShipHealth(int value) {
+		ship.updateHealth(value);
+		notifyShipListeners(ship);
+	}
+
+	public void addShipMember(Person person) {
+		ship.addPerson(person);
+		notifyShipListeners(ship);
 	}
 }

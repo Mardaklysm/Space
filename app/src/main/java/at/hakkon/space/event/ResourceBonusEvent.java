@@ -13,37 +13,29 @@ import at.hakkon.space.utility.Utility;
 
 public class ResourceBonusEvent extends AbsEvent {
 
-	private boolean canBeExecuted = true;
-
 	public ResourceBonusEvent(int level) {
 		super(level);
 
 		Random r = new Random();
-		int resourceBonus = r.nextInt(100*level - 50*level) + 50*level;
+		int resourceBonus = r.nextInt(100 * level - 50 * level) + 50 * level;
 
 		setResourceBonus(resourceBonus);
 	}
 
 	@Override
-	public void execute(Context context) {
-		if (!canBeExecuted){
+	protected void executeImpl(Context context) {
+		if (!canBeExecuted()) {
 			Utility.getInstance().showTextDialog(context, "There are no minerals left.");
 			return;
 		}
 
 		Utility.getInstance().showTextDialog(context, "You collected minerals worth " + getResourceBonus() + "€");
 
-		ApplicationClass.getInstance().getShip().updateMoney(getResourceBonus());
-		canBeExecuted = false;
+		ApplicationClass.getInstance().updateShipMoney(getResourceBonus());
 	}
 
 	@Override
-	public boolean canBeExecuted() {
-		return canBeExecuted;
-	}
-
-	@Override
-	public void callback(Context context, int hint) {
+	public void callbackImpl(Context context, int hint) {
 		//Nothing to do
 	}
 

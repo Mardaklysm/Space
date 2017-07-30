@@ -13,7 +13,7 @@ import at.hakkon.space.listener.IPlanetVisitListener;
 import at.hakkon.space.listener.IShipListener;
 import at.hakkon.space.R;
 import at.hakkon.space.datamodel.ship.Ship;
-import at.hakkon.space.datamodel.event.AbsEvent;
+import at.hakkon.space.event.AbsEvent;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 
 import static android.view.View.GONE;

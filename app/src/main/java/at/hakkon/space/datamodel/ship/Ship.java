@@ -67,6 +67,8 @@ public class Ship {
 
 		Galaxy galaxy = ApplicationClass.getInstance().getGalaxy();
 		AbsPlanet startPlanet = galaxy.getReachablePlanets().get(0);
+		startPlanet.getEvent().setEnabled(false);
+
 		Ship ship = new Ship(name, START_HEALTH, START_FUEL, START_MONEY, persons, rooms, startPlanet);
 		ship.addInventory(new Weapon("Simple Laser", 100, 15, 5));
 		ship.addInventory(new Weapon("Simple Rocket", 100, 45, 7));
@@ -94,10 +96,10 @@ public class Ship {
 		}
 
 		ArrayList<Weapon> weapons = getWeapons();
-		retString +="\nWeapons List (" + weapons.size() + ")\n";
-		for (Weapon weapon: weapons){
+		retString += "\nWeapons List (" + weapons.size() + ")\n";
+		for (Weapon weapon : weapons) {
 			retString += weapon.getInformationDump();
-			retString +="\n";
+			retString += "\n";
 		}
 
 		return retString;
@@ -117,7 +119,7 @@ public class Ship {
 		return true;
 	}
 
-	public boolean canMoveToPlanet(AbsPlanet planet){
+	public boolean canMoveToPlanet(AbsPlanet planet) {
 		int fuelCost = planet.getTravelCosts();
 
 		if (fuel - fuelCost < 0) {
@@ -140,22 +142,22 @@ public class Ship {
 	}
 
 
-	public void addInventory(IInventoryItem item){
-		if (!inventory.contains(item)){
+	public void addInventory(IInventoryItem item) {
+		if (!inventory.contains(item)) {
 			inventory.add(item);
 		}
 		ApplicationClass.getInstance().requestNotifyShipChangedEvent();
 	}
 
-	public boolean removeInventory(IInventoryItem item){
+	public boolean removeInventory(IInventoryItem item) {
 		return inventory.remove(item);
 	}
 
-	public ArrayList<Weapon> getWeapons(){
+	public ArrayList<Weapon> getWeapons() {
 		ArrayList<Weapon> weapons = new ArrayList<>();
 
-		for (IInventoryItem item: inventory){
-			if (item instanceof  Weapon){
+		for (IInventoryItem item : inventory) {
+			if (item instanceof Weapon) {
 				weapons.add((Weapon) item);
 			}
 		}
@@ -166,9 +168,15 @@ public class Ship {
 
 	public void updateHealth(int value) {
 		health += value;
-		if (health <0){
+		if (health < 0) {
 			Utility.getInstance().showTextDialog(ApplicationClass.getInstance().getBaseContext(), "You are dead!");
 		}
 		ApplicationClass.getInstance().requestNotifyShipChangedEvent();
+	}
+
+	public void addPerson(Person person) {
+		if (!persons.contains(person)) {
+			persons.add(person);
+		}
 	}
 }

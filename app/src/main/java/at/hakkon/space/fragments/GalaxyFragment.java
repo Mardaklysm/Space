@@ -16,7 +16,7 @@ import at.hakkon.space.adapter.SelectPlanetArrayAdapter;
 import at.hakkon.space.adapter.SelectPlanetListEntry;
 import at.hakkon.space.listener.IGalaxyListener;
 import at.hakkon.space.R;
-import at.hakkon.space.datamodel.event.TravelQuestionEvent;
+import at.hakkon.space.event.TravelQuestionEvent;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
 

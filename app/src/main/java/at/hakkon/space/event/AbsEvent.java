@@ -13,6 +13,9 @@ import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 
 public abstract class AbsEvent {
 
+	private boolean enabled = true;
+	private boolean executed = false;
+
 	private int level;
 	private int resourceBonus;
 
@@ -26,7 +29,6 @@ public abstract class AbsEvent {
 
 	public ArrayList<String> text = new ArrayList<>();
 
-	abstract public EEventType getEventType();
 
 	public int getLevel() {
 		return level;
@@ -41,11 +43,26 @@ public abstract class AbsEvent {
 		this.resourceBonus = resourceBonus;
 	}
 
-	public abstract void execute(Context context);
+	abstract public EEventType getEventType();
 
-	public abstract boolean canBeExecuted();
+	public void execute(Context context){//TODO: Do we need a booelan return value here??
+		if (enabled){
+			executeImpl(context);
+		}
+	}
 
-	public abstract void callback(Context context, int hint);
+	protected abstract void executeImpl(Context context);
+
+	public boolean canBeExecuted(){
+		return enabled && !executed;
+	}
+
+	public void callback(Context context, int hint){
+		callbackImpl(context, hint);
+		executed = true;
+	}
+
+	public abstract void callbackImpl(Context context, int hint);
 
 	public void init(Context context, Ship ship, AbsPlanet planet){
 		this.context = context;
@@ -63,5 +80,9 @@ public abstract class AbsEvent {
 
 	public AbsPlanet getPlanet() {
 		return planet;
+	}
+
+	public void setEnabled(boolean enabled){
+		this.enabled = enabled;
 	}
 }

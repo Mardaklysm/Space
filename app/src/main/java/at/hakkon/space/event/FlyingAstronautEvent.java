@@ -1,0 +1,76 @@
+package at.hakkon.space.event;
+
+import android.content.Context;
+
+import java.util.Random;
+
+import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.datamodel.person.Person;
+import at.hakkon.space.datamodel.ship.Ship;
+import at.hakkon.space.utility.Utility;
+
+/**
+ * Created by Markus on 30.07.2017.
+ */
+
+public class FlyingAstronautEvent extends AbsEvent {
+
+	private boolean canBeExecuted = true;
+
+	private static CharSequence[] options;
+
+	static {
+		options = new CharSequence[3];
+
+		options[0] = ("Teleport the monkey on your ship");
+		options[1] = ("Shoot the monkey");
+		options[2] = ("Ignore it");
+	}
+
+	public FlyingAstronautEvent(int level) {
+		super(level);
+	}
+
+	@Override
+	public EEventType getEventType() {
+		return EEventType.Question;
+	}
+
+	@Override
+	protected void executeImpl(Context context) {
+		if (canBeExecuted()) {
+			String text = "You can't belive your eyes as you see a space suit flying ... in space ... The passenger looks like a monkey.";
+			Utility.getInstance().showQuestionsDialog(context, text, options, this);
+		}
+	}
+
+
+	@Override
+	public void callbackImpl(Context context, int hint) {
+		Ship ship = ApplicationClass.getInstance().getShip();
+
+		if (hint == 0){
+			Random random = new Random();
+			boolean positiveResult = random.nextBoolean();
+
+			if (positiveResult){
+				String text = "As you get face to face with the survivor you notice it's not a monkey but a human engineer who hasn't shaved in a while.\nYou make sure that your new crew member gets some proper shaving equipment.";
+
+				Person person = new Person("Hairy Mory");
+				ApplicationClass.getInstance().addShipMember(person);
+				Utility.getInstance().showTextDialog(context, text);
+			}else{
+				int damage = 25 * getLevel();
+				ApplicationClass.getInstance().updateShipHealth(-damage);
+				String text = "As you open the rescue pod the monkey seems to be as dangerous as confused and imemdietly runs off with a shrieking screm\nIt takes you an hour to get ride of the crazy monkey and your ship takes " + damage + " points of damage." ;
+				Utility.getInstance().showTextDialog(context, text);
+			}
+		}else if (hint == 1){
+			String text = "You fire your weapons at the helpless astronaut and turn him into dust.\nAs you move along you hope that noone has seen what you did." ;
+			Utility.getInstance().showTextDialog(context, text);
+		}else if (hint == 2){
+			String text = "As you pass by the helpless astronaut you are not so sure anymore if this is a monkey after all." ;
+			Utility.getInstance().showTextDialog(context, text);
+		}
+	}
+}

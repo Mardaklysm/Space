@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
 
-import at.hakkon.space.datamodel.event.AbsEvent;
+import at.hakkon.space.event.AbsEvent;
 
 /**
  * Created by Markus on 30.07.2017.

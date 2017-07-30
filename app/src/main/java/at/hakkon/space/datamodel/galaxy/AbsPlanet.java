@@ -1,6 +1,6 @@
 package at.hakkon.space.datamodel.galaxy;
 
-import at.hakkon.space.datamodel.event.AbsEvent;
+import at.hakkon.space.event.AbsEvent;
 
 /**
  * Created by Markus on 29.07.2017.

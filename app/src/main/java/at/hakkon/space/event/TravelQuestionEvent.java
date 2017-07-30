@@ -26,7 +26,7 @@ public class TravelQuestionEvent extends AbsEvent {
 	private boolean moved = false;
 
 	@Override
-	public void execute(Context context) {
+	protected void executeImpl(Context context) {
 		if (!canBeExecuted()){
 			Utility.getInstance().showTextDialog(context,"You can not travel there!");
 			return;
@@ -41,7 +41,7 @@ public class TravelQuestionEvent extends AbsEvent {
 	}
 
 	@Override
-	public void callback(Context context, int hint) {
+	public void callbackImpl(Context context, int hint) {
 		if (hint == 1){
 			moved = ApplicationClass.getInstance().moveToPlanet(getPlanet());
 

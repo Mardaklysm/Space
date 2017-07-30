@@ -17,8 +17,9 @@ public class EventGenerator {
 	}
 
 	public AbsEvent generateRandomEvent(int level){
-		ResourceBonusEvent event = new ResourceBonusEvent(level, EEventType.ResourceBonus);
+		ResourceBonusEvent event = new ResourceBonusEvent(level);
+		UnknownMetalBoxEvent unknownMetalBoxEvent = new UnknownMetalBoxEvent(level);
 
-		return event;
+		return unknownMetalBoxEvent;
 	}
 }

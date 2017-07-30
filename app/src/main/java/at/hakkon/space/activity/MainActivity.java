@@ -1,4 +1,4 @@
-package at.hakkon.space;
+package at.hakkon.space.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -6,8 +6,9 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.TextView;
 
+import at.hakkon.space.R;
+import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.navigation.PagingViewPager;
 import at.hakkon.space.navigation.TopLevelFragmentPagerAdapter;
 
@@ -15,7 +16,6 @@ public class MainActivity extends AppCompatActivity {
 
 	private ApplicationClass appClass = ApplicationClass.getInstance();
 
-	private TextView mTextMessage;
 
 	private TopLevelFragmentPagerAdapter adapter;
 	private PagingViewPager viewPager;
@@ -61,5 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
 		appClass.initialize();
 	}
+
 
 }

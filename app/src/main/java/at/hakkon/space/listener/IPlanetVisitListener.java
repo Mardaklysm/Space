@@ -1,4 +1,4 @@
-package at.hakkon.space;
+package at.hakkon.space.listener;
 
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 

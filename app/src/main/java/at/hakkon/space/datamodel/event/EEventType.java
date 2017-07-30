@@ -5,5 +5,5 @@ package at.hakkon.space.datamodel.event;
  */
 
 public enum EEventType {
-	Nothing, Shop, Battle, ResourceBonus,
+	Nothing, Shop, Battle, ResourceBonus, Question, TravelQuestion,
 }

@@ -1,8 +1,8 @@
-package at.hakkon.space.datamodel.rooms;
+package at.hakkon.space.datamodel.room;
 
 import java.util.ArrayList;
 
-import at.hakkon.space.datamodel.IInventoryItem;
+import at.hakkon.space.datamodel.inventory.IInventoryItem;
 
 public abstract class AbsRoom {
 
@@ -37,7 +37,7 @@ public abstract class AbsRoom {
 	public String getInformationDump() {
 		String retString = "";
 
-		retString += "Room [" + getName() + "(Type: " + getRoomType().name() + ")]\n";
+		retString += "Room [" + getName() + "(Type: " + getRoomType().name() + ")]";
 
 		return retString;
 	}

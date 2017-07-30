@@ -1,4 +1,4 @@
-package at.hakkon.space.datamodel;
+package at.hakkon.space.datamodel.person;
 
 import java.util.ArrayList;
 

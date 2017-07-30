@@ -1,6 +1,6 @@
-package at.hakkon.space;
+package at.hakkon.space.listener;
 
-import at.hakkon.space.datamodel.Ship;
+import at.hakkon.space.datamodel.ship.Ship;
 
 /**
  * Created by Markus on 29.07.2017.

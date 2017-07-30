@@ -8,13 +8,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import at.hakkon.space.ApplicationClass;
-import at.hakkon.space.IGalaxyListener;
+import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.adapter.SelectPlanetArrayAdapter;
+import at.hakkon.space.adapter.SelectPlanetListEntry;
+import at.hakkon.space.listener.IGalaxyListener;
 import at.hakkon.space.R;
+import at.hakkon.space.datamodel.event.TravelQuestionEvent;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
 
@@ -22,7 +24,7 @@ import at.hakkon.space.datamodel.galaxy.Galaxy;
  * Created by Markus on 05.07.2017.
  */
 
-public class MapFragment extends Fragment implements IGalaxyListener {
+public class GalaxyFragment extends Fragment implements IGalaxyListener {
 
 	private final static String TAG = "MapFragment";
 
@@ -31,10 +33,9 @@ public class MapFragment extends Fragment implements IGalaxyListener {
 	private Galaxy galaxy;
 
 
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.fragment_map, container, false);
+		view = inflater.inflate(R.layout.fragment_galaxy, container, false);
 
 		ApplicationClass.getInstance().addGalaxyListener(this);
 
@@ -72,16 +73,18 @@ public class MapFragment extends Fragment implements IGalaxyListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-				ListView listView = (ListView) MapFragment.this.view.findViewById(R.id.listPlanets);
+				ListView listView = (ListView) GalaxyFragment.this.view.findViewById(R.id.listPlanets);
 				Object selectedItem = listView.getItemAtPosition(position);
 
-				if (selectedItem!= null && (selectedItem instanceof SelectPlanetListEntry)){
+				if (selectedItem != null && (selectedItem instanceof SelectPlanetListEntry)) {
 					AbsPlanet selectedPlanet = ((SelectPlanetListEntry) selectedItem).getPlanet();
-					boolean moved = ApplicationClass.getInstance().moveToPlanet(selectedPlanet);
-					Toast.makeText(getContext(), moved ? "Moved to planet " + selectedPlanet.getName() : "Unable to travel to the selected planet", Toast.LENGTH_SHORT).show();
+					if (selectedPlanet.equals(ApplicationClass.getInstance().getShip().getCurrentPlanet())) {
+						return;
+					}
+					TravelQuestionEvent travelQuestionEvent = new TravelQuestionEvent(galaxy.getLevel());
+					travelQuestionEvent.init(getContext(), ApplicationClass.getInstance().getShip(), selectedPlanet);
+					travelQuestionEvent.execute(getContext());
 				}
-
-
 
 
 			}
@@ -89,4 +92,7 @@ public class MapFragment extends Fragment implements IGalaxyListener {
 
 
 	}
+
+
+
 }

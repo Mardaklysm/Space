@@ -1,6 +1,5 @@
 package at.hakkon.space.datamodel.galaxy;
 
-import at.hakkon.space.ApplicationClass;
 import at.hakkon.space.datamodel.event.AbsEvent;
 
 /**
@@ -13,7 +12,6 @@ public abstract class AbsPlanet {
 	private String name;
 
 	private boolean visited;
-	private boolean isFirsTimeVisit = true;
 
 	public AbsPlanet(Galaxy galaxy, String name){
 		this.galaxy =galaxy;
@@ -39,27 +37,8 @@ public abstract class AbsPlanet {
 		return name;
 	}
 
-	public boolean visit(){
-		if (visited){
-			isFirsTimeVisit = false;
-			return false;
-		}
-		ApplicationClass.getInstance().visitPlanet(this);
-
-		visited = true;
-		return true;
-	}
-
 	public Galaxy getGalaxy(){
 		return galaxy;
 	}
 
-	public boolean getIsFirsTimeVisit() {
-		return isFirsTimeVisit;
-	}
-
-	public void setVisited(boolean visited){
-		this.visited = visited;
-		this.isFirsTimeVisit = !visited;
-	}
 }

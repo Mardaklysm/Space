@@ -1,13 +1,16 @@
-package at.hakkon.space;
+package at.hakkon.space.application;
 
 import android.content.Context;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import at.hakkon.space.datamodel.Ship;
+import at.hakkon.space.datamodel.ship.Ship;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
+import at.hakkon.space.listener.IGalaxyListener;
+import at.hakkon.space.listener.IPlanetVisitListener;
+import at.hakkon.space.listener.IShipListener;
 
 public class ApplicationClass extends android.app.Application {
 
@@ -118,5 +121,9 @@ public class ApplicationClass extends android.app.Application {
 
 	public void toast(Context context, String text) {
 		Toast.makeText(context, text, Toast.LENGTH_SHORT);
+	}
+
+	public void requestNotifyShipChangedEvent(){
+		notifyShipListeners(getShip());
 	}
 }

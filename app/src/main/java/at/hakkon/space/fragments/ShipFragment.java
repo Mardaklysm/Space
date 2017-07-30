@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import at.hakkon.space.ApplicationClass;
-import at.hakkon.space.IShipListener;
+import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.listener.IShipListener;
 import at.hakkon.space.R;
-import at.hakkon.space.datamodel.Ship;
+import at.hakkon.space.datamodel.ship.Ship;
 
 /**
  * Created by Markus on 05.07.2017.

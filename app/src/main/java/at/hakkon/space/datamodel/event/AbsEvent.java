@@ -1,6 +1,11 @@
 package at.hakkon.space.datamodel.event;
 
+import android.content.Context;
+
 import java.util.ArrayList;
+
+import at.hakkon.space.datamodel.ship.Ship;
+import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 
 /**
  * Created by Markus on 29.07.2017.
@@ -8,20 +13,20 @@ import java.util.ArrayList;
 
 public abstract class AbsEvent {
 
-	private EEventType eventType;
 	private int level;
 	private int resourceBonus;
 
+	private Context context;
+	private Ship ship;
+	private AbsPlanet planet;
+
+	public AbsEvent(int level){
+		this.level = level;
+	}
+
 	public ArrayList<String> text = new ArrayList<>();
 
-	public AbsEvent(int level,EEventType eventType) {
-		this.level = level;
-		this.eventType = eventType;
-	}
-
-	public EEventType getEventType() {
-		return eventType;
-	}
+	abstract public EEventType getEventType();
 
 	public int getLevel() {
 		return level;
@@ -36,5 +41,27 @@ public abstract class AbsEvent {
 		this.resourceBonus = resourceBonus;
 	}
 
-	public abstract void execute();
+	public abstract void execute(Context context);
+
+	public abstract boolean canBeExecuted();
+
+	public abstract void callback(Context context, int hint);
+
+	public void init(Context context, Ship ship, AbsPlanet planet){
+		this.context = context;
+		this.ship = ship;
+		this.planet = planet;
+	}
+
+	public Context getContext() {
+		return context;
+	}
+
+	public Ship getShip() {
+		return ship;
+	}
+
+	public AbsPlanet getPlanet() {
+		return planet;
+	}
 }

@@ -1,4 +1,4 @@
-package at.hakkon.space.fragments;
+package at.hakkon.space.adapter;
 
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 

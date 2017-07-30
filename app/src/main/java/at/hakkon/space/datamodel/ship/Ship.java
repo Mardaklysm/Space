@@ -3,6 +3,7 @@ package at.hakkon.space.datamodel.ship;
 import java.util.ArrayList;
 
 import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.utility.Utility;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
@@ -24,7 +25,7 @@ public class Ship {
 	private AbsPlanet currentPlanet;
 
 	private final static int START_HEALTH = 1000;
-	private final static int START_FUEL = 10;
+	private final static int START_FUEL = 2;
 	private final static int START_MONEY = 250;
 
 	private String name;
@@ -114,9 +115,20 @@ public class Ship {
 			return false;
 		}
 
-		fuel = fuel - planet.getTravelCosts();
+		updateFuel(-planet.getTravelCosts());
+
 		currentPlanet = planet;
 		return true;
+	}
+
+	public int updateFuel(int fuel){
+		this.fuel += fuel;
+
+		if (fuel <= 0){
+			ApplicationClass.getInstance().gameOver(EGameOverReason.OutOfFuel);
+		}
+
+		return fuel;
 	}
 
 	public boolean canMoveToPlanet(AbsPlanet planet) {
@@ -169,6 +181,7 @@ public class Ship {
 	public void updateHealth(int value) {
 		health += value;
 		if (health < 0) {
+			ApplicationClass.getInstance().gameOver(EGameOverReason.OutOfHealth);
 			Utility.getInstance().showTextDialog(ApplicationClass.getInstance().getBaseContext(), "You are dead!");
 		}
 		ApplicationClass.getInstance().requestNotifyShipChangedEvent();

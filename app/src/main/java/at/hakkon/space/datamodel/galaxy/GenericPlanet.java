@@ -11,8 +11,8 @@ public class GenericPlanet extends AbsPlanet {
 
 	private AbsEvent event;
 
-	public GenericPlanet(Galaxy galaxy, String name) {
-		super(galaxy, name);
+	public GenericPlanet(Galaxy galaxy, String name, PlanetPosition planetPosition) {
+		super(galaxy, name, planetPosition);
 
 		event = EventGenerator.getInstance().generateRandomEvent(galaxy.getLevel());
 	}

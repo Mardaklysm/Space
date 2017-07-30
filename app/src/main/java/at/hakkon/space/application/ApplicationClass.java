@@ -5,6 +5,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import at.hakkon.space.activity.MainActivity;
+import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.ship.Ship;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
@@ -12,6 +14,7 @@ import at.hakkon.space.datamodel.galaxy.Galaxy;
 import at.hakkon.space.listener.IGalaxyListener;
 import at.hakkon.space.listener.IPlanetVisitListener;
 import at.hakkon.space.listener.IShipListener;
+import at.hakkon.space.utility.Utility;
 
 public class ApplicationClass extends android.app.Application {
 
@@ -142,5 +145,13 @@ public class ApplicationClass extends android.app.Application {
 	public void addShipMember(Person person) {
 		ship.addPerson(person);
 		notifyShipListeners(ship);
+	}
+
+	public void gameOver(EGameOverReason gameOverReason) {
+		Utility.getInstance().showTextDialog(getContext(),"Game Over: " + gameOverReason.name());
+	}
+
+	public Context getContext(){
+		return MainActivity.getInstance();
 	}
 }

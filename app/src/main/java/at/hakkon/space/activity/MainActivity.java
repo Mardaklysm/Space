@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
 
 	private ApplicationClass appClass = ApplicationClass.getInstance();
 
+	private static MainActivity instance;
+
 
 	private TopLevelFragmentPagerAdapter adapter;
 	private PagingViewPager viewPager;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		instance = this;
 		setContentView(R.layout.activity_main);
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -60,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
 		navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
 		appClass.initialize();
+	}
+
+	public static MainActivity getInstance(){
+		return instance;
 	}
 
 

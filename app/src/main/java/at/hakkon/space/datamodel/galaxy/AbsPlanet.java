@@ -10,12 +10,12 @@ public abstract class AbsPlanet {
 
 	private Galaxy galaxy;
 	private String name;
+	private PlanetPosition planetPosition;
 
-	private boolean visited;
-
-	public AbsPlanet(Galaxy galaxy, String name){
+	public AbsPlanet(Galaxy galaxy, String name, PlanetPosition planetPosition){
 		this.galaxy =galaxy;
 		this.name = name;
+		this.planetPosition = planetPosition;
 	}
 
 	public abstract AbsEvent getEvent();
@@ -41,4 +41,7 @@ public abstract class AbsPlanet {
 		return galaxy;
 	}
 
+	public PlanetPosition getPlanetPosition() {
+		return planetPosition;
+	}
 }

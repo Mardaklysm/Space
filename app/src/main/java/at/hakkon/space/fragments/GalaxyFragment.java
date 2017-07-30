@@ -5,20 +5,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
-import at.hakkon.space.application.ApplicationClass;
-import at.hakkon.space.adapter.SelectPlanetArrayAdapter;
-import at.hakkon.space.adapter.SelectPlanetListEntry;
-import at.hakkon.space.listener.IGalaxyListener;
 import at.hakkon.space.R;
-import at.hakkon.space.event.TravelQuestionEvent;
+import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
+import at.hakkon.space.listener.IGalaxyListener;
+import at.hakkon.space.views.GalaxyRowView;
 
 /**
  * Created by Markus on 05.07.2017.
@@ -56,39 +52,27 @@ public class GalaxyFragment extends Fragment implements IGalaxyListener {
 	}
 
 	private void updatePlanets() {
-		((TextView) view.findViewById(R.id.tvGalaxyInfo)).setText(galaxy.getName() + " (" + galaxy.getReachablePlanets().size() + " Planets)");
+		//((TextView) view.findViewById(R.id.tvGalaxyInfo)).setText(galaxy.getName() + " (" + galaxy.getReachablePlanets().size() + " Planets)");
 
-		ListView listView = (ListView) view.findViewById(R.id.listPlanets);
+		((LinearLayout) view.findViewById(R.id.llGalaxyContent)).removeAllViews();
 
-		ArrayList<SelectPlanetListEntry> entries = new ArrayList<>();
+		for (int i=0; i< galaxy.getGalaxyDepth(); i++){
 
-		for (AbsPlanet planet : galaxy.getReachablePlanets()) {
-			entries.add(new SelectPlanetListEntry(planet));
+			ArrayList<AbsPlanet> rowPlanets = new ArrayList<>();
+			for (AbsPlanet planet: galaxy.getPlanets()){
+				if (planet.getPlanetPosition().getY() == i){
+					rowPlanets.add(planet);
+				}
+			}
+
+			GalaxyRowView galaxyRowView = new GalaxyRowView(getContext(), rowPlanets);
+			LinearLayout parent = (LinearLayout) view.findViewById(R.id.llGalaxyContent);
+
+			parent.addView(galaxyRowView);
+
 		}
 
-		listView.setAdapter(new SelectPlanetArrayAdapter(getContext(), R.layout.default_list_entry, entries));
 
-		listView.setClickable(true);
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-				ListView listView = (ListView) GalaxyFragment.this.view.findViewById(R.id.listPlanets);
-				Object selectedItem = listView.getItemAtPosition(position);
-
-				if (selectedItem != null && (selectedItem instanceof SelectPlanetListEntry)) {
-					AbsPlanet selectedPlanet = ((SelectPlanetListEntry) selectedItem).getPlanet();
-					if (selectedPlanet.equals(ApplicationClass.getInstance().getShip().getCurrentPlanet())) {
-						return;
-					}
-					TravelQuestionEvent travelQuestionEvent = new TravelQuestionEvent(galaxy.getLevel());
-					travelQuestionEvent.init(getContext(), ApplicationClass.getInstance().getShip(), selectedPlanet);
-					travelQuestionEvent.execute(getContext());
-				}
-
-
-			}
-		});
 
 
 	}

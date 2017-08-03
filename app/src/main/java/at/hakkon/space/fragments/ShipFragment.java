@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.ship.PlayerShip;
+import at.hakkon.space.event.RestartGameEvent;
 import at.hakkon.space.listener.IShipListener;
 
 /**
@@ -26,6 +28,14 @@ public class ShipFragment extends Fragment implements IShipListener {
 
 		ApplicationClass.getInstance().addShipListener(this);
 		shipUpdated(ApplicationClass.getInstance().getShip());
+
+		view.findViewById(R.id.bRestartGame).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				RestartGameEvent restartGameEvent = new RestartGameEvent(1, EGameOverReason.RestartRequested);
+				restartGameEvent.execute(getContext());
+			}
+		});
 
 		return view;
 	}

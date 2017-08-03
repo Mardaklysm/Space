@@ -32,8 +32,8 @@ public class GoToGalaxyEvent extends AbsEvent {
 	@Override
 	public void callbackImpl(Context context, int hint) {
 		if (hint == 1){
-			int fuelBonus = 10;
-			ApplicationClass.getInstance().updateFuel(fuelBonus * getLevel());
+			int fuelBonus = 5 + getLevel();
+			ApplicationClass.getInstance().updateFuel(fuelBonus);
 			Utility.getInstance().showTextDialog(context,"As you travel to the next Galaxy you can collect " + fuelBonus + " fuel");
 			ApplicationClass.getInstance().moveToNewGalaxy();
 			Log.i(TAG, "User decided to move to a new galaxy");

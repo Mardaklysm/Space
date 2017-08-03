@@ -23,6 +23,10 @@
             android:layout_height="wrap_content"
             android:inputType="textMultiLine" android:text="TextView"
             android:textColor="@color/fontColorGray1" android:textSize="12sp"/>
+        <Button
+            android:id="@+id/bRestartGame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:text="Self Destruction"/>
     </LinearLayout>
 
 

@@ -5,5 +5,6 @@ package at.hakkon.space.datamodel;
  */
 
 public enum EGameOverReason {
-	Finished, OutOfFuel, OutOfHealth
+	Finished, OutOfFuel, OutOfHealth, RestartRequested;
+
 }

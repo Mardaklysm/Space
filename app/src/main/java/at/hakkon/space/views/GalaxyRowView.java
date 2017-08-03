@@ -24,6 +24,7 @@ import at.hakkon.space.listener.IPlanetVisitListener;
 public class GalaxyRowView extends LinearLayout implements IPlanetVisitListener{
 
 	private View view;
+	private PlayerShip ship;
 
 	private  ArrayList<AbsPlanet> planets;
 
@@ -31,6 +32,9 @@ public class GalaxyRowView extends LinearLayout implements IPlanetVisitListener{
 		super(context);
 
 		this.planets = planets;
+		this.ship = ship;
+
+
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		view = inflater.inflate(R.layout.view_planet_row, this, true);
@@ -41,9 +45,7 @@ public class GalaxyRowView extends LinearLayout implements IPlanetVisitListener{
 
 	}
 
-	private void updateView() {
-
-		PlayerShip ship = ApplicationClass.getInstance().getShip();
+	public void updateView() {
 
 		boolean posExists0 = false;
 		boolean posExists1 = false;
@@ -126,4 +128,5 @@ public class GalaxyRowView extends LinearLayout implements IPlanetVisitListener{
 	public void planetVisit(AbsPlanet planet) {
 		updateView();
 	}
+
 }

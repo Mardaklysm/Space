@@ -7,10 +7,11 @@ import java.util.ArrayList;
 
 import at.hakkon.space.activity.MainActivity;
 import at.hakkon.space.datamodel.EGameOverReason;
-import at.hakkon.space.datamodel.person.Person;
-import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
+import at.hakkon.space.datamodel.person.Person;
+import at.hakkon.space.datamodel.ship.PlayerShip;
+import at.hakkon.space.event.RestartGameEvent;
 import at.hakkon.space.listener.IGalaxyListener;
 import at.hakkon.space.listener.IPlanetVisitListener;
 import at.hakkon.space.listener.IShipListener;
@@ -51,6 +52,20 @@ public class ApplicationClass extends android.app.Application {
 		isInitialized = true;
 
 		notifyShipListeners(ship);
+	}
+
+	public void restartGame(){
+		galaxy = new Galaxy("Starting Galaxy", 1);
+
+		ship = new PlayerShip("Weinreise");
+		ship.setStartPlanet(galaxy.getFirstPlanet());
+		ship.setCurrentPlanet(galaxy.getFirstPlanet());
+
+		isInitialized = true;
+
+		notifyShipListeners(ship);
+		notifyGalaxyListeners(galaxy);
+		notifyPlanetVisitListener(ship.getCurrentPlanet());
 	}
 
 	public PlayerShip getShip() {
@@ -106,6 +121,8 @@ public class ApplicationClass extends android.app.Application {
 		}
 	}
 
+	private final static String TAG = "AppClass";
+
 	private void notifyGalaxyListeners(Galaxy galaxy) {
 		for (IGalaxyListener listener : galaxyListeners) {
 			listener.galaxyUpdated(galaxy);
@@ -153,6 +170,9 @@ public class ApplicationClass extends android.app.Application {
 
 	public void gameOver(EGameOverReason gameOverReason) {
 		Utility.getInstance().showTextDialog(getContext(),"Game Over: " + gameOverReason.name());
+		RestartGameEvent event = new RestartGameEvent(1, gameOverReason);
+		event.execute(getContext());
+
 	}
 
 	public Context getContext(){
@@ -163,12 +183,15 @@ public class ApplicationClass extends android.app.Application {
 		int galaxyLevel = galaxy.getLevel() +1;
 		Galaxy newGalaxy = new Galaxy("Galaxy " + galaxyLevel,galaxyLevel);
 		this.galaxy = newGalaxy;
+		ship.setCurrentPlanet(galaxy.getFirstPlanet());
+		ship.setStartPlanet(galaxy.getFirstPlanet());
+
 
 		notifyGalaxyListeners(this.galaxy);
 	}
 
 	public void updateFuel(int fuel) {
 		ship.updateFuel(fuel);
-		notifyShipListeners(ship);
 	}
+
 }

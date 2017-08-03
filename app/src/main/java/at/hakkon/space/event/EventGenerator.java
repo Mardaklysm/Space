@@ -1,5 +1,7 @@
 package at.hakkon.space.event;
 
+import java.util.Random;
+
 /**
  * Created by Markus on 29.07.2017.
  */
@@ -17,10 +19,19 @@ public class EventGenerator {
 	}
 
 	public AbsEvent generateRandomEvent(int level){
-		ResourceBonusEvent event = new ResourceBonusEvent(level);
-		UnknownMetalBoxEvent unknownMetalBoxEvent = new UnknownMetalBoxEvent(level);
 
-		FlyingAstronautEvent flyingAstronautEvent = new FlyingAstronautEvent(level);
-		return flyingAstronautEvent;
+		AbsEvent event = null;
+		Random random = new Random();
+
+		int randId = random.nextInt(3);
+
+		switch (randId){
+			case 0: event = new ResourceBonusEvent(level); break;
+			case 1: event = new UnknownMetalBoxEvent(level); break;
+			case 2: event = new FlyingAstronautEvent(level); break;
+			default: throw new RuntimeException("balblbalba");
+		}
+
+		return event;
 	}
 }

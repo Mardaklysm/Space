@@ -50,7 +50,7 @@ public class UnknownMetalBoxEvent extends AbsEvent {
 
 			Utility.getInstance().showTextDialog(context,text);
 
-			ApplicationClass.getInstance().updateShipMoney(-money);
+			ApplicationClass.getInstance().updateShipMoney(money);
 			ApplicationClass.getInstance().updateShipHealth(-health);
 		}else if (hint == 1){
 			int money = 100;

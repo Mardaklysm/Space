@@ -43,4 +43,12 @@ public class Weapon implements  IInventoryItem{
 		retString+= name + "(" + health + "HP, DMG: " + damage + ", Cost: " + energyCost + ")";
 		return retString;
 	}
+
+	public static Weapon getLaser(int level){
+		return new Weapon("Laser Lv." + level, 50*level, 15*level, 2*level);
+	}
+
+	public static Weapon getRocket(int level){
+		return new Weapon("Rocket Lv." + level, 75*level, 40*level, 3*level);
+	}
 }

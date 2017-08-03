@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
+import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
@@ -19,7 +20,9 @@ import at.hakkon.space.utility.Utility;
 
 public class PlayerShip extends AbsShip {
 
-	protected final static int START_FUEL = 50;
+	protected final static int START_HEALTH = 1000;
+
+	protected final static int START_FUEL = 8;
 	protected final static int START_MONEY = 250;
 
 
@@ -33,6 +36,11 @@ public class PlayerShip extends AbsShip {
 		super(name, START_HEALTH, getInitPersons(), getInitRooms());
 		this.money = START_MONEY;
 		this.fuel = START_FUEL;
+
+		inventory.add(Weapon.getLaser(1));
+		inventory.add(Weapon.getLaser(1));
+		inventory.add(Weapon.getRocket(1));
+
 	}
 
 	private static ArrayList<Person> getInitPersons() {
@@ -124,7 +132,8 @@ public class PlayerShip extends AbsShip {
 	}
 
 	public boolean canMoveToPlanet(AbsPlanet planet) {
-		int fuelCost = planet.getTravelCosts();
+
+		int fuelCost = Utility.getTravelCost(this, planet);
 
 		if (fuel - fuelCost < 0) {
 			return false;
@@ -138,7 +147,7 @@ public class PlayerShip extends AbsShip {
 
 
 	public int getFuel() {
-		return 0;
+		return fuel;
 	}
 
 
@@ -149,4 +158,21 @@ public class PlayerShip extends AbsShip {
 	public void setCurrentPlanet(AbsPlanet currentPlanet) {
 		this.currentPlanet = currentPlanet;
 	}
+
+	@Override
+	public void addInventory(IInventoryItem item) {
+		super.addInventory(item);
+		ApplicationClass.getInstance().requestNotifyShipChangedEvent();
+	}
+
+	@Override
+	public boolean removeInventory(IInventoryItem item) {
+		boolean result = super.removeInventory(item);
+		if (result){
+			ApplicationClass.getInstance().requestNotifyShipChangedEvent();
+		}
+
+		return result;
+	}
+
 }

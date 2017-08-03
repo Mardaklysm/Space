@@ -16,17 +16,12 @@ import at.hakkon.space.utility.Utility;
 
 public abstract class AbsShip {
 
-
-	protected final static int START_HEALTH = 1000;
-
 	private String name;
 	private int health;
 
-
-
-	private ArrayList<Person> persons = new ArrayList<>();
-	private ArrayList<AbsRoom> rooms = new ArrayList<>();
-	private ArrayList<IInventoryItem> inventory = new ArrayList<>();
+	protected ArrayList<Person> persons = new ArrayList<>();
+	protected ArrayList<AbsRoom> rooms = new ArrayList<>();
+	protected ArrayList<IInventoryItem> inventory = new ArrayList<>();
 
 	public AbsShip(String name, int health, ArrayList<Person> persons, ArrayList<AbsRoom> rooms) {
 		this.name = name;
@@ -74,13 +69,9 @@ public abstract class AbsShip {
 
 
 
-	public void addInventory(IInventoryItem item, boolean notify) {
+	public void addInventory(IInventoryItem item) {
 		if (!inventory.contains(item)) {
 			inventory.add(item);
-		}
-
-		if (notify){
-			ApplicationClass.getInstance().requestNotifyShipChangedEvent();
 		}
 	}
 

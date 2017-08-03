@@ -6,7 +6,7 @@ import java.util.Random;
 
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.person.Person;
-import at.hakkon.space.datamodel.ship.Ship;
+import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.utility.Utility;
 
 /**
@@ -47,7 +47,7 @@ public class FlyingAstronautEvent extends AbsEvent {
 
 	@Override
 	public void callbackImpl(Context context, int hint) {
-		Ship ship = ApplicationClass.getInstance().getShip();
+		PlayerShip ship = ApplicationClass.getInstance().getShip();
 
 		if (hint == 0){
 			Random random = new Random();

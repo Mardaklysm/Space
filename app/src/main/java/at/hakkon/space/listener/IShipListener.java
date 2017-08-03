@@ -1,6 +1,6 @@
 package at.hakkon.space.listener;
 
-import at.hakkon.space.datamodel.ship.Ship;
+import at.hakkon.space.datamodel.ship.PlayerShip;
 
 /**
  * Created by Markus on 29.07.2017.
@@ -8,5 +8,5 @@ import at.hakkon.space.datamodel.ship.Ship;
 
 public interface IShipListener {
 
-	void shipUpdated(Ship ship);
+	void shipUpdated(PlayerShip ship);
 }

@@ -6,13 +6,16 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.datamodel.ship.PlayerShip;
+import at.hakkon.space.listener.IShipListener;
 import at.hakkon.space.navigation.PagingViewPager;
 import at.hakkon.space.navigation.TopLevelFragmentPagerAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IShipListener {
 
 	private ApplicationClass appClass = ApplicationClass.getInstance();
 
@@ -28,13 +31,14 @@ public class MainActivity extends AppCompatActivity {
 		@Override
 		public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 			switch (item.getItemId()) {
-				case R.id.navigation_home:
+				case R.id.navigation_ship:
 					viewPager.setCurrentItem(0, false);
 					return true;
-				case R.id.navigation_dashboard:
+				case R.id.navigation_map:
 					viewPager.setCurrentItem(1, false);
+					adapter.getMapFragment().setVisible();
 					return true;
-				case R.id.navigation_notifications:
+				case R.id.navigation_planet:
 					viewPager.setCurrentItem(2, false);
 					return true;
 			}
@@ -62,12 +66,26 @@ public class MainActivity extends AppCompatActivity {
 		BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
 		navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+
+		appClass.addShipListener(this);
+
 		appClass.initialize();
+
 	}
 
-	public static MainActivity getInstance(){
+	public static MainActivity getInstance() {
 		return instance;
 	}
 
 
+	@Override
+	public void shipUpdated(PlayerShip ship) {
+		updateHeader(ship);
+	}
+
+	private void updateHeader(PlayerShip ship) {
+		((TextView) findViewById(R.id.tvHeaderCash)).setText("Cash: " + ship.getMoney());
+		((TextView) findViewById(R.id.tvHeaderFuel)).setText("Fuel: " + ship.getFuel());
+		((TextView) findViewById(R.id.tvHeaderHealth)).setText("Health: " + ship.getHealth());
+	}
 }

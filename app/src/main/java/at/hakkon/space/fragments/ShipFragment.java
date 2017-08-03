@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import at.hakkon.space.application.ApplicationClass;
-import at.hakkon.space.listener.IShipListener;
 import at.hakkon.space.R;
-import at.hakkon.space.datamodel.ship.Ship;
+import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.datamodel.ship.PlayerShip;
+import at.hakkon.space.listener.IShipListener;
 
 /**
  * Created by Markus on 05.07.2017.
@@ -32,7 +32,7 @@ public class ShipFragment extends Fragment implements IShipListener {
 
 
 	@Override
-	public void shipUpdated(Ship ship) {
+	public void shipUpdated(PlayerShip ship) {
 		((TextView)view.findViewById(R.id.tvShipInfo)).setText(ship.getInformationDump());
 	}
 }

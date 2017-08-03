@@ -1,6 +1,8 @@
 package at.hakkon.space.views;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -11,25 +13,37 @@ import java.util.ArrayList;
 import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
+import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.event.TravelQuestionEvent;
+import at.hakkon.space.listener.IPlanetVisitListener;
 
 /**
  * Created by Markus on 29.07.2017.
  */
 
-public class GalaxyRowView extends LinearLayout{
+public class GalaxyRowView extends LinearLayout implements IPlanetVisitListener{
 
 	private View view;
 
 	private  ArrayList<AbsPlanet> planets;
 
-	public GalaxyRowView(Context context, ArrayList<AbsPlanet> planets) {
+	public GalaxyRowView(Context context, PlayerShip ship, ArrayList<AbsPlanet> planets) {
 		super(context);
 
 		this.planets = planets;
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		view = inflater.inflate(R.layout.view_planet_row, this, true);
+
+		ApplicationClass.getInstance().addPlanetVisitorListener(this);
+
+		updateView();
+
+	}
+
+	private void updateView() {
+
+		PlayerShip ship = ApplicationClass.getInstance().getShip();
 
 		boolean posExists0 = false;
 		boolean posExists1 = false;
@@ -45,10 +59,30 @@ public class GalaxyRowView extends LinearLayout{
 				case 2: addButtonListener((Button) view.findViewById(R.id.bPos2), planet); posExists2 = true; break;
 				case 3: addButtonListener((Button) view.findViewById(R.id.bPos3), planet); posExists3 = true; break;
 			}
+
+
+
+			if (planet.equals(ship.getCurrentPlanet())){
+				int color = Color.parseColor("#00ff00");
+				switch (position){
+					case 0: view.findViewById(R.id.bPos0).getBackground().setColorFilter(color, PorterDuff.Mode.DARKEN); break;
+					case 1: view.findViewById(R.id.bPos1).getBackground().setColorFilter(color, PorterDuff.Mode.DARKEN); break;
+					case 2: view.findViewById(R.id.bPos2).getBackground().setColorFilter(color, PorterDuff.Mode.DARKEN); break;
+					case 3: view.findViewById(R.id.bPos3).getBackground().setColorFilter(color, PorterDuff.Mode.DARKEN); break;
+				}
+			}else{
+				int color = Color.parseColor("#00ff00");
+				switch (position){
+					case 0: view.findViewById(R.id.bPos0).getBackground().setColorFilter(null); break;
+					case 1: view.findViewById(R.id.bPos1).getBackground().setColorFilter(null); break;
+					case 2: view.findViewById(R.id.bPos2).getBackground().setColorFilter(null); break;
+					case 3: view.findViewById(R.id.bPos3).getBackground().setColorFilter(null); break;
+				}
+			}
 		}
 
 		if (!posExists0){
-			 view.findViewById(R.id.bPos0).setVisibility(INVISIBLE);
+			view.findViewById(R.id.bPos0).setVisibility(INVISIBLE);
 		}
 		if (!posExists1){
 			view.findViewById(R.id.bPos1).setVisibility(INVISIBLE);
@@ -60,7 +94,6 @@ public class GalaxyRowView extends LinearLayout{
 			view.findViewById(R.id.bPos3).setVisibility(INVISIBLE);
 		}
 
-
 	}
 
 
@@ -70,11 +103,13 @@ public class GalaxyRowView extends LinearLayout{
 			@Override
 			public void onClick(View v) {
 				if (planet.equals(ApplicationClass.getInstance().getShip().getCurrentPlanet())) {
-					return;
+					planet.getEvent().execute(getContext());
+				}else{
+					TravelQuestionEvent travelQuestionEvent = new TravelQuestionEvent(1);
+					travelQuestionEvent.init(getContext(), ApplicationClass.getInstance().getShip(), planet);
+					travelQuestionEvent.execute(getContext());
 				}
-				TravelQuestionEvent travelQuestionEvent = new TravelQuestionEvent(1);
-				travelQuestionEvent.init(getContext(), ApplicationClass.getInstance().getShip(), planet);
-				travelQuestionEvent.execute(getContext());
+
 			}
 		});
 
@@ -87,4 +122,8 @@ public class GalaxyRowView extends LinearLayout{
 	}
 
 
+	@Override
+	public void planetVisit(AbsPlanet planet) {
+		updateView();
+	}
 }

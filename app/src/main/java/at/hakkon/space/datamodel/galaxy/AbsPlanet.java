@@ -8,6 +8,8 @@ import at.hakkon.space.event.AbsEvent;
 
 public abstract class AbsPlanet {
 
+	private AbsEvent event;
+
 	private Galaxy galaxy;
 	private String name;
 	private PlanetPosition planetPosition;
@@ -18,7 +20,9 @@ public abstract class AbsPlanet {
 		this.planetPosition = planetPosition;
 	}
 
-	public abstract AbsEvent getEvent();
+
+
+
 
 	public String getInformationDump(){
 		String retString = "";
@@ -44,4 +48,14 @@ public abstract class AbsPlanet {
 	public PlanetPosition getPlanetPosition() {
 		return planetPosition;
 	}
+
+
+	public AbsEvent getEvent() {
+		return event;
+	}
+
+	public void setEvent(AbsEvent event){
+		this.event = event;
+	}
+
 }

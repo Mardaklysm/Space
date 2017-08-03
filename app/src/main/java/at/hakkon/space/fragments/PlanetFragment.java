@@ -5,25 +5,23 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
+import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.datamodel.galaxy.AbsPlanet;
+import at.hakkon.space.datamodel.galaxy.Galaxy;
+import at.hakkon.space.datamodel.ship.PlayerShip;
+import at.hakkon.space.listener.IGalaxyListener;
 import at.hakkon.space.listener.IPlanetVisitListener;
 import at.hakkon.space.listener.IShipListener;
-import at.hakkon.space.R;
-import at.hakkon.space.datamodel.ship.Ship;
-import at.hakkon.space.event.AbsEvent;
-import at.hakkon.space.datamodel.galaxy.AbsPlanet;
-
-import static android.view.View.GONE;
 
 
 /**
  * Created by Markus on 05.07.2017.
  */
 
-public class PlanetFragment extends Fragment implements IShipListener, IPlanetVisitListener {
+public class PlanetFragment extends Fragment implements IShipListener, IPlanetVisitListener, IGalaxyListener {
 
 	private View view;
 
@@ -40,31 +38,19 @@ public class PlanetFragment extends Fragment implements IShipListener, IPlanetVi
 		planet = ApplicationClass.getInstance().getShip().getCurrentPlanet();
 		planetChanged();
 
-		initExecuteEventButton();
 
 		return view;
 	}
 
-	private void initExecuteEventButton() {
-		Button button = (Button) view.findViewById(R.id.bExecutePlanetEvent);
-
-		button.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				executeEvent(planet);
-			}
-		});
-	}
 
 	private void planetChanged() {
 		TextView tvPlanetInfo = (TextView) view.findViewById(R.id.tvPlanetInfo);
 
 		tvPlanetInfo.setText(planet.getInformationDump());
-		updateExecuteEventButton(planet.getEvent().canBeExecuted());
 	}
 
 	@Override
-	public void shipUpdated(Ship ship) {
+	public void shipUpdated(PlayerShip ship) {
 		if (ship.getCurrentPlanet().equals(planet)) {
 			return;
 		}
@@ -77,38 +63,11 @@ public class PlanetFragment extends Fragment implements IShipListener, IPlanetVi
 		shipUpdated(ApplicationClass.getInstance().getShip());
 	}
 
-	private void executeEvent(AbsPlanet planet) {
-		AbsEvent event = planet.getEvent();
 
-		switch (event.getEventType()) {
-
-			case Nothing:
-				ApplicationClass.getInstance().toast(getContext(), "Nothing special happened");
-				break;
-			case Shop:
-				//TODO: Implement
-				break;
-			case Battle:
-				break;
-			//TODO: Implement
-			case ResourceBonus:
-
-				if (event.canBeExecuted()) {
-					event.execute(getContext());
-					updateExecuteEventButton(false);
-				}
-
-				break;
-			case Question:
-				if (event.canBeExecuted()) {
-					event.execute(getContext());
-					updateExecuteEventButton(false);
-				}
-				break;
+	@Override
+	public void galaxyUpdated(Galaxy galaxy) {
+		if (!galaxy.getPlanets().contains(planet)){
+			planet = galaxy.getFirstPlanet();
 		}
-	}
-
-	private void updateExecuteEventButton(boolean enable) {
-		view.findViewById(R.id.bExecutePlanetEvent).setVisibility(enable ? View.VISIBLE : GONE);
 	}
 }

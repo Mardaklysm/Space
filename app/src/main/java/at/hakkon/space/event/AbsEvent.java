@@ -4,7 +4,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
-import at.hakkon.space.datamodel.ship.Ship;
+import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 
 /**
@@ -20,7 +20,7 @@ public abstract class AbsEvent {
 	private int resourceBonus;
 
 	private Context context;
-	private Ship ship;
+	private PlayerShip ship;
 	private AbsPlanet planet;
 
 	public AbsEvent(int level){
@@ -64,7 +64,7 @@ public abstract class AbsEvent {
 
 	public abstract void callbackImpl(Context context, int hint);
 
-	public void init(Context context, Ship ship, AbsPlanet planet){
+	public void init(Context context, PlayerShip ship, AbsPlanet planet){
 		this.context = context;
 		this.ship = ship;
 		this.planet = planet;
@@ -74,7 +74,7 @@ public abstract class AbsEvent {
 		return context;
 	}
 
-	public Ship getShip() {
+	public PlayerShip getShip() {
 		return ship;
 	}
 

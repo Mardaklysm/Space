@@ -22,7 +22,7 @@ import at.hakkon.space.views.GalaxyRowView;
 
 public class GalaxyFragment extends Fragment implements IGalaxyListener {
 
-	private final static String TAG = "MapFragment";
+	private final static String TAG = "GalaxyFragment";
 
 	private View view;
 
@@ -51,32 +51,54 @@ public class GalaxyFragment extends Fragment implements IGalaxyListener {
 		updatePlanets();
 	}
 
+	private ArrayList<GalaxyRowView> rows = new ArrayList<>();
+
 	private void updatePlanets() {
 		//((TextView) view.findViewById(R.id.tvGalaxyInfo)).setText(galaxy.getName() + " (" + galaxy.getReachablePlanets().size() + " Planets)");
 
 		((LinearLayout) view.findViewById(R.id.llGalaxyContent)).removeAllViews();
 
-		for (int i=0; i< galaxy.getGalaxyDepth(); i++){
+		//for (int i = galaxy.getGalaxyDepth() - 1; i >= 0; i--) {
+		for (int i = 0; i <= galaxy.getGalaxyDepth(); i++) {
 
 			ArrayList<AbsPlanet> rowPlanets = new ArrayList<>();
-			for (AbsPlanet planet: galaxy.getPlanets()){
-				if (planet.getPlanetPosition().getY() == i){
+			for (AbsPlanet planet : galaxy.getPlanets()) {
+				if (planet.getPlanetPosition().getY() == i) {
 					rowPlanets.add(planet);
 				}
 			}
 
-			GalaxyRowView galaxyRowView = new GalaxyRowView(getContext(), rowPlanets);
+			GalaxyRowView galaxyRowView = new GalaxyRowView(getContext(), ApplicationClass.getInstance().getShip(), rowPlanets);
 			LinearLayout parent = (LinearLayout) view.findViewById(R.id.llGalaxyContent);
 
 			parent.addView(galaxyRowView);
+			rows.add(galaxyRowView);
 
 		}
-
-
 
 
 	}
 
 
+	public void setVisible() {
+		//TODO: Implement some cool scroll animation to keep the current planet in focus.
+		/**
+		ScrollView scrollView = (ScrollView) view.findViewById(R.id.fragmentMapScrollView);
 
+		Button shipPlanetButton;
+
+		PlanetPosition planetPosition = ApplicationClass.getInstance().getShip().getCurrentPlanet().getPlanetPosition();
+
+		View viewToScrollTo = null;
+		for (int i = 0; i < rows.size(); i++) {
+			if (i == rows.size() - planetPosition.getY() -1) {
+				viewToScrollTo = rows.get(i);
+			}
+		}
+		if (viewToScrollTo != null) {
+			scrollView.scrollTo(0, viewToScrollTo.getBottom());
+		}
+		 **/
+
+	}
 }

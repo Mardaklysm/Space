@@ -3,6 +3,8 @@ package at.hakkon.space.datamodel.galaxy;
 import java.util.ArrayList;
 import java.util.Random;
 
+import at.hakkon.space.event.GoToGalaxyEvent;
+
 /**
  * Created by Markus on 29.07.2017.
  */
@@ -13,10 +15,12 @@ public class Galaxy {
 	private String name;
 	private ArrayList<AbsPlanet> planets = new ArrayList<>();
 
+	private AbsPlanet firstPlanet;
+
 	public final static int MAX_GALAXY_WIDTH = 4;
 
-	public int getGalaxyDepth(){
-		return 10 + level + level/2 ;
+	public int getGalaxyDepth() {
+		return 10 + level + level / 2;
 	}
 
 	public Galaxy(String name, int level) {
@@ -31,36 +35,26 @@ public class Galaxy {
 		int planetY = 0;
 
 		Random random = new Random();
-		for (int i = 0; i < getGalaxyDepth(); i++) {
+		for (int i = 0; i <= getGalaxyDepth(); i++) {
+
 			AbsPlanet planet = new GenericPlanet(this, "Generic Planet " + i, new PlanetPosition(planetX, planetY));
 			planets.add(planet);
 			planetY++;
 			planetX = random.nextInt(MAX_GALAXY_WIDTH);
+
+			if (i == 0) {
+				firstPlanet = planet;
+			}
 		}
 
+
+		addGoToGalaryEvent(planets.get(planets.size() - 1));
 	}
 
-	public ArrayList<AbsPlanet> getReachablePlanets(int position) {
-		ArrayList<AbsPlanet> reachablePlanets = new ArrayList<>();
-		//TODO: Implement somet cool navigation structure
-		//for (Planet planet:planets){
-		//}
+	private void addGoToGalaryEvent(AbsPlanet planet) {
+		GoToGalaxyEvent goToGalaxyEvent = new GoToGalaxyEvent(getLevel());
 
-		for (AbsPlanet planet : planets) {
-			reachablePlanets.add(planet);
-		}
-
-		return reachablePlanets;
-	}
-
-	public ArrayList<AbsPlanet> getReachablePlanets() {
-		ArrayList<AbsPlanet> reachablePlanets = new ArrayList<>();
-
-		for (AbsPlanet planet : planets) {
-			reachablePlanets.add(planet);
-		}
-
-		return reachablePlanets;
+		planet.setEvent(goToGalaxyEvent);
 	}
 
 	public ArrayList<AbsPlanet> getPlanets() {
@@ -85,5 +79,9 @@ public class Galaxy {
 
 	public int getLevel() {
 		return level;
+	}
+
+	public AbsPlanet getFirstPlanet() {
+		return firstPlanet;
 	}
 }

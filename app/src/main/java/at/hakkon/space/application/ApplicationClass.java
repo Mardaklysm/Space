@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import at.hakkon.space.activity.MainActivity;
 import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.person.Person;
-import at.hakkon.space.datamodel.ship.Ship;
+import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
 import at.hakkon.space.listener.IGalaxyListener;
@@ -24,7 +24,7 @@ public class ApplicationClass extends android.app.Application {
 	private ArrayList<IGalaxyListener> galaxyListeners = new ArrayList<>();
 	private ArrayList<IPlanetVisitListener> planetVisitListeners = new ArrayList<>();
 
-	private Ship ship;
+	private PlayerShip ship;
 	private Galaxy galaxy;
 
 	public static ApplicationClass getInstance() {
@@ -44,13 +44,16 @@ public class ApplicationClass extends android.app.Application {
 
 		galaxy = new Galaxy("Starting Galaxy", 1);
 
-		ship = Ship.getDefault("Weinreise");
-
+		ship = new PlayerShip("Weinreise");
+		ship.setStartPlanet(galaxy.getFirstPlanet());
+		ship.setCurrentPlanet(galaxy.getFirstPlanet());
 
 		isInitialized = true;
+
+		notifyShipListeners(ship);
 	}
 
-	public Ship getShip() {
+	public PlayerShip getShip() {
 		return ship;
 	}
 
@@ -63,6 +66,7 @@ public class ApplicationClass extends android.app.Application {
 			notifyShipListeners(getShip());
 		}
 
+		planet.getEvent().execute(getContext());
 		return moved;
 	}
 
@@ -96,7 +100,7 @@ public class ApplicationClass extends android.app.Application {
 		planetVisitListeners.remove(listener);
 	}
 
-	private void notifyShipListeners(Ship ship) {
+	private void notifyShipListeners(PlayerShip ship) {
 		for (IShipListener listener : shipListeners) {
 			listener.shipUpdated(ship);
 		}
@@ -153,5 +157,18 @@ public class ApplicationClass extends android.app.Application {
 
 	public Context getContext(){
 		return MainActivity.getInstance();
+	}
+
+	public void moveToNewGalaxy() {
+		int galaxyLevel = galaxy.getLevel() +1;
+		Galaxy newGalaxy = new Galaxy("Galaxy " + galaxyLevel,galaxyLevel);
+		this.galaxy = newGalaxy;
+
+		notifyGalaxyListeners(this.galaxy);
+	}
+
+	public void updateFuel(int fuel) {
+		ship.updateFuel(fuel);
+		notifyShipListeners(ship);
 	}
 }

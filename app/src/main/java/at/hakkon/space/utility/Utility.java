@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
 
+import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.datamodel.galaxy.AbsPlanet;
+import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.event.AbsEvent;
 
 /**
@@ -43,7 +46,7 @@ public class Utility {
 			}
 		};
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationClass.getInstance().getContext());
 		builder.setMessage(text).setPositiveButton("Yes", dialogClickListener)
 				.setNegativeButton("No", dialogClickListener).show();
 
@@ -73,6 +76,20 @@ public class Utility {
 				event.callback(context, which);
 			}
 		}).show();
+	}
+
+	public static int getTravelCost(PlayerShip ship, AbsPlanet planet) {
+		AbsPlanet startPlanet = ship.getCurrentPlanet();
+
+		int distanceX = Math.abs(startPlanet.getPlanetPosition().getX() - planet.getPlanetPosition().getX());
+		int distanceY = Math.abs(startPlanet.getPlanetPosition().getY() - planet.getPlanetPosition().getY());
+
+
+		int totDistance = distanceX + distanceY *2;
+
+		return totDistance;
+
+
 	}
 }
 

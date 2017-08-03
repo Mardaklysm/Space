@@ -4,7 +4,7 @@ import android.content.Context;
 
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.utility.Utility;
-import at.hakkon.space.datamodel.ship.Ship;
+import at.hakkon.space.datamodel.ship.PlayerShip;
 
 /**
  * Created by Markus on 30.07.2017.
@@ -42,7 +42,7 @@ public class UnknownMetalBoxEvent extends AbsEvent {
 
 	@Override
 	public void callbackImpl(Context context, int hint){
-		Ship ship = ApplicationClass.getInstance().getShip();
+		PlayerShip ship = ApplicationClass.getInstance().getShip();
 		if (hint == 0){
 			int money = 150 * getLevel();
 			int health = 20 * getLevel();

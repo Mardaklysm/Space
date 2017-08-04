@@ -126,6 +126,12 @@ public abstract class AbsShip {
 	}
 
 	public ArrayList<IInventoryItem> getInventory() {
-		return inventory;
+		return null;
+	}
+
+	public abstract EShipType getShipType();
+
+	public int getInitialEnergy() {
+		return 5;
 	}
 }

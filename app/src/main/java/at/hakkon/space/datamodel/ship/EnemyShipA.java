@@ -13,19 +13,24 @@ import at.hakkon.space.datamodel.room.WeaponRoom;
  * Created by Markus on 03.08.2017.
  */
 
-public class EnemyShip extends AbsShip {
+public class EnemyShipA extends AbsShip {
 
 	protected final static int START_HEALTH = 250;
 
-	public EnemyShip(String name, int health, ArrayList<Person> persons, ArrayList<AbsRoom> rooms) {
+	public EnemyShipA(String name, int health, ArrayList<Person> persons, ArrayList<AbsRoom> rooms) {
 		super(name, health, persons, rooms);
 	}
 
-	public EnemyShip(String name) {
+	public EnemyShipA(String name) {
 		super(name, START_HEALTH, getInitPersons(), getInitRooms());
 
 		addInventory(Weapon.getLaser(1));
 		addInventory(Weapon.getRocket(1));
+	}
+
+	@Override
+	public EShipType getShipType() {
+		return EShipType.Enemy_A;
 	}
 
 	private static ArrayList<Person> getInitPersons() {

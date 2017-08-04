@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:background="@color/colorWhite"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+    />
+    <TextView
+        android:id="@+id/tvBattleTitle"
+        android:layout_width="match_parent"
+        android:background="@color/colorLightGrey1"
+        android:textColor="@color/fontColorBlack"
+        android:layout_below="@+id/header"
+        android:layout_height="wrap_content"
+        android:text="Battle Log Title"/>
+    <ScrollView
+        android:id="@+id/scViewBattleTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tvBattleTitle"
+        android:background="@color/colorBlack"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvBattleLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:text="Battle Log ..." android:textColor="@color/fontColorWhiteGray"/>
+        </LinearLayout>
+
+    </ScrollView>
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:id="@+id/llBattlePlayer"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/colorLightGrey1"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/bBattleWeapon1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Weapon 1"/>
+            <Button
+                android:id="@+id/bBattleWeapon2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Weapon 2"/>
+            <Button
+                android:id="@+id/bBattleWeapon3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Weapon 3"/>
+            <Button
+                android:id="@+id/bBattleWeapon4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Weapon 4"/>
+            <Button
+                android:id="@+id/bBattleNextRound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Confirm"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@color/colorDarkGrey1"
+            android:orientation="horizontal">
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView3"
+            android:layout_width="150dp"
+            android:layout_height="fill_parent"
+            android:background="@color/colorLightGrey1"
+            android:fillViewport="true">
+            <LinearLayout
+                android:id="@+id/llBattleEnemy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorLightGrey1"
+                android:orientation="vertical">
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>

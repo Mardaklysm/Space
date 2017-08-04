@@ -12,8 +12,20 @@ public abstract class AbsRoom {
 
 	private ERoom room;
 
+	private int health = 4;
+
+
 	public AbsRoom(String name) {
 		this.name = name;
+	}
+
+	public boolean istDestroyed(){
+		return health == 0;
+	}
+
+	public void updateHealth(int value){
+		health += value;
+		health = Math.max(0, health);
 	}
 
 
@@ -40,5 +52,9 @@ public abstract class AbsRoom {
 		retString += "Room [" + getName() + "(Type: " + getRoomType().name() + ")]";
 
 		return retString;
+	}
+
+	public int getHealth() {
+		return health;
 	}
 }

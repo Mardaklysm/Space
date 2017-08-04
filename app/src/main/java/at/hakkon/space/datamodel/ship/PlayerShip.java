@@ -22,7 +22,7 @@ public class PlayerShip extends AbsShip {
 
 	protected final static int START_HEALTH = 1000;
 
-	protected final static int START_FUEL = 8;
+	protected final static int START_FUEL = 50;
 	protected final static int START_MONEY = 250;
 
 
@@ -173,6 +173,11 @@ public class PlayerShip extends AbsShip {
 		}
 
 		return result;
+	}
+
+	@Override
+	public EShipType getShipType() {
+		return EShipType.Player_A;
 	}
 
 }

@@ -2,6 +2,8 @@ package at.hakkon.space.event;
 
 import java.util.Random;
 
+import at.hakkon.space.datamodel.ship.EShipType;
+
 /**
  * Created by Markus on 29.07.2017.
  */
@@ -31,6 +33,8 @@ public class EventGenerator {
 			case 2: event = new FlyingAstronautEvent(level); break;
 			default: throw new RuntimeException("balblbalba");
 		}
+
+		event = new BattleEvent(level, EShipType.Enemy_A);
 
 		return event;
 	}

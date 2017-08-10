@@ -3,6 +3,8 @@ package at.hakkon.space.datamodel.room;
 import java.util.ArrayList;
 
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
+import at.hakkon.space.datamodel.inventory.Weapon;
+import at.hakkon.space.datamodel.ship.AbsShip;
 
 public abstract class AbsRoom {
 
@@ -47,14 +49,19 @@ public abstract class AbsRoom {
 
 
 	public String getInformationDump() {
-		String retString = "";
-
-		retString += "Room [" + getName() + "(Type: " + getRoomType().name() + ")]";
-
-		return retString;
+		return null;
 	}
 
 	public int getHealth() {
 		return health;
+	}
+
+	public int attackWithWeapon(AbsShip attacker, AbsShip defender, Weapon weapon) {
+		//TODO: Implement sth cool like evasion or shields
+
+		int weaponDamage = weapon.getDamage();
+		defender.updateHealth(-weaponDamage);
+		health-=weapon.getDamage();
+		return weaponDamage;
 	}
 }

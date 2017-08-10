@@ -57,6 +57,8 @@ public class Utility {
 		builder.setMessage(text).show();
 	}
 
+
+
 	private AlertDialog alertDialog;
 
 	public void showQuestionsDialog(final Context context, String text, CharSequence[] charSequences, final AbsEvent event) {
@@ -91,6 +93,7 @@ public class Utility {
 
 
 	}
+
 }
 
 

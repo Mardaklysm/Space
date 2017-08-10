@@ -5,4 +5,5 @@ package at.hakkon.space.datamodel.inventory;
  */
 
 public interface IInventoryItem {
+	String getName();
 }

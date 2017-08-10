@@ -45,7 +45,7 @@ public class ApplicationClass extends android.app.Application {
 
 		galaxy = new Galaxy("Starting Galaxy", 1);
 
-		ship = new PlayerShip("Weinreise");
+		ship = new PlayerShip("Weinreise", 1);
 		ship.setStartPlanet(galaxy.getFirstPlanet());
 		ship.setCurrentPlanet(galaxy.getFirstPlanet());
 
@@ -57,7 +57,7 @@ public class ApplicationClass extends android.app.Application {
 	public void restartGame(){
 		galaxy = new Galaxy("Starting Galaxy", 1);
 
-		ship = new PlayerShip("Weinreise");
+		ship = new PlayerShip("Weinreise", 1);
 		ship.setStartPlanet(galaxy.getFirstPlanet());
 		ship.setCurrentPlanet(galaxy.getFirstPlanet());
 
@@ -192,6 +192,7 @@ public class ApplicationClass extends android.app.Application {
 
 	public void updateFuel(int fuel) {
 		ship.updateFuel(fuel);
+		notifyShipListeners(ship);
 	}
 
 }

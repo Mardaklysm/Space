@@ -1,5 +1,7 @@
 package at.hakkon.space.datamodel.inventory;
 
+import at.hakkon.space.datamodel.room.AbsRoom;
+
 /**
  * Created by Markus on 29.07.2017.
  */
@@ -20,6 +22,7 @@ public class Weapon implements  IInventoryItem{
 	}
 
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -45,10 +48,28 @@ public class Weapon implements  IInventoryItem{
 	}
 
 	public static Weapon getLaser(int level){
-		return new Weapon("Laser Lv." + level, 50*level, 15*level, 2*level);
+		return new Weapon("Laser Lv." + level, 5*level, 2*level, 2*level);
 	}
 
 	public static Weapon getRocket(int level){
-		return new Weapon("Rocket Lv." + level, 75*level, 40*level, 3*level);
+		return new Weapon("Rocket Lv." + level, 10*level, 4*level, 3*level);
+	}
+
+	private AbsRoom target;
+
+	public void setTarget(AbsRoom target){
+		this.target = target;
+	}
+
+	public AbsRoom getTarget(){
+		return target;
+	}
+
+	public boolean hasTarget(){
+		return target != null;
+	}
+
+	public int getEnergyCost() {
+		return energyCost;
 	}
 }

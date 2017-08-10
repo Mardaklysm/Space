@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="Battle Log Title"/>
     <ScrollView
-        android:id="@+id/scViewBattleTitle"
+        android:id="@+id/scBattle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/linearLayout"
@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
-                android:text="Battle Log ..." android:textColor="@color/fontColorWhiteGray"/>
+                android:textColor="@color/fontColorWhiteGray"/>
         </LinearLayout>
 
     </ScrollView>
@@ -59,6 +59,12 @@
             android:layout_weight="0"
             android:background="@color/colorLightGrey1"
             android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvWeaponTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_weight="0"
+                android:text="Weapon Charge: " android:textAlignment="center"
+                android:textColor="@color/fontColorWhiteGray"/>
             <Button
                 android:id="@+id/bBattleWeapon1"
                 android:layout_width="match_parent"
@@ -105,6 +111,11 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorLightGrey1"
                 android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvEnemyRoomsTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:text="Enemy Ship Rooms"
+                    android:textAlignment="center" android:textColor="@color/fontColorWhiteGray"/>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

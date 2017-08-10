@@ -14,9 +14,8 @@ public class BattleEvent extends AbsEvent {
 
 	private EShipType shipType;
 
-	public BattleEvent(int level) {
-		super(level);
-	}
+	private boolean executed = false;
+
 
 	public BattleEvent(int level, EShipType shipType) {
 		super(level);
@@ -33,9 +32,13 @@ public class BattleEvent extends AbsEvent {
 		if (shipType == null){
 			throw new RuntimeException("Enemy cant be null!");
 		}
-
+		if (!canBeExecuted()){
+			return;
+		}
+		executed = true;
 		Intent intent = new Intent(context, BattleActivity.class);
-		intent.putExtra("enemyShipTypeOrdinal", shipType.ordinal()); //Optional parameters
+		intent.putExtra("enemyShipTypeOrdinal", shipType.ordinal());
+		intent.putExtra("level", getLevel());
 		context.startActivity(intent);
 
 	}
@@ -43,5 +46,10 @@ public class BattleEvent extends AbsEvent {
 	@Override
 	public void callbackImpl(Context context, int hint) {
 
+	}
+
+	@Override
+	public boolean canBeExecuted(){
+		return !executed;
 	}
 }

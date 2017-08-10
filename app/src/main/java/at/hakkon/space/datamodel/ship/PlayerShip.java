@@ -6,6 +6,7 @@ import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
+import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
@@ -20,7 +21,7 @@ import at.hakkon.space.utility.Utility;
 
 public class PlayerShip extends AbsShip {
 
-	protected final static int START_HEALTH = 1000;
+	protected final static int START_HEALTH = 100;
 
 	protected final static int START_FUEL = 50;
 	protected final static int START_MONEY = 250;
@@ -32,8 +33,8 @@ public class PlayerShip extends AbsShip {
 	private int fuel;
 	private AbsPlanet startPlanet;
 
-	public PlayerShip(String name) {
-		super(name, START_HEALTH, getInitPersons(), getInitRooms());
+	public PlayerShip(String name, int level) {
+		super(name, level, START_HEALTH, getInitPersons(), getInitRooms());
 		this.money = START_MONEY;
 		this.fuel = START_FUEL;
 
@@ -54,9 +55,9 @@ public class PlayerShip extends AbsShip {
 
 	private static ArrayList<AbsRoom> getInitRooms() {
 		ArrayList<AbsRoom> rooms = new ArrayList<>();
-		rooms.add(new NavigationRoom("Cheap Navigation room"));
-		rooms.add(new EmptyRoom("Empty Hall I"));
-		rooms.add(new EmptyRoom("Empty Hall II"));
+		rooms.add(new NavigationRoom("Navigation I"));
+		rooms.add(new EmptyRoom("Hall I"));
+		rooms.add(new EmptyRoom("Hall I"));
 
 		WeaponRoom weaponRoom = new WeaponRoom("Armory");
 
@@ -178,6 +179,21 @@ public class PlayerShip extends AbsShip {
 	@Override
 	public EShipType getShipType() {
 		return EShipType.Player_A;
+	}
+
+	@Override
+	public Loot getLoot() {
+		return new Loot(money, fuel, getInventory());
+	}
+
+	@Override
+	public void updateHealth(int value) {
+		super.updateHealth(value);
+		if (getHealth() < 0) {
+			ApplicationClass.getInstance().gameOver(EGameOverReason.OutOfHealth);
+			Utility.getInstance().showTextDialog(ApplicationClass.getInstance().getBaseContext(), "You are dead!");
+		}
+		ApplicationClass.getInstance().requestNotifyShipChangedEvent();
 	}
 
 }

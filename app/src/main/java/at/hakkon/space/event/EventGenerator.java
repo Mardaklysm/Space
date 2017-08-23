@@ -20,6 +20,8 @@ public class EventGenerator {
 		return instance;
 	}
 
+	private final static int MAX_EVENT_COUNT = 4;
+
 	public AbsEvent generateRandomEvent(int level) {
 
 		AbsEvent event = null;
@@ -31,7 +33,7 @@ public class EventGenerator {
 		if (battleEncounter) {
 			event = createBattleEvent(level, EShipType.Enemy_A);
 		} else {
-			int randId = random.nextInt(4);
+			int randId = random.nextInt(MAX_EVENT_COUNT);
 			switch (randId) {
 				case 0:
 					event = new ResourceBonusEvent(level);
@@ -46,7 +48,7 @@ public class EventGenerator {
 					event = new FuelShopEvent(level);
 					break;
 				default:
-					throw new RuntimeException("balblbalba");
+					throw new RuntimeException("Invalid Event ID. I dont know any event with this ID: " + randId + ". :( ....");
 			}
 		}
 

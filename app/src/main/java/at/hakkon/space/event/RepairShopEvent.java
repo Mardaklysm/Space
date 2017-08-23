@@ -11,8 +11,9 @@ import at.hakkon.space.utility.Utility;
  * Created by Markus on 10.08.2017.
  */
 
-public class FuelShopEvent extends AbsEvent {
-	public FuelShopEvent(int level) {
+public class RepairShopEvent extends AbsEvent {
+
+	public RepairShopEvent(int level) {
 		super(level);
 	}
 
@@ -23,21 +24,21 @@ public class FuelShopEvent extends AbsEvent {
 
 	@Override
 	protected void executeImpl(Context context) {
-		String text = "Refill station - We pump you up!";
+		String text = "Repair station - We fix you up!";
 		CharSequence[] charSequences = new CharSequence[5];
 
 		ArrayList<CharSequence> choices = new ArrayList<>();
-		boolean canAfford = getShip().getMoney() >= 50;
+		boolean canAfford = getShip().getMoney() >= 20;
 		if (!canAfford){
-			choices.add("You can't afford any fuel :(");
+			choices.add("You can't afford any repairs :(");
 		}
 
 		int multiplier=1;
 		while (multiplier < 8) {
-			int costs = multiplier * 50;
+			int costs = multiplier * 20;
 			int value = multiplier * 5;
 			if (costs <= getShip().getMoney()){
-				choices.add("Buy " + value + " fuel for " + costs + "$.");
+				choices.add("Repair " + value + " points for " + costs + "$.");
 			}
 			multiplier++;
 		}
@@ -47,11 +48,12 @@ public class FuelShopEvent extends AbsEvent {
 			charSequences[i] = choices.get(i);
 		}
 		Utility.getInstance().showQuestionsDialog(context, text, charSequences, this);
+
 	}
 
 	@Override
 	public void callbackImpl(Context context, int hint) {
-		ApplicationClass.getInstance().updateShipMoney(-((hint + 1) * 50));
-		ApplicationClass.getInstance().updateFuel((hint + 1) * 5);
+		ApplicationClass.getInstance().updateShipMoney(-((hint + 1) * 20));
+		ApplicationClass.getInstance().updateShipHealth((hint + 1) * 5);
 	}
 }

@@ -6,12 +6,23 @@ package at.hakkon.space.datamodel.room;
 
 public class NavigationRoom extends AbsRoom {
 
-	public NavigationRoom(String name) {
-		super(name);
+	public NavigationRoom(int level) {
+		super(level);
 	}
 
 	@Override
 	public ERoom getRoomType() {
 		return ERoom.Navigation;
+	}
+
+	@Override
+	/**
+	 * Percentage for evading attacks
+	 */
+	public float getEfficency() {
+		float value = (float) getLevel() * 5f / 100f;
+
+		value = Math.min(value, 0.9f);
+		return value;
 	}
 }

@@ -5,5 +5,5 @@ package at.hakkon.space.datamodel.room;
  */
 
 public enum ERoom {
-	Navigation, Weapons, Empty
+	Navigation, Weapons, Shield, Mechanic, Empty
 }

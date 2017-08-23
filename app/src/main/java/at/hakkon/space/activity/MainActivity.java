@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ApplicationClass.getInstance().updateActiveContext(this);
 		instance = this;
 		setContentView(R.layout.activity_main);
 
@@ -69,12 +70,25 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 
 		appClass.addShipListener(this);
 
+
 		appClass.initialize();
 
 	}
 
 	public static MainActivity getInstance() {
 		return instance;
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		ApplicationClass.getInstance().removeShipListener(this);
+		ApplicationClass.getInstance().removeShipListener(adapter.getPlanetFragment());
+		ApplicationClass.getInstance().removeShipListener(adapter.getShipFragment());
+
+
+		ApplicationClass.getInstance().removeGalaxyListener(adapter.getMapFragment());
 	}
 
 

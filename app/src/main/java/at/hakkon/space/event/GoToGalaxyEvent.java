@@ -26,7 +26,7 @@ public class GoToGalaxyEvent extends AbsEvent {
 	@Override
 	protected void executeImpl(Context context) {
 		String dialogTitle = "Congratulations: You reached the end of this Galaxy!\n\nWould you like to travel to the next Galaxy now?";
-		Utility.getInstance().showYesNoDialog(ApplicationClass.getInstance().getContext(), dialogTitle, this);
+		Utility.getInstance().showYesNoDialog(ApplicationClass.getInstance().getActiveContext(), dialogTitle, this);
 	}
 
 	@Override

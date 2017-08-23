@@ -1,12 +1,15 @@
 package at.hakkon.space.datamodel.ship;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
+import at.hakkon.space.datamodel.room.NavigationRoom;
+import at.hakkon.space.datamodel.room.WeaponRoom;
 
 /**
  * Created by Markus on 29.07.2017.
@@ -16,6 +19,7 @@ public abstract class AbsShip {
 
 	private String name;
 	private int health;
+	private int maxHealth;
 	private int level;
 
 	protected ArrayList<Person> persons = new ArrayList<>();
@@ -25,6 +29,7 @@ public abstract class AbsShip {
 	public AbsShip(String name, int level, int health, ArrayList<Person> persons, ArrayList<AbsRoom> rooms) {
 		this.name = name;
 		this.health = health;
+		this.maxHealth = health;
 
 		this.persons = persons;
 		this.rooms = rooms;
@@ -63,8 +68,6 @@ public abstract class AbsShip {
 	}
 
 
-
-
 	public void addInventory(IInventoryItem item) {
 		if (!inventory.contains(item)) {
 			inventory.add(item);
@@ -74,6 +77,7 @@ public abstract class AbsShip {
 	public boolean removeInventory(IInventoryItem item) {
 		return inventory.remove(item);
 	}
+
 
 	public ArrayList<Weapon> getWeapons() {
 		ArrayList<Weapon> weapons = new ArrayList<>();
@@ -87,9 +91,21 @@ public abstract class AbsShip {
 		return weapons;
 	}
 
+	public ArrayList<Weapon> getEquippedWeapons() {
+		ArrayList<Weapon> weapons = new ArrayList<>();
+
+		for (IInventoryItem item : inventory) {
+			if ((item instanceof Weapon )&& (((Weapon)item).isEquipped())) {
+				weapons.add((Weapon) item);
+			}
+		}
+
+		return weapons;
+	}
+
 
 	public void updateHealth(int value) {
-		health += value;
+		health = Math.min(health + value, maxHealth);
 	}
 
 	public void addPerson(Person person) {
@@ -97,7 +113,6 @@ public abstract class AbsShip {
 			persons.add(person);
 		}
 	}
-
 
 
 	public int getHealth() {
@@ -132,15 +147,39 @@ public abstract class AbsShip {
 		return level;
 	}
 
-	public int getTotalWeaponDamage(){
-		int damage = 0;
-
-		for (IInventoryItem item: inventory){
-			if (item instanceof  Weapon){
-				damage += ((Weapon) item).getDamage();
+	public int getWeaponRoomLevel() {
+		for (AbsRoom room : getRooms()) {
+			if (room instanceof WeaponRoom) {
+				return room.getLevel();
 			}
 		}
+		return 1;
+	}
 
-		return damage;
+	public WeaponRoom getWeaponRoom() {
+		for (AbsRoom room : getRooms()) {
+			if (room instanceof WeaponRoom) {
+				return (WeaponRoom) room;
+			}
+		}
+		return null;
+	}
+
+	public NavigationRoom getNavigationRoom() {
+		for (AbsRoom room : getRooms()) {
+			if (room instanceof NavigationRoom) {
+				return (NavigationRoom) room;
+			}
+		}
+		return null;
+	}
+
+	public boolean hits(AbsShip defender) {
+		float evadeChanche = defender.getNavigationRoom().getEfficency();
+
+		Random random = new Random();
+		float hitValue =  random.nextFloat();
+
+		return hitValue > evadeChanche;
 	}
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import at.hakkon.space.event.GoToGalaxyEvent;
+import at.hakkon.space.event.RepairShopEvent;
 
 /**
  * Created by Markus on 29.07.2017.
@@ -30,9 +31,12 @@ public class Galaxy {
 		createPlanets();
 	}
 
+	//private final static int MAX_STORE_COUNT = 2;
+
 	private void createPlanets() {
 		int planetX = 0;
 		int planetY = 0;
+
 
 		Random random = new Random();
 		for (int i = 0; i <= getGalaxyDepth(); i++) {
@@ -49,6 +53,22 @@ public class Galaxy {
 
 
 		addGoToGalaryEvent(planets.get(planets.size() - 1));
+
+		int shopPlanetIdx = random.nextInt(planets.size()-2) +1;
+		planets.get(shopPlanetIdx).setEvent(new RepairShopEvent(level));
+
+//		for (int i=0; i< MAX_STORE_COUNT; i++){
+//			boolean foundValidIndex = false;
+//			while (!foundValidIndex){
+//				int shopPlanetIdx = random.nextInt(planets.size()-1);
+//
+//				if ( !(planets.get(shopPlanetIdx).getEvent() instanceof RepairShopEvent)){
+//					foundValidIndex = true;
+//					planets.get(shopPlanetIdx).setEvent(new RepairShopEvent(level));
+//				}
+//			}
+//		}
+
 	}
 
 	private void addGoToGalaryEvent(AbsPlanet planet) {

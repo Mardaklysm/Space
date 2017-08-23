@@ -37,7 +37,7 @@ public class RoomView extends android.support.v7.widget.AppCompatButton {
 	}
 
 	public void update() {
-		String text = room.getName() + "\n(" + room.getHealth() + "HP)";
+		String text = room.getName() + "\n(" + room.getEfficency() + ")";
 		this.setText(text);
 
 	}

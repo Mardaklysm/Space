@@ -6,8 +6,9 @@ import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
-import at.hakkon.space.datamodel.room.EmptyRoom;
+import at.hakkon.space.datamodel.room.MachanicRoom;
 import at.hakkon.space.datamodel.room.NavigationRoom;
+import at.hakkon.space.datamodel.room.ShieldRoom;
 import at.hakkon.space.datamodel.room.WeaponRoom;
 
 /**
@@ -84,31 +85,38 @@ public class EnemyShipA extends AbsShip {
 	private static ArrayList<AbsRoom> getInitRooms(int level) {
 		ArrayList<AbsRoom> rooms = new ArrayList<>();
 
-
-		rooms.add(new NavigationRoom("Navigation I"));
-		rooms.add(new EmptyRoom("Hall I"));
-		rooms.add(new WeaponRoom("Armory I"));
-
-		if (level > 2) {
-			rooms.add(new EmptyRoom("Hall II"));
+		if (true){
+			rooms.add(new NavigationRoom(3 + level/2));
+			rooms.add(new WeaponRoom(2 + level/2));
+			rooms.add(new MachanicRoom(1 + level/2));
+			rooms.add(new ShieldRoom(1 + level/2));
 		}
 
-		if (level > 4) {
-			rooms.add(new EmptyRoom("Hall III"));
+		/**
+		if (level <= 2) {
+			rooms.add(new NavigationRoom(1));
+			rooms.add(new WeaponRoom(1));
+		}else if (level <= 4) {
+			rooms.add(new NavigationRoom(2));
+			rooms.add(new WeaponRoom(2));
+			rooms.add(new MachanicRoom(1));
+		}else if (level <= 6) {
+			rooms.add(new NavigationRoom(2));
+			rooms.add(new WeaponRoom(3));
+			rooms.add(new MachanicRoom(2));
+			rooms.add(new ShieldRoom(2));
+		}else if (level <= 8) {
+			rooms.add(new NavigationRoom(3));
+			rooms.add(new WeaponRoom(5));
+			rooms.add(new MachanicRoom(3));
+			rooms.add(new ShieldRoom(3));
+		}else {
+			rooms.add(new NavigationRoom(3 + level/2));
+			rooms.add(new WeaponRoom(2 + level/2));
+			rooms.add(new MachanicRoom(1 + level/2));
+			rooms.add(new ShieldRoom(1 + level/2));
 		}
-
-		if (level > 6) {
-			rooms.add(new EmptyRoom("Hall IV"));
-		}
-
-		if (level > 8) {
-			rooms.add(new EmptyRoom("Hall V"));
-		}
-
-		if (level > 10) {
-			rooms.add(new EmptyRoom("Hall VI"));
-		}
-
+**/
 		return rooms;
 	}
 

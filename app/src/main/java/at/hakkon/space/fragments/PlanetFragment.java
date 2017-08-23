@@ -70,4 +70,12 @@ public class PlanetFragment extends Fragment implements IShipListener, IPlanetVi
 			planet = galaxy.getFirstPlanet();
 		}
 	}
+
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		ApplicationClass.getInstance().removeShipListener(this);
+		ApplicationClass.getInstance().removePlanetVisitListener(this);
+
+	}
 }

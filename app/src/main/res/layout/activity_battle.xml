@@ -54,9 +54,8 @@
 
         <LinearLayout
             android:id="@+id/llBattlePlayer"
-            android:layout_width="200dp"
+            android:layout_width="164dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
             android:background="@color/colorLightGrey1"
             android:orientation="vertical">
             <TextView
@@ -92,16 +91,17 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/llSpacer"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
             android:background="@color/colorDarkGrey1"
-            android:orientation="horizontal">
+            android:orientation="vertical">
         </LinearLayout>
 
         <ScrollView
             android:id="@+id/scrollView3"
-            android:layout_width="150dp"
+            android:layout_width="130dp"
             android:layout_height="fill_parent"
             android:background="@color/colorLightGrey1"
             android:fillViewport="true">

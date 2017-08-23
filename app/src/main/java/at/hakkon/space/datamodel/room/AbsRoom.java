@@ -8,24 +8,23 @@ import at.hakkon.space.datamodel.ship.AbsShip;
 
 public abstract class AbsRoom {
 
-	private String name;
-
 	private ArrayList<IInventoryItem> items = new ArrayList<>();
 
 	private ERoom room;
 
+	private int level = 1;
+
 	private int health = 4;
 
-
-	public AbsRoom(String name) {
-		this.name = name;
+	public AbsRoom(int level) {
+		this.level = level;
 	}
 
-	public boolean istDestroyed(){
+	public boolean istDestroyed() {
 		return health == 0;
 	}
 
-	public void updateHealth(int value){
+	public void updateHealth(int value) {
 		health += value;
 		health = Math.max(0, health);
 	}
@@ -44,12 +43,12 @@ public abstract class AbsRoom {
 	}
 
 	public String getName() {
-		return name;
+		return getRoomType().name() + " Lv." + level;
 	}
 
 
 	public String getInformationDump() {
-		return null;
+		return getName();
 	}
 
 	public int getHealth() {
@@ -57,11 +56,19 @@ public abstract class AbsRoom {
 	}
 
 	public int attackWithWeapon(AbsShip attacker, AbsShip defender, Weapon weapon) {
-		//TODO: Implement sth cool like evasion or shields
+		if (attacker.hits(defender)) {
+			int weaponDamage = weapon.getDamage(attacker.getWeaponRoomLevel());
+			defender.updateHealth(-weaponDamage);
+			//health -= weaponDamage;
+			return weaponDamage;
+		} else {
+			return -1;
+		}
+	}
 
-		int weaponDamage = weapon.getDamage();
-		defender.updateHealth(-weaponDamage);
-		health-=weapon.getDamage();
-		return weaponDamage;
+	public abstract float getEfficency();
+
+	public int getLevel() {
+		return level;
 	}
 }

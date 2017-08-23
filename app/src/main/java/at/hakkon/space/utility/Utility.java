@@ -46,7 +46,7 @@ public class Utility {
 			}
 		};
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationClass.getInstance().getContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationClass.getInstance().getActiveContext());
 		builder.setMessage(text).setPositiveButton("Yes", dialogClickListener)
 				.setNegativeButton("No", dialogClickListener).show();
 

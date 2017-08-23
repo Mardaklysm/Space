@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
+import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 
@@ -75,7 +76,8 @@ public abstract class AbsEvent {
 	}
 
 	public PlayerShip getShip() {
-		return ship;
+		return ApplicationClass.getInstance().getShip();
+//		return ship;
 	}
 
 	public AbsPlanet getPlanet() {

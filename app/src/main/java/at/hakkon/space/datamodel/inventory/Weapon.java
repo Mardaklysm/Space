@@ -35,6 +35,10 @@ public class Weapon implements  IInventoryItem{
 		return damage;
 	}
 
+	public int getDamage(int modifier) {
+		return damage * modifier;
+	}
+
 	public int updateHalth(int health){
 		this.health+=health;
 		return this.health;
@@ -71,5 +75,15 @@ public class Weapon implements  IInventoryItem{
 
 	public int getEnergyCost() {
 		return energyCost;
+	}
+
+	private boolean isEquipped;
+
+	public void equip(boolean equip){
+		isEquipped = equip;
+	}
+
+	public boolean isEquipped(){
+		return isEquipped;
 	}
 }

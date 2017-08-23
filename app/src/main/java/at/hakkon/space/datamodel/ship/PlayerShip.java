@@ -10,8 +10,9 @@ import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
-import at.hakkon.space.datamodel.room.EmptyRoom;
+import at.hakkon.space.datamodel.room.MachanicRoom;
 import at.hakkon.space.datamodel.room.NavigationRoom;
+import at.hakkon.space.datamodel.room.ShieldRoom;
 import at.hakkon.space.datamodel.room.WeaponRoom;
 import at.hakkon.space.utility.Utility;
 
@@ -21,7 +22,7 @@ import at.hakkon.space.utility.Utility;
 
 public class PlayerShip extends AbsShip {
 
-	protected final static int START_HEALTH = 100;
+	protected final static int START_HEALTH = 1;
 
 	protected final static int START_FUEL = 50;
 	protected final static int START_MONEY = 250;
@@ -38,10 +39,17 @@ public class PlayerShip extends AbsShip {
 		this.money = START_MONEY;
 		this.fuel = START_FUEL;
 
-		inventory.add(Weapon.getLaser(1));
-		inventory.add(Weapon.getLaser(1));
-		inventory.add(Weapon.getRocket(1));
+		Weapon laser1 = Weapon.getLaser(1);
+		laser1.equip(true);
+		inventory.add(laser1);
 
+		Weapon laser2 = Weapon.getLaser(1);
+		laser2.equip(true);
+		inventory.add(laser2);
+
+		Weapon rocket1 = Weapon.getRocket(1);
+		rocket1.equip(true);
+		inventory.add(rocket1);
 	}
 
 	private static ArrayList<Person> getInitPersons() {
@@ -55,20 +63,37 @@ public class PlayerShip extends AbsShip {
 
 	private static ArrayList<AbsRoom> getInitRooms() {
 		ArrayList<AbsRoom> rooms = new ArrayList<>();
-		rooms.add(new NavigationRoom("Navigation I"));
-		rooms.add(new EmptyRoom("Hall I"));
-		rooms.add(new EmptyRoom("Hall I"));
-
-		WeaponRoom weaponRoom = new WeaponRoom("Armory");
-
-
-		rooms.add(weaponRoom);
+		rooms.add(new NavigationRoom(1));
+		rooms.add(new MachanicRoom(1));
+		rooms.add(new ShieldRoom(1));
+		rooms.add(new WeaponRoom(1));
 
 		return rooms;
 	}
 
 	@Override
 	public String getInformationDump() {
+		String retString = "";
+
+		retString += "Crew Members\n";
+
+		for (Person person : getPersons()) {
+			retString += person.getInformationDump();
+			retString += "\n\n";
+		}
+
+		retString += "Room Overview\n";
+
+		for (AbsRoom room : getRooms()) {
+			retString += room.getInformationDump();
+			retString += "\n";
+		}
+
+		return retString;
+	}
+
+
+	public String getInformationDump2() {
 		String retString = "";
 
 		retString += getName() + " (" + getMoney() + "€)\n";
@@ -169,7 +194,7 @@ public class PlayerShip extends AbsShip {
 	@Override
 	public boolean removeInventory(IInventoryItem item) {
 		boolean result = super.removeInventory(item);
-		if (result){
+		if (result) {
 			ApplicationClass.getInstance().requestNotifyShipChangedEvent();
 		}
 
@@ -189,11 +214,11 @@ public class PlayerShip extends AbsShip {
 	@Override
 	public void updateHealth(int value) {
 		super.updateHealth(value);
+
 		if (getHealth() < 0) {
 			ApplicationClass.getInstance().gameOver(EGameOverReason.OutOfHealth);
-			Utility.getInstance().showTextDialog(ApplicationClass.getInstance().getBaseContext(), "You are dead!");
 		}
-		ApplicationClass.getInstance().requestNotifyShipChangedEvent();
 	}
+
 
 }

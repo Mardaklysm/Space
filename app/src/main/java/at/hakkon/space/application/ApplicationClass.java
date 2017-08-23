@@ -1,6 +1,7 @@
 package at.hakkon.space.application;
 
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -52,20 +53,24 @@ public class ApplicationClass extends android.app.Application {
 		isInitialized = true;
 
 		notifyShipListeners(ship);
+		notifyGalaxyListeners(galaxy);
+		notifyPlanetVisitListener(ship.getCurrentPlanet());
+
 	}
 
 	public void restartGame(){
-		galaxy = new Galaxy("Starting Galaxy", 1);
+		isInitialized = false;
 
-		ship = new PlayerShip("Weinreise", 1);
-		ship.setStartPlanet(galaxy.getFirstPlanet());
-		ship.setCurrentPlanet(galaxy.getFirstPlanet());
+		Intent intent = new Intent(activeContext, MainActivity.class);
 
-		isInitialized = true;
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-		notifyShipListeners(ship);
-		notifyGalaxyListeners(galaxy);
-		notifyPlanetVisitListener(ship.getCurrentPlanet());
+		activeContext.startActivity(intent);
+
+		//notifyShipListeners(ship);
+		//notifyGalaxyListeners(galaxy);
+		//notifyPlanetVisitListener(ship.getCurrentPlanet());
 	}
 
 	public PlayerShip getShip() {
@@ -83,6 +88,10 @@ public class ApplicationClass extends android.app.Application {
 
 		planet.getEvent().execute(getContext());
 		return moved;
+	}
+
+	public Context getContext(){
+		return MainActivity.getInstance();
 	}
 
 	public void addShipListener(IShipListener listener) {
@@ -169,15 +178,12 @@ public class ApplicationClass extends android.app.Application {
 	}
 
 	public void gameOver(EGameOverReason gameOverReason) {
-		Utility.getInstance().showTextDialog(getContext(),"Game Over: " + gameOverReason.name());
+		Utility.getInstance().showTextDialog(activeContext, "Game Over: " + gameOverReason.name());
 		RestartGameEvent event = new RestartGameEvent(1, gameOverReason);
-		event.execute(getContext());
+		event.execute(activeContext);
 
 	}
 
-	public Context getContext(){
-		return MainActivity.getInstance();
-	}
 
 	public void moveToNewGalaxy() {
 		int galaxyLevel = galaxy.getLevel() +1;
@@ -193,6 +199,16 @@ public class ApplicationClass extends android.app.Application {
 	public void updateFuel(int fuel) {
 		ship.updateFuel(fuel);
 		notifyShipListeners(ship);
+	}
+
+	private Context activeContext;
+
+	public void updateActiveContext(Context context){
+		activeContext = context;
+	}
+
+	public Context getActiveContext(){
+		return activeContext;
 	}
 
 }

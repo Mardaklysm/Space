@@ -17,8 +17,10 @@ import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.inventory.Weapon;
+import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.event.RestartGameEvent;
+import at.hakkon.space.event.UpgradeEvent;
 import at.hakkon.space.listener.IShipListener;
 
 /**
@@ -55,7 +57,37 @@ public class ShipFragment extends Fragment implements IShipListener {
 	public void shipUpdated(PlayerShip ship) {
 		((TextView) view.findViewById(R.id.tvShipInfo)).setText(ship.getInformationDump());
 
-		//Refresh Weapons
+		refreshWeapons(ship);
+		refreshRooms(ship);
+
+	}
+
+	private void refreshRooms(PlayerShip ship) {
+		LinearLayout llShipRooms = (LinearLayout) view.findViewById(R.id.llShipRooms);
+
+		llShipRooms.removeAllViews();
+
+		ArrayList<AbsRoom> rooms = ship.getRooms();
+
+		for (final AbsRoom room: rooms){
+			final Button button = new Button(getActivity());
+			button.setText(room.getName() + " (" + room.getEffectiveEfficency() + ")");
+
+			button.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					UpgradeEvent event = new UpgradeEvent(room, 1);
+					event.execute(getActivity());
+				}
+			});
+
+			llShipRooms.addView(button);
+		}
+
+
+	}
+
+	private void refreshWeapons(PlayerShip ship) {
 		LinearLayout llShipWeapons = (LinearLayout) view.findViewById(R.id.llShipWeapons);
 
 		llShipWeapons.removeAllViews();

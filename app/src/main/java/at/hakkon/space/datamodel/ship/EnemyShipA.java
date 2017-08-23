@@ -1,6 +1,7 @@
 package at.hakkon.space.datamodel.ship;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.Weapon;
@@ -29,22 +30,26 @@ public class EnemyShipA extends AbsShip {
 		if (level == 1) {
 			addInventory(Weapon.getLaser(1));
 		} else if (level >= 2) {
-			addInventory(Weapon.getLaser(1));
-			addInventory(Weapon.getRocket(1));
+			addInventory(Weapon.getLaser(2));
+			addInventory(Weapon.getRocket(2));
 		} else if (level >= 4) {
-			addInventory(Weapon.getLaser(1));
-			addInventory(Weapon.getLaser(1));
-			addInventory(Weapon.getRocket(1));
+			addInventory(Weapon.getLaser(2));
+			addInventory(Weapon.getLaser(2));
+			addInventory(Weapon.getRocket(2));
 		} else if (level >= 6) {
+			addInventory(Weapon.getLaser(4));
 			addInventory(Weapon.getLaser(2));
-			addInventory(Weapon.getRocket(1));
+			addInventory(Weapon.getRocket(4));
 		} else if (level >= 8) {
-			addInventory(Weapon.getLaser(3));
-			addInventory(Weapon.getRocket(1));
+			addInventory(Weapon.getLaser(4));
+			addInventory(Weapon.getLaser(4));
+			addInventory(Weapon.getLaser(4));
+			addInventory(Weapon.getRocket(6));
 		} else if (level >= 10) {
-			addInventory(Weapon.getLaser(2));
-			addInventory(Weapon.getLaser(2));
-			addInventory(Weapon.getRocket(3));
+			addInventory(Weapon.getLaser(6));
+			addInventory(Weapon.getLaser(6));
+			addInventory(Weapon.getRocket(7));
+			addInventory(Weapon.getRocket(8 ));
 		}
 
 	}
@@ -85,14 +90,16 @@ public class EnemyShipA extends AbsShip {
 	private static ArrayList<AbsRoom> getInitRooms(int level) {
 		ArrayList<AbsRoom> rooms = new ArrayList<>();
 
+		/**
 		if (true){
 			rooms.add(new NavigationRoom(3 + level/2));
 			rooms.add(new WeaponRoom(2 + level/2));
 			rooms.add(new MachanicRoom(1 + level/2));
 			rooms.add(new ShieldRoom(1 + level/2));
 		}
+		 **/
 
-		/**
+
 		if (level <= 2) {
 			rooms.add(new NavigationRoom(1));
 			rooms.add(new WeaponRoom(1));
@@ -116,13 +123,17 @@ public class EnemyShipA extends AbsShip {
 			rooms.add(new MachanicRoom(1 + level/2));
 			rooms.add(new ShieldRoom(1 + level/2));
 		}
-**/
+
 		return rooms;
 	}
 
 	@Override
 	public Loot getLoot() {
-		return new Loot(100 * getLevel(), 3 * getLevel(), getInventory());
+		Random random = new Random();
+		int randCash = (random.nextInt(150 - 100)+100) * getLevel();
+		int randFuel = random.nextInt(4) + getLevel();
+
+		return new Loot(randCash, randFuel, getInventory());
 	}
 
 

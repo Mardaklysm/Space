@@ -223,6 +223,14 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			return;
 		}
 
+		//Regenerate Rooms
+		for (AbsRoom room: ApplicationClass.getInstance().getShip().getRooms()){
+			room.regenerate();
+		}
+		for (AbsRoom room: enemyShip.getRooms()){
+			room.regenerate();
+		}
+
 		//AddEnergy
 		energyPlayer += appClass.getShip().getInitialEnergy();
 		energyEnemy += enemyShip.getInitialEnergy();
@@ -324,6 +332,10 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		updateTitle();
 		energyChanged();
+
+		for (RoomView roomView: roomViews){
+			roomView.update();
+		}
 	}
 
 	private void energyChanged() {
@@ -418,7 +430,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		selectedWeapon.setTarget(target);
 
 		mapWeaponButtons.get(weapon).getBackground().setColorFilter(target == null ? colorSelected : colorWeaponLocked, PorterDuff.Mode.DARKEN);
-		mapWeaponButtons.get(weapon).setText(weapon.getName() + "(" + weapon.getEnergyCost() + ")" + (weapon.getTarget() != null ? "\n(" + weapon.getTarget().getName() + ")" : "\n "));
+		mapWeaponButtons.get(weapon).setText(weapon.getBattleLabel(ApplicationClass.getInstance().getShip().getWeaponRoom().getEffectiveEfficency()));
 
 
 		refreshUI();
@@ -474,34 +486,26 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		if (weapons.size() > 0) {
 			Weapon weapon = playerShip.getEquippedWeapons().get(0);
-			((Button) findViewById(R.id.bBattleWeapon1)).setText(weapon.getName() + "(" + weapon.getEnergyCost() + ")" + (weapon.getTarget() != null ? "\n(" + weapon.getTarget().getName() + ")" : "\n "));
+			((Button) findViewById(R.id.bBattleWeapon1)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEfficency()));
 			mapWeaponButtons.put(weapon, ((Button) findViewById(R.id.bBattleWeapon1)));
-		} else {
-			((Button) findViewById(R.id.bBattleWeapon1)).setText("-UNUSED SLOT-");
 		}
 
 		if (weapons.size() > 1) {
 			Weapon weapon = playerShip.getEquippedWeapons().get(1);
-			((Button) findViewById(R.id.bBattleWeapon2)).setText(weapon.getName() + "(" + weapon.getEnergyCost() + ")" + (weapon.getTarget() != null ? "\n(" + weapon.getTarget().getName() + ")" : "\n "));
+			((Button) findViewById(R.id.bBattleWeapon2)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEfficency()));
 			mapWeaponButtons.put(weapon, ((Button) findViewById(R.id.bBattleWeapon2)));
-		} else {
-			((Button) findViewById(R.id.bBattleWeapon2)).setText("-UNUSED SLOT-");
 		}
 
 		if (weapons.size() > 2) {
 			Weapon weapon = playerShip.getEquippedWeapons().get(2);
-			((Button) findViewById(R.id.bBattleWeapon3)).setText(weapon.getName() + "(" + weapon.getEnergyCost() + ")" + (weapon.getTarget() != null ? "\n(" + weapon.getTarget().getName() + ")" : "\n "));
+			((Button) findViewById(R.id.bBattleWeapon3)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEfficency()));
 			mapWeaponButtons.put(weapon, ((Button) findViewById(R.id.bBattleWeapon3)));
-		} else {
-			((Button) findViewById(R.id.bBattleWeapon3)).setText("-UNUSED SLOT-");
 		}
 
 		if (weapons.size() > 3) {
 			Weapon weapon = playerShip.getEquippedWeapons().get(3);
-			((Button) findViewById(R.id.bBattleWeapon4)).setText(weapon.getName() + "(" + weapon.getEnergyCost() + ")" + (weapon.getTarget() != null ? "\n(" + weapon.getTarget().getName() + ")" : "\n "));
+			((Button) findViewById(R.id.bBattleWeapon4)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEfficency()));
 			mapWeaponButtons.put(weapon, ((Button) findViewById(R.id.bBattleWeapon4)));
-		} else {
-			((Button) findViewById(R.id.bBattleWeapon4)).setText("-UNUSED SLOT-");
 		}
 	}
 
@@ -510,6 +514,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	public void shipUpdated(PlayerShip ship) {
 		updateHeader(ship);
 		updateWeaponButtons(ship);
+
 	}
 
 	private void updateHeader(PlayerShip ship) {
@@ -523,6 +528,13 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		super.onDestroy();
 
 		ApplicationClass.getInstance().removeShipListener(this);
+	}
+
+	@Override
+	public void onResume(){
+		super.onResume();
+
+		ApplicationClass.getInstance().updateActiveContext(this);
 	}
 
 	@Override

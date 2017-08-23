@@ -22,10 +22,10 @@ import at.hakkon.space.utility.Utility;
 
 public class PlayerShip extends AbsShip {
 
-	protected final static int START_HEALTH = 1;
+	protected final static int START_HEALTH = 100;
 
-	protected final static int START_FUEL = 50;
-	protected final static int START_MONEY = 250;
+	protected final static int START_FUEL = 30;
+	protected final static int START_MONEY = 500;
 
 
 	private AbsPlanet currentPlanet;
@@ -80,13 +80,6 @@ public class PlayerShip extends AbsShip {
 		for (Person person : getPersons()) {
 			retString += person.getInformationDump();
 			retString += "\n\n";
-		}
-
-		retString += "Room Overview\n";
-
-		for (AbsRoom room : getRooms()) {
-			retString += room.getInformationDump();
-			retString += "\n";
 		}
 
 		return retString;

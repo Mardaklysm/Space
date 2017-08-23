@@ -14,19 +14,23 @@ public abstract class AbsRoom {
 
 	private int level = 1;
 
-	private int health = 4;
+	private int maxHealth;
+	private int health;
+	private int healthRegeneration;
 
 	public AbsRoom(int level) {
 		this.level = level;
+		health = level *20;
+		maxHealth = health;
+		healthRegeneration = level;
 	}
 
 	public boolean istDestroyed() {
-		return health == 0;
+		return health <= 0;
 	}
 
-	public void updateHealth(int value) {
-		health += value;
-		health = Math.max(0, health);
+	public void regenerate(){
+		health = Math.min(health + healthRegeneration, maxHealth);
 	}
 
 
@@ -57,18 +61,42 @@ public abstract class AbsRoom {
 
 	public int attackWithWeapon(AbsShip attacker, AbsShip defender, Weapon weapon) {
 		if (attacker.hits(defender)) {
-			int weaponDamage = weapon.getDamage(attacker.getWeaponRoomLevel());
+			int weaponDamage = Math.round (weapon.getDamage() * attacker.getWeaponRoom().getEffectiveEfficency());
 			defender.updateHealth(-weaponDamage);
-			//health -= weaponDamage;
+			health = Math.max(health -weaponDamage,0);
 			return weaponDamage;
 		} else {
 			return -1;
 		}
 	}
 
-	public abstract float getEfficency();
+	protected abstract float getEfficency();
+
+	public float getEffectiveEfficency(){
+
+		float efficiency = getEfficency();
+
+		float p1 = maxHealth /100f;
+		float pOkay = health/p1;
+		//float pOkay = 1- pDamaged;
+
+
+
+		return efficiency * pOkay/100;
+	}
+
+
+
 
 	public int getLevel() {
 		return level;
+	}
+
+	public int getUpgradeCosts() {
+		return level * 100;
+	}
+
+	public void upgrade() {
+
 	}
 }

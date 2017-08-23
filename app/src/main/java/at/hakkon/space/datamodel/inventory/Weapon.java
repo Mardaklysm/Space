@@ -35,8 +35,8 @@ public class Weapon implements  IInventoryItem{
 		return damage;
 	}
 
-	public int getDamage(int modifier) {
-		return damage * modifier;
+	public int getDamage(float modifier) {
+		return Math.round(damage * modifier);
 	}
 
 	public int updateHalth(int health){
@@ -85,5 +85,15 @@ public class Weapon implements  IInventoryItem{
 
 	public boolean isEquipped(){
 		return isEquipped;
+	}
+
+	public String getBattleLabel(float damageModifier){
+		String retString = "";
+
+		//Costs,Name, Danage
+		retString += "(" + getEnergyCost() + ") " + getName() + " " + getDamage(damageModifier) + "Dmg";
+		retString += (getTarget() != null ? "\n(" + getTarget().getName() + ")" : "\n ");
+
+		return retString;
 	}
 }

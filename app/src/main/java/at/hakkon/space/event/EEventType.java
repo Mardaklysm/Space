@@ -5,5 +5,5 @@ package at.hakkon.space.event;
  */
 
 public enum EEventType {
-	Nothing, Shop, Battle, ResourceBonus, Question, TravelQuestion,
+	Nothing, Shop, Battle, ResourceBonus, Question, TravelQuestion, Upgrade,
 }

@@ -175,7 +175,7 @@ public abstract class AbsShip {
 	}
 
 	public boolean hits(AbsShip defender) {
-		float evadeChanche = defender.getNavigationRoom().getEfficency();
+		float evadeChanche = defender.getNavigationRoom().getEffectiveEfficency();
 
 		Random random = new Random();
 		float hitValue =  random.nextFloat();

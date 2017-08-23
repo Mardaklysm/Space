@@ -75,6 +75,13 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 
 	}
 
+	@Override
+	public void onResume(){
+		super.onResume();
+
+		ApplicationClass.getInstance().updateActiveContext(this);
+	}
+
 	public static MainActivity getInstance() {
 		return instance;
 	}

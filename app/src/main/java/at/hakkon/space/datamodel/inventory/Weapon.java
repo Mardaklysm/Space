@@ -11,14 +11,16 @@ public class Weapon implements  IInventoryItem{
 	private String name;
 	private int health;
 	private int damage;
+	private int level;
 
 	private int energyCost;
 
-	public Weapon(String name, int health, int damage, int energyCost){
+	public Weapon(int level, String name, int health, int damage, int energyCost){
 		this.name = name;
 		this.health = health;
 		this.damage = damage;
 		this.energyCost = energyCost;
+		this.level = level;
 	}
 
 
@@ -40,7 +42,6 @@ public class Weapon implements  IInventoryItem{
 	}
 
 	public int updateHalth(int health){
-		this.health+=health;
 		return this.health;
 	}
 
@@ -52,11 +53,11 @@ public class Weapon implements  IInventoryItem{
 	}
 
 	public static Weapon getLaser(int level){
-		return new Weapon("Laser Lv." + level, 5*level, 2*level, 2*level);
+		return new Weapon(level, "Laser Lv." + level, 5*level, 2*level, 2*level);
 	}
 
 	public static Weapon getRocket(int level){
-		return new Weapon("Rocket Lv." + level, 10*level, 4*level, 3*level);
+		return new Weapon(level, "Rocket Lv." + level, 10*level, 4*level, 3*level);
 	}
 
 	private AbsRoom target;
@@ -83,8 +84,14 @@ public class Weapon implements  IInventoryItem{
 		isEquipped = equip;
 	}
 
+	@Override
 	public boolean isEquipped(){
 		return isEquipped;
+	}
+
+	@Override
+	public int getCashValue() {
+		return level * 50;
 	}
 
 	public String getBattleLabel(float damageModifier){

@@ -3,11 +3,13 @@ package at.hakkon.space.datamodel.ship;
 import java.util.ArrayList;
 import java.util.Random;
 
+import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
+import at.hakkon.space.datamodel.room.MachanicRoom;
 import at.hakkon.space.datamodel.room.NavigationRoom;
 import at.hakkon.space.datamodel.room.WeaponRoom;
 
@@ -105,7 +107,19 @@ public abstract class AbsShip {
 
 
 	public void updateHealth(int value) {
-		health = Math.min(health + value, maxHealth);
+		int newHealth = health + value;
+
+		if (newHealth <0){
+			newHealth = 0;
+		}
+		if (newHealth > maxHealth){
+			newHealth = maxHealth;
+		}
+		health = newHealth;
+
+		if (this instanceof PlayerShip){
+			ApplicationClass.getInstance().requestNotifyShipChangedEvent();
+		}
 	}
 
 	public void addPerson(Person person) {
@@ -160,6 +174,15 @@ public abstract class AbsShip {
 		for (AbsRoom room : getRooms()) {
 			if (room instanceof WeaponRoom) {
 				return (WeaponRoom) room;
+			}
+		}
+		return null;
+	}
+
+	public MachanicRoom getMechanicRoom() {
+		for (AbsRoom room : getRooms()) {
+			if (room instanceof MachanicRoom) {
+				return (MachanicRoom) room;
 			}
 		}
 		return null;

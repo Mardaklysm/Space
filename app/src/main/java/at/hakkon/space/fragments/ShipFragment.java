@@ -16,10 +16,12 @@ import java.util.ArrayList;
 import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.EGameOverReason;
+import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.event.RestartGameEvent;
+import at.hakkon.space.event.SellEvent;
 import at.hakkon.space.event.UpgradeEvent;
 import at.hakkon.space.listener.IShipListener;
 
@@ -57,8 +59,9 @@ public class ShipFragment extends Fragment implements IShipListener {
 	public void shipUpdated(PlayerShip ship) {
 		((TextView) view.findViewById(R.id.tvShipInfo)).setText(ship.getInformationDump());
 
-		refreshWeapons(ship);
 		refreshRooms(ship);
+		refreshWeapons(ship);
+		refreshInventory(ship);
 
 	}
 
@@ -69,7 +72,7 @@ public class ShipFragment extends Fragment implements IShipListener {
 
 		ArrayList<AbsRoom> rooms = ship.getRooms();
 
-		for (final AbsRoom room: rooms){
+		for (final AbsRoom room : rooms) {
 			final Button button = new Button(getActivity());
 			button.setText(room.getName() + " (" + room.getEffectiveEfficency() + ")");
 
@@ -109,6 +112,31 @@ public class ShipFragment extends Fragment implements IShipListener {
 		}
 	}
 
+	private void refreshInventory(final PlayerShip ship) {
+		LinearLayout llShipInventory = (LinearLayout) view.findViewById(R.id.llShipInventory);
+
+		llShipInventory.removeAllViews();
+
+
+		ArrayList<IInventoryItem> inventory = ship.getInventory();
+
+		for (final IInventoryItem item : inventory) {
+			if (!item.isEquipped()) {
+				final Button button = new Button(getActivity());
+				llShipInventory.addView(button);
+				button.setText(item.getName() + " (" + item.getCashValue() + "$)");
+
+				button.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						SellEvent sellEvent = new SellEvent(item, 1);
+						sellEvent.execute(getActivity());
+					}
+				});
+			}
+		}
+	}
+
 	private int colorSelected = Color.parseColor("#42bc31");
 	private final static int MAX_WEAPONS_EQUIP_COUNT = 4;
 
@@ -128,20 +156,21 @@ public class ShipFragment extends Fragment implements IShipListener {
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (weapon.isEquipped()){
+				if (weapon.isEquipped()) {
 					button.getBackground().setColorFilter(null);
-				}else if ( ship.getEquippedWeapons().size() < MAX_WEAPONS_EQUIP_COUNT){
+				} else if (ship.getEquippedWeapons().size() < MAX_WEAPONS_EQUIP_COUNT) {
 					button.getBackground().setColorFilter(colorSelected, PorterDuff.Mode.DARKEN);
 				}
 
 				weapon.equip(!weapon.isEquipped());
+				refreshInventory(ship);
 			}
 		});
 
 	}
 
 	@Override
-	public void onDestroy(){
+	public void onDestroy() {
 		super.onDestroy();
 		ApplicationClass.getInstance().removeShipListener(this);
 	}

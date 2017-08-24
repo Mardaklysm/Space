@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
 
+import java.math.BigDecimal;
+
 import at.hakkon.space.R;
 import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.ship.AbsShip;
@@ -37,7 +39,7 @@ public class RoomView extends android.support.v7.widget.AppCompatButton {
 	}
 
 	public void update() {
-		String text = room.getName() + "\n(" + room.getEffectiveEfficency() + ")";
+		String text = room.getName() + "\n(" + roundTwoDecimals(room.getEffectiveEfficency()) + ")";
 		this.setText(text);
 
 	}
@@ -45,6 +47,13 @@ public class RoomView extends android.support.v7.widget.AppCompatButton {
 
 	public AbsShip getShip() {
 		return ship;
+	}
+
+	double roundTwoDecimals(double d) {
+
+		BigDecimal a = new BigDecimal(d);
+		BigDecimal roundOff = a.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		return roundOff.doubleValue();
 	}
 
 

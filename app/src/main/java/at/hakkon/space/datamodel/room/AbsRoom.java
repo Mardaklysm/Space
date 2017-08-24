@@ -2,6 +2,7 @@ package at.hakkon.space.datamodel.room;
 
 import java.util.ArrayList;
 
+import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.ship.AbsShip;
@@ -20,7 +21,7 @@ public abstract class AbsRoom {
 
 	public AbsRoom(int level) {
 		this.level = level;
-		health = level *20;
+		health = level * 20;
 		maxHealth = health;
 		healthRegeneration = level;
 	}
@@ -29,7 +30,7 @@ public abstract class AbsRoom {
 		return health <= 0;
 	}
 
-	public void regenerate(){
+	public void regenerate() {
 		health = Math.min(health + healthRegeneration, maxHealth);
 	}
 
@@ -59,33 +60,36 @@ public abstract class AbsRoom {
 		return health;
 	}
 
-	public int attackWithWeapon(AbsShip attacker, AbsShip defender, Weapon weapon) {
+	public AttackResult attackWithWeapon(AbsShip attacker, AbsShip defender, Weapon weapon) {
 		if (attacker.hits(defender)) {
-			int weaponDamage = Math.round (weapon.getDamage() * attacker.getWeaponRoom().getEffectiveEfficency());
-			defender.updateHealth(-weaponDamage);
-			health = Math.max(health -weaponDamage,0);
-			return weaponDamage;
+			int weaponDamage = defender.getWeaponRoom() == null ? 0 : Math.round(weapon.getDamage() * attacker.getWeaponRoom().getEffectiveEfficency());
+			int damageReduction = defender.getMechanicRoom() == null ? 0 : (int) Math.floor(defender.getMechanicRoom().getEffectiveEfficency());
+
+			int totalDamage = weaponDamage - damageReduction;
+
+			//Update ship health
+			defender.updateHealth(-totalDamage);
+
+			//Update Room health
+			health = Math.max(health -totalDamage,0);
+
+			return new AttackResult(true,Math.max(0,totalDamage));
 		} else {
-			return -1;
+			return new AttackResult(false,0);
 		}
 	}
 
 	protected abstract float getEfficency();
 
-	public float getEffectiveEfficency(){
+	public float getEffectiveEfficency() {
 
 		float efficiency = getEfficency();
 
-		float p1 = maxHealth /100f;
-		float pOkay = health/p1;
-		//float pOkay = 1- pDamaged;
+		float p1 = maxHealth / 100f;
+		float pOkay = health / p1;
 
-
-
-		return efficiency * pOkay/100;
+		return efficiency * pOkay / 100;
 	}
-
-
 
 
 	public int getLevel() {
@@ -97,6 +101,8 @@ public abstract class AbsRoom {
 	}
 
 	public void upgrade() {
-
+		ApplicationClass.getInstance().updateShipMoney(-getUpgradeCosts());
+		level++;
+		ApplicationClass.getInstance().requestNotifyShipChangedEvent();
 	}
 }

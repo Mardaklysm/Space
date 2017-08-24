@@ -17,7 +17,7 @@ public class MachanicRoom extends AbsRoom {
 
 	@Override
 	public float getEfficency() {
-		return getLevel()*3;
+		return getLevel() /2;
 	}
 
 }

@@ -101,27 +101,27 @@ public class EnemyShipA extends AbsShip {
 
 
 		if (level <= 2) {
-			rooms.add(new NavigationRoom(1));
+			rooms.add(new NavigationRoom(2));
 			rooms.add(new WeaponRoom(1));
 		}else if (level <= 4) {
-			rooms.add(new NavigationRoom(2));
-			rooms.add(new WeaponRoom(2));
-			rooms.add(new MachanicRoom(1));
-		}else if (level <= 6) {
-			rooms.add(new NavigationRoom(2));
+			rooms.add(new NavigationRoom(3));
 			rooms.add(new WeaponRoom(3));
 			rooms.add(new MachanicRoom(2));
+		}else if (level <= 6) {
+			rooms.add(new NavigationRoom(2));
+			rooms.add(new WeaponRoom(6));
+			rooms.add(new MachanicRoom(4));
 			rooms.add(new ShieldRoom(2));
 		}else if (level <= 8) {
 			rooms.add(new NavigationRoom(3));
-			rooms.add(new WeaponRoom(5));
-			rooms.add(new MachanicRoom(3));
+			rooms.add(new WeaponRoom(8));
+			rooms.add(new MachanicRoom(6));
 			rooms.add(new ShieldRoom(3));
 		}else {
-			rooms.add(new NavigationRoom(3 + level/2));
-			rooms.add(new WeaponRoom(2 + level/2));
-			rooms.add(new MachanicRoom(1 + level/2));
-			rooms.add(new ShieldRoom(1 + level/2));
+			rooms.add(new NavigationRoom(6 + level/2));
+			rooms.add(new WeaponRoom(6 + level/2));
+			rooms.add(new MachanicRoom(6 + level/2));
+			rooms.add(new ShieldRoom(6 + level/2));
 		}
 
 		return rooms;

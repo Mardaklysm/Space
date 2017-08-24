@@ -10,6 +10,7 @@ import at.hakkon.space.activity.MainActivity;
 import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
+import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.event.RestartGameEvent;
@@ -211,4 +212,9 @@ public class ApplicationClass extends android.app.Application {
 		return activeContext;
 	}
 
+	public void sellItem(IInventoryItem item) {
+		updateShipMoney(item.getCashValue());
+		ship.getInventory().remove(item);
+		notifyShipListeners(ship);
+	}
 }

@@ -28,6 +28,7 @@ import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.room.AbsRoom;
+import at.hakkon.space.datamodel.room.AttackResult;
 import at.hakkon.space.datamodel.ship.AbsShip;
 import at.hakkon.space.datamodel.ship.EShipType;
 import at.hakkon.space.datamodel.ship.EnemyShipA;
@@ -167,9 +168,10 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		//Fire weapons for player AT the enemy
 		for (Map.Entry<Weapon, AbsRoom> entry : mapWeaponRooms.entrySet()) {
 			if (entry.getKey().hasTarget()) {
-				int damage = entry.getValue().attackWithWeapon(appClass.getShip(), enemyShip, entry.getKey());
+				AttackResult attackResult = entry.getValue().attackWithWeapon(appClass.getShip(), enemyShip, entry.getKey());
+				int damage = attackResult.getDamage();
 
-				if (damage > 0) {
+				if (attackResult.isHit()) {
 					String message = "Enemy (" + entry.getValue().getName() + ") took " + damage + " damage (" + entry.getKey().getName() + ")";
 					playActionAnimation(1, colorGreen, String.valueOf(damage));
 					addMessage(message);
@@ -194,10 +196,11 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 				int rndIdx = random.nextInt(rooms);
 				AbsRoom target = appClass.getShip().getRooms().get(rndIdx);
 
-				int damage = target.attackWithWeapon(enemyShip, appClass.getShip(), weapon);
+				AttackResult attackResult = target.attackWithWeapon(enemyShip, appClass.getShip(), weapon);
+				int damage = attackResult.getDamage();
 				energyEnemy -= weapon.getEnergyCost();
 
-				if (damage >= 0) {
+				if (attackResult.isHit()) {
 					String message = "You " + target.getName() + " took " + damage + " damage (" + weapon.getName() + ")";
 					playActionAnimation(2, colorRed, String.valueOf(damage));
 					addMessage(message);
@@ -224,10 +227,10 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		}
 
 		//Regenerate Rooms
-		for (AbsRoom room: ApplicationClass.getInstance().getShip().getRooms()){
+		for (AbsRoom room : ApplicationClass.getInstance().getShip().getRooms()) {
 			room.regenerate();
 		}
-		for (AbsRoom room: enemyShip.getRooms()){
+		for (AbsRoom room : enemyShip.getRooms()) {
 			room.regenerate();
 		}
 
@@ -248,10 +251,10 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	private void playActionAnimation(int position, int color, String text) {
 
 		//Left
-		if (position == 1){
+		if (position == 1) {
 
-		//Right
-		}else{
+			//Right
+		} else {
 
 		}
 
@@ -333,7 +336,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		updateTitle();
 		energyChanged();
 
-		for (RoomView roomView: roomViews){
+		for (RoomView roomView : roomViews) {
 			roomView.update();
 		}
 	}
@@ -531,7 +534,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	}
 
 	@Override
-	public void onResume(){
+	public void onResume() {
 		super.onResume();
 
 		ApplicationClass.getInstance().updateActiveContext(this);

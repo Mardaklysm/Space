@@ -84,6 +84,28 @@
             android:background="@color/colorDarkGrey1"
             android:orientation="horizontal">
         </LinearLayout>
+        <TextView
+            android:id="@+id/tvShipInventory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:text="Ship Inventory"
+            android:textColor="@color/fontColorWhiteGray"
+            android:textStyle="bold"/>
+        <LinearLayout
+            android:id="@+id/llShipInventory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llSpacer4"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorDarkGrey1"
+            android:orientation="horizontal">
+        </LinearLayout>
         <Button
             android:layout_marginTop="20dp"
             android:id="@+id/bRestartGame"

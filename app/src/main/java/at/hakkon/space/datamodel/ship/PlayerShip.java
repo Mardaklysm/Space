@@ -24,7 +24,7 @@ public class PlayerShip extends AbsShip {
 
 	protected final static int START_HEALTH = 100;
 
-	protected final static int START_FUEL = 30;
+	protected final static int START_FUEL = 300;
 	protected final static int START_MONEY = 500;
 
 
@@ -208,7 +208,7 @@ public class PlayerShip extends AbsShip {
 	public void updateHealth(int value) {
 		super.updateHealth(value);
 
-		if (getHealth() < 0) {
+		if (getHealth() <= 0) {
 			ApplicationClass.getInstance().gameOver(EGameOverReason.OutOfHealth);
 		}
 	}

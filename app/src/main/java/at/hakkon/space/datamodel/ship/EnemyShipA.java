@@ -9,7 +9,7 @@ import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.room.MachanicRoom;
 import at.hakkon.space.datamodel.room.NavigationRoom;
-import at.hakkon.space.datamodel.room.ShieldRoom;
+import at.hakkon.space.datamodel.room.GeneratorRoom;
 import at.hakkon.space.datamodel.room.WeaponRoom;
 
 /**
@@ -103,25 +103,27 @@ public class EnemyShipA extends AbsShip {
 		if (level <= 2) {
 			rooms.add(new NavigationRoom(2));
 			rooms.add(new WeaponRoom(1));
+			rooms.add(new GeneratorRoom(1));
 		}else if (level <= 4) {
 			rooms.add(new NavigationRoom(3));
 			rooms.add(new WeaponRoom(3));
 			rooms.add(new MachanicRoom(2));
+			rooms.add(new GeneratorRoom(3));
 		}else if (level <= 6) {
 			rooms.add(new NavigationRoom(2));
 			rooms.add(new WeaponRoom(6));
 			rooms.add(new MachanicRoom(4));
-			rooms.add(new ShieldRoom(2));
+			rooms.add(new GeneratorRoom(5));
 		}else if (level <= 8) {
 			rooms.add(new NavigationRoom(3));
 			rooms.add(new WeaponRoom(8));
 			rooms.add(new MachanicRoom(6));
-			rooms.add(new ShieldRoom(3));
+			rooms.add(new GeneratorRoom(7));
 		}else {
 			rooms.add(new NavigationRoom(6 + level/2));
 			rooms.add(new WeaponRoom(6 + level/2));
 			rooms.add(new MachanicRoom(6 + level/2));
-			rooms.add(new ShieldRoom(6 + level/2));
+			rooms.add(new GeneratorRoom(8 + level/2));
 		}
 
 		return rooms;

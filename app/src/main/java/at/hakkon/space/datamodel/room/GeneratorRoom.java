@@ -4,20 +4,20 @@ package at.hakkon.space.datamodel.room;
  * Created by Markus on 29.07.2017.
  */
 
-public class ShieldRoom extends AbsRoom {
+public class GeneratorRoom extends AbsRoom {
 
-	public ShieldRoom(int level) {
+	public GeneratorRoom(int level) {
 		super(level);
 	}
 
 	@Override
 	public ERoom getRoomType() {
-		return ERoom.Shield;
+		return ERoom.Generator;
 	}
 
 	@Override
 	public float getEfficency() {
-		return getLevel();
+		return 2 + getLevel() * 2;
 	}
 
 

@@ -12,7 +12,7 @@ import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.room.MachanicRoom;
 import at.hakkon.space.datamodel.room.NavigationRoom;
-import at.hakkon.space.datamodel.room.ShieldRoom;
+import at.hakkon.space.datamodel.room.GeneratorRoom;
 import at.hakkon.space.datamodel.room.WeaponRoom;
 import at.hakkon.space.utility.Utility;
 
@@ -65,7 +65,7 @@ public class PlayerShip extends AbsShip {
 		ArrayList<AbsRoom> rooms = new ArrayList<>();
 		rooms.add(new NavigationRoom(1));
 		rooms.add(new MachanicRoom(1));
-		rooms.add(new ShieldRoom(1));
+		rooms.add(new GeneratorRoom(1));
 		rooms.add(new WeaponRoom(1));
 
 		return rooms;

@@ -71,7 +71,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		ApplicationClass.getInstance().addShipListener(this);
 
-		this.energyPlayer = appClass.getShip().getInitialEnergy();
+		this.energyPlayer = (int) appClass.getShip().getGeneratorRoom().getEfficency();
 
 		//UI
 		updateHeader(ApplicationClass.getInstance().getShip());
@@ -235,8 +235,8 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		}
 
 		//AddEnergy
-		energyPlayer += appClass.getShip().getInitialEnergy();
-		energyEnemy += enemyShip.getInitialEnergy();
+		energyPlayer += appClass.getShip().getGeneratorRoom().getEfficency();
+		energyEnemy += enemyShip.getGeneratorRoom().getEfficency();
 
 		//Update message log
 		roundNr++;
@@ -408,7 +408,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			});
 		}
 
-		energyEnemy = enemyShip.getInitialEnergy();
+		energyEnemy = (int) enemyShip.getGeneratorRoom().getEfficency();
 	}
 
 	private void selectTarget(Weapon weapon, AbsRoom target) {

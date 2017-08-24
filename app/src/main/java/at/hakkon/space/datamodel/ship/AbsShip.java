@@ -12,6 +12,7 @@ import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.room.MachanicRoom;
 import at.hakkon.space.datamodel.room.NavigationRoom;
 import at.hakkon.space.datamodel.room.WeaponRoom;
+import at.hakkon.space.datamodel.room.GeneratorRoom;
 
 /**
  * Created by Markus on 29.07.2017.
@@ -151,10 +152,6 @@ public abstract class AbsShip {
 
 	public abstract EShipType getShipType();
 
-	public int getInitialEnergy() {
-		return 5 + level;
-	}
-
 	public abstract Loot getLoot();
 
 	public int getLevel() {
@@ -196,6 +193,17 @@ public abstract class AbsShip {
 		}
 		return null;
 	}
+
+
+	public GeneratorRoom getGeneratorRoom() {
+		for (AbsRoom room : getRooms()) {
+			if (room instanceof GeneratorRoom) {
+				return (GeneratorRoom) room;
+			}
+		}
+		return null;
+	}
+
 
 	public boolean hits(AbsShip defender) {
 		float evadeChanche = defender.getNavigationRoom().getEffectiveEfficency();

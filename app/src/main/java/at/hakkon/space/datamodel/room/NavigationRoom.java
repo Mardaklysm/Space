@@ -20,9 +20,19 @@ public class NavigationRoom extends AbsRoom {
 	 * Percentage for evading attacks
 	 */
 	public float getEfficency() {
-		float value = (float) getLevel() * 5f / 100f;
+		float value = getEfficency(getLevel());
+		return value;
+	}
+
+	private float getEfficency(int level) {
+		float value = (float) level * 5f / 100f;
 
 		value = Math.min(value, 0.9f);
 		return value;
+	}
+
+	@Override
+	public String getUpgradeInformationText() {
+		return "Evasion (" + getEfficency(getLevel()) + ") => " + getEfficency(getLevel()+1);
 	}
 }

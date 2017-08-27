@@ -17,7 +17,18 @@ public class WeaponRoom extends AbsRoom {
 
 	@Override
 	public float getEfficency() {
-		return 1 + getLevel() / 10f;
+		return getEfficency(getLevel());
+	}
+
+
+	private float getEfficency(int level) {
+		return 1 + level / 10f;
+	}
+
+
+	@Override
+	public String getUpgradeInformationText() {
+		return "Weapon Damage (" + getEfficency(getLevel()) + ") => " + getEfficency(getLevel()+1);
 	}
 
 }

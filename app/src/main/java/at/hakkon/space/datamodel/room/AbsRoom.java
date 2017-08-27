@@ -21,7 +21,7 @@ public abstract class AbsRoom {
 
 	public AbsRoom(int level) {
 		this.level = level;
-		health = level * 20;
+		health = level * 40;
 		maxHealth = health;
 		healthRegeneration = level;
 	}
@@ -103,6 +103,13 @@ public abstract class AbsRoom {
 	public void upgrade() {
 		ApplicationClass.getInstance().updateShipMoney(-getUpgradeCosts());
 		level++;
+
 		ApplicationClass.getInstance().requestNotifyShipChangedEvent();
+	}
+
+	public abstract String getUpgradeInformationText();
+
+	public int getMaxHealth(){
+		return maxHealth;
 	}
 }

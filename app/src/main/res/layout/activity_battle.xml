@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:background="@color/colorWhite"
                 android:layout_height="match_parent"
+                android:background="@color/colorWhite"
                 android:orientation="vertical">
 
     <include
@@ -11,19 +11,21 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
     />
+
+
     <TextView
         android:id="@+id/tvBattleTitle"
         android:layout_width="match_parent"
-        android:background="@color/colorLightGrey1"
-        android:textColor="@color/fontColorBlack"
-        android:layout_below="@+id/header"
         android:layout_height="wrap_content"
-        android:text="Battle Log Title"/>
+        android:layout_below="@+id/header"
+        android:background="@color/colorLightGrey1"
+        android:text="Battle Log Title"
+        android:textColor="@color/fontColorBlack"/>
     <ScrollView
         android:id="@+id/scBattle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout"
+        android:layout_above="@+id/llBottom"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tvBattleTitle"
         android:background="@color/colorBlack"
@@ -42,8 +44,9 @@
         </LinearLayout>
 
     </ScrollView>
+
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/llBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -68,28 +71,53 @@
                 android:id="@+id/bBattleWeapon1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Weapon 1"/>
+                android:text="Weapon 1" android:textSize="@dimen/font_size_weapon_button"/>
             <Button
                 android:id="@+id/bBattleWeapon2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Weapon 2"/>
+                android:text="Weapon 2" android:textSize="@dimen/font_size_weapon_button"/>
             <Button
                 android:id="@+id/bBattleWeapon3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Weapon 3"/>
+                android:text="Weapon 3" android:textSize="@dimen/font_size_weapon_button"/>
             <Button
                 android:id="@+id/bBattleWeapon4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Weapon 4"/>
+                android:text="Weapon 4" android:textSize="@dimen/font_size_weapon_button"/>
             <Button
                 android:id="@+id/bBattleNextRound"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:text="Confirm"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorDarkGrey1"
+                android:layout_weight="0" android:orientation="horizontal">
+                <Button
+                    android:id="@+id/bPShipNavigationRoom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:text="N"/>
+                <Button
+                    android:id="@+id/bPShipWeaponRoom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:text="W"/>
+                <Button
+                    android:id="@+id/bPShipMechanicRoom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:text="M"/>
+                <Button
+                    android:id="@+id/bPShipGeneratorRoom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:text="G"/>
+            </LinearLayout>
         </LinearLayout>
-
         <LinearLayout
             android:id="@+id/llSpacer"
             android:layout_width="fill_parent"

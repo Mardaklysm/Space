@@ -35,8 +35,8 @@ public class RepairShopEvent extends AbsEvent {
 
 		int multiplier=1;
 		while (multiplier < 8) {
-			int costs = multiplier * 20;
-			int value = multiplier * 5;
+			int costs = multiplier * 30;
+			int value = multiplier * 15;
 			if (costs <= getShip().getMoney()){
 				choices.add("Repair " + value + " points for " + costs + "$.");
 			}
@@ -53,8 +53,8 @@ public class RepairShopEvent extends AbsEvent {
 
 	@Override
 	public void callbackImpl(Context context, int hint) {
-		ApplicationClass.getInstance().updateShipMoney(-((hint + 1) * 20));
-		ApplicationClass.getInstance().updateShipHealth((hint + 1) * 5);
+		ApplicationClass.getInstance().updateShipMoney(-((hint + 1) * 30));
+		ApplicationClass.getInstance().updateShipHealth((hint + 1) * 15);
 
 		ApplicationClass.getInstance().updateScore(getLevel()* hint *10);
 	}

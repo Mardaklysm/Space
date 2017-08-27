@@ -31,7 +31,8 @@ public class UpgradeEvent extends AbsEvent {
 			String text = "";
 			//text += room.getName() + " Lv." + room.getLevel() + " (" + room.getEfficency() + ")";
 			text += room.getName() + " (" + room.getEffectiveEfficency() + ")\n\n";
-			text += "Upgrade this room for " + room.getUpgradeCosts() + "$ ?";
+			text += "Upgrade this room for " + room.getUpgradeCosts() + "$ ?\n\n";
+			text += room.getUpgradeInformationText();
 			Utility.getInstance().showYesNoDialog(context, text, this);
 		} else {
 			String text = "";

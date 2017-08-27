@@ -17,7 +17,12 @@ public class GeneratorRoom extends AbsRoom {
 
 	@Override
 	public float getEfficency() {
-		return 2 + getLevel() * 2;
+		return 4 + getLevel();
+	}
+
+	@Override
+	public String getUpgradeInformationText() {
+		return "Energy Regeneration (" + getEfficency() + ") => " + (getEfficency() +1);
 	}
 
 

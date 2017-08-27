@@ -31,7 +31,8 @@ public class EventGenerator {
 
 
 		if (battleEncounter) {
-			event = createBattleEvent(level, EShipType.Enemy_A);
+			int randShip = random.nextInt(2);
+ 			event = createBattleEvent(level, EShipType.values()[randShip]);
 		} else {
 			int randId = random.nextInt(MAX_EVENT_COUNT);
 			switch (randId) {

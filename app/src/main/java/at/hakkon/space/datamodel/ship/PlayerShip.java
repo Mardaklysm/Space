@@ -10,7 +10,7 @@ import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
-import at.hakkon.space.datamodel.room.MachanicRoom;
+import at.hakkon.space.datamodel.room.MechanicRoom;
 import at.hakkon.space.datamodel.room.NavigationRoom;
 import at.hakkon.space.datamodel.room.GeneratorRoom;
 import at.hakkon.space.datamodel.room.WeaponRoom;
@@ -50,6 +50,18 @@ public class PlayerShip extends AbsShip {
 		Weapon rocket1 = Weapon.getRocket(1);
 		rocket1.equip(true);
 		inventory.add(rocket1);
+
+		Weapon laser3 = Weapon.getLaser(1);
+		laser3.equip(false);
+		inventory.add(laser3);
+
+		Weapon laser4 = Weapon.getLaser(1);
+		laser4.equip(false);
+		inventory.add(laser4);
+
+		Weapon laser5 = Weapon.getLaser(1);
+		laser5.equip(false);
+		inventory.add(laser5);
 	}
 
 	private static ArrayList<Person> getInitPersons() {
@@ -64,7 +76,7 @@ public class PlayerShip extends AbsShip {
 	private static ArrayList<AbsRoom> getInitRooms() {
 		ArrayList<AbsRoom> rooms = new ArrayList<>();
 		rooms.add(new NavigationRoom(1));
-		rooms.add(new MachanicRoom(1));
+		rooms.add(new MechanicRoom(1));
 		rooms.add(new GeneratorRoom(1));
 		rooms.add(new WeaponRoom(1));
 
@@ -212,6 +224,8 @@ public class PlayerShip extends AbsShip {
 			ApplicationClass.getInstance().gameOver(EGameOverReason.OutOfHealth);
 		}
 	}
+
+
 
 
 }

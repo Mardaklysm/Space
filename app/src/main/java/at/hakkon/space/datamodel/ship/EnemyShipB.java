@@ -7,56 +7,45 @@ import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
+import at.hakkon.space.datamodel.room.GeneratorRoom;
 import at.hakkon.space.datamodel.room.MechanicRoom;
 import at.hakkon.space.datamodel.room.NavigationRoom;
-import at.hakkon.space.datamodel.room.GeneratorRoom;
 import at.hakkon.space.datamodel.room.WeaponRoom;
 
 /**
  * Created by Markus on 03.08.2017.
  */
 
-public class EnemyShipA extends AbsShip {
+public class EnemyShipB extends AbsShip {
 
-	protected final static int START_HEALTH = 50;
+	protected final static int START_HEALTH = 60;
 
 //	public EnemyShipA(String name, int level, int health, ArrayList<Person> persons, ArrayList<AbsRoom> rooms) {
 //		super(name, level, health, persons, rooms);
 //	}
 
-	public EnemyShipA(String name, int level) {
+	public EnemyShipB(String name, int level) {
 		super(name, level, START_HEALTH * level/2, getInitPersons(level), getInitRooms(level));
 
 		if (level == 1) {
-			addInventory(Weapon.getLaser(1));
+			addInventory(Weapon.getNuke(1));
 		} else if (level >= 2) {
-			addInventory(Weapon.getLaser(2));
-			addInventory(Weapon.getRocket(2));
+			addInventory(Weapon.getNuke(2));
 		} else if (level >= 4) {
-			addInventory(Weapon.getLaser(2));
-			addInventory(Weapon.getLaser(2));
-			addInventory(Weapon.getRocket(2));
+			addInventory(Weapon.getNuke(2));
 		} else if (level >= 6) {
-			addInventory(Weapon.getLaser(4));
-			addInventory(Weapon.getLaser(2));
-			addInventory(Weapon.getRocket(4));
+			addInventory(Weapon.getNuke(2));
 		} else if (level >= 8) {
-			addInventory(Weapon.getLaser(4));
-			addInventory(Weapon.getLaser(4));
-			addInventory(Weapon.getLaser(4));
-			addInventory(Weapon.getRocket(6));
+			addInventory(Weapon.getNuke(3));
 		} else if (level >= 10) {
-			addInventory(Weapon.getLaser(6));
-			addInventory(Weapon.getLaser(6));
-			addInventory(Weapon.getRocket(7));
-			addInventory(Weapon.getRocket(8 ));
+			addInventory(Weapon.getNuke(4));
 		}
 
 	}
 
 	@Override
 	public EShipType getShipType() {
-		return EShipType.Enemy_A;
+		return EShipType.Enemy_B;
 	}
 
 	private static ArrayList<Person> getInitPersons(int level) {
@@ -101,28 +90,29 @@ public class EnemyShipA extends AbsShip {
 
 
 		if (level <= 2) {
-			rooms.add(new NavigationRoom(2));
-			rooms.add(new WeaponRoom(1));
-			rooms.add(new GeneratorRoom(1));
-		}else if (level <= 4) {
 			rooms.add(new NavigationRoom(3));
-			rooms.add(new WeaponRoom(3));
-			rooms.add(new MechanicRoom(2));
-			rooms.add(new GeneratorRoom(3));
-		}else if (level <= 6) {
-			rooms.add(new NavigationRoom(2));
-			rooms.add(new WeaponRoom(6));
+			rooms.add(new WeaponRoom(2));
+			rooms.add(new MechanicRoom(3));
+			rooms.add(new GeneratorRoom(2));
+		}else if (level <= 3) {
+			rooms.add(new NavigationRoom(4));
+			rooms.add(new WeaponRoom(5));
 			rooms.add(new MechanicRoom(4));
-			rooms.add(new GeneratorRoom(5));
-		}else if (level <= 8) {
-			rooms.add(new NavigationRoom(3));
+			rooms.add(new GeneratorRoom(4));
+		}else if (level <= 4) {
+			rooms.add(new NavigationRoom(6));
 			rooms.add(new WeaponRoom(8));
 			rooms.add(new MechanicRoom(6));
-			rooms.add(new GeneratorRoom(7));
+			rooms.add(new GeneratorRoom(6));
+		}else if (level <= 6) {
+			rooms.add(new NavigationRoom(8));
+			rooms.add(new WeaponRoom(12));
+			rooms.add(new MechanicRoom(10));
+			rooms.add(new GeneratorRoom(8));
 		}else {
-			rooms.add(new NavigationRoom(6 + level/2));
-			rooms.add(new WeaponRoom(6 + level/2));
-			rooms.add(new MechanicRoom(6 + level/2));
+			rooms.add(new NavigationRoom(8 + level/2));
+			rooms.add(new WeaponRoom(10 + level/2));
+			rooms.add(new MechanicRoom(8 + level/2));
 			rooms.add(new GeneratorRoom(8 + level/2));
 		}
 

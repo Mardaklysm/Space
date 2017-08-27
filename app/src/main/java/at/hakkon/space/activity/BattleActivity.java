@@ -32,6 +32,7 @@ import at.hakkon.space.datamodel.room.AttackResult;
 import at.hakkon.space.datamodel.ship.AbsShip;
 import at.hakkon.space.datamodel.ship.EShipType;
 import at.hakkon.space.datamodel.ship.EnemyShipA;
+import at.hakkon.space.datamodel.ship.EnemyShipB;
 import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.listener.IShipListener;
 import at.hakkon.space.utility.Utility;
@@ -235,8 +236,8 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		}
 
 		//AddEnergy
-		energyPlayer += appClass.getShip().getGeneratorRoom().getEfficency();
-		energyEnemy += enemyShip.getGeneratorRoom().getEfficency();
+		energyPlayer += appClass.getShip().getGeneratorRoom().getEffectiveEfficency();
+		energyEnemy += enemyShip.getGeneratorRoom().getEffectiveEfficency();
 
 		//Update message log
 		roundNr++;
@@ -334,6 +335,12 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 	}
 
+	private int colorP10 = Color.parseColor("#de3923");
+	private int colorP25 = Color.parseColor("#de8a27");
+	private int colorP50 = Color.parseColor("#e7e02a");
+	private int colorP75 = Color.parseColor("#aeba24");
+	private int colorP100 = Color.parseColor("#4ca22a");
+
 	private void refreshUI() {
 
 		updateTitle();
@@ -341,6 +348,30 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		for (RoomView roomView : roomViews) {
 			roomView.update();
+		}
+
+		PlayerShip ship = ApplicationClass.getInstance().getShip();
+		updatePlayerRoomWidget(ship.getNavigationRoom(), (Button) findViewById(R.id.bPShipNavigationRoom));
+		updatePlayerRoomWidget(ship.getWeaponRoom(), (Button) findViewById(R.id.bPShipWeaponRoom));
+		updatePlayerRoomWidget(ship.getMechanicRoom(), (Button) findViewById(R.id.bPShipMechanicRoom));
+		updatePlayerRoomWidget(ship.getGeneratorRoom(), (Button) findViewById(R.id.bPShipGeneratorRoom));
+
+	}
+
+	private void updatePlayerRoomWidget(AbsRoom room, Button button) {
+		int health = room.getHealth();
+		int maxHealth = room.getMaxHealth();
+
+		if (health <= maxHealth * 0.10) {
+			button.getBackground().setColorFilter(colorP10, PorterDuff.Mode.DARKEN);
+		} else if (health <= maxHealth * 0.25) {
+			button.getBackground().setColorFilter(colorP25, PorterDuff.Mode.DARKEN);
+		} else if (health <= maxHealth * 0.50) {
+			button.getBackground().setColorFilter(colorP50, PorterDuff.Mode.DARKEN);
+		} else if (health <= maxHealth * 0.75) {
+			button.getBackground().setColorFilter(colorP75, PorterDuff.Mode.DARKEN);
+		} else {
+			button.getBackground().setColorFilter(colorP100, PorterDuff.Mode.DARKEN);
 		}
 	}
 
@@ -380,10 +411,12 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			case Enemy_A:
 				enemyShip = new EnemyShipA("Enemy A", level);
 				break;
+			case Enemy_B:
+				enemyShip = new EnemyShipB("Enemy B", level);
+				break;
 			case Player_A:
 				throw new RuntimeException("Ship cant be Player Ship");
-			case Enemy_B:
-				throw new RuntimeException("Enemy_B not implemented yet");
+
 		}
 
 		//Init room Widgets

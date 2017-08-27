@@ -9,7 +9,7 @@ import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
-import at.hakkon.space.datamodel.room.MachanicRoom;
+import at.hakkon.space.datamodel.room.MechanicRoom;
 import at.hakkon.space.datamodel.room.NavigationRoom;
 import at.hakkon.space.datamodel.room.WeaponRoom;
 import at.hakkon.space.datamodel.room.GeneratorRoom;
@@ -38,6 +38,11 @@ public abstract class AbsShip {
 		this.rooms = rooms;
 		this.level = level;
 
+	}
+
+	public void updateMaxHealth(int value){
+		maxHealth += value;
+		updateHealth(value);
 	}
 
 
@@ -176,10 +181,10 @@ public abstract class AbsShip {
 		return null;
 	}
 
-	public MachanicRoom getMechanicRoom() {
+	public MechanicRoom getMechanicRoom() {
 		for (AbsRoom room : getRooms()) {
-			if (room instanceof MachanicRoom) {
-				return (MachanicRoom) room;
+			if (room instanceof MechanicRoom) {
+				return (MechanicRoom) room;
 			}
 		}
 		return null;

@@ -4,4 +4,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="font_size_room_view">4sp</dimen>
+
+    <dimen name= "font_size_weapon_button">12sp</dimen>
 </resources>

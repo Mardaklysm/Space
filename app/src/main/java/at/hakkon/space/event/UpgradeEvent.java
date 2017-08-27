@@ -27,13 +27,13 @@ public class UpgradeEvent extends AbsEvent {
 	@Override
 	protected void executeImpl(Context context) {
 
-		if (ApplicationClass.getInstance().getShip().getMoney() >= room.getUpgradeCosts()){
+		if (ApplicationClass.getInstance().getShip().getMoney() >= room.getUpgradeCosts()) {
 			String text = "";
 			//text += room.getName() + " Lv." + room.getLevel() + " (" + room.getEfficency() + ")";
 			text += room.getName() + " (" + room.getEffectiveEfficency() + ")\n\n";
 			text += "Upgrade this room for " + room.getUpgradeCosts() + "$ ?";
 			Utility.getInstance().showYesNoDialog(context, text, this);
-		}else{
+		} else {
 			String text = "";
 			//text += room.getName() + " Lv." + room.getLevel() + " (" + room.getEfficency() + ")";
 			text += room.getName() + " (" + room.getEffectiveEfficency() + ")\n\n";
@@ -46,8 +46,9 @@ public class UpgradeEvent extends AbsEvent {
 	@Override
 	public void callbackImpl(Context context, int hint) {
 
-		if (hint == 1){
+		if (hint == 1) {
 			room.upgrade();
+			ApplicationClass.getInstance().updateScore(room.getLevel() * 50);
 		}
 	}
 }

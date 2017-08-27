@@ -55,5 +55,7 @@ public class RepairShopEvent extends AbsEvent {
 	public void callbackImpl(Context context, int hint) {
 		ApplicationClass.getInstance().updateShipMoney(-((hint + 1) * 20));
 		ApplicationClass.getInstance().updateShipHealth((hint + 1) * 5);
+
+		ApplicationClass.getInstance().updateScore(getLevel()* hint *10);
 	}
 }

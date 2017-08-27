@@ -319,6 +319,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		CharSequence[] charSequences = new CharSequence[1];
 		charSequences[0] = "Okay";
 
+
 		builder.setItems(charSequences, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -328,6 +329,8 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 				//event.callback(this, which);
 			}
 		}).show();
+
+		ApplicationClass.getInstance().updateScore(level * 100 + loot.getFuel() + loot.getMoney());
 
 	}
 

@@ -36,9 +36,11 @@ public class GoToGalaxyEvent extends AbsEvent {
 			ApplicationClass.getInstance().updateFuel(fuelBonus);
 			Utility.getInstance().showTextDialog(context,"As you travel to the next Galaxy you can collect " + fuelBonus + " fuel");
 			ApplicationClass.getInstance().moveToNewGalaxy();
+			ApplicationClass.getInstance().updateScore(getLevel()* 200);
 			Log.i(TAG, "User decided to move to a new galaxy");
 		}else if (hint == 2){
 			Log.i(TAG, "User decided to NOT move to a new galaxy");
 		}
+
 	}
 }

@@ -53,5 +53,6 @@ public class FuelShopEvent extends AbsEvent {
 	public void callbackImpl(Context context, int hint) {
 		ApplicationClass.getInstance().updateShipMoney(-((hint + 1) * 50));
 		ApplicationClass.getInstance().updateFuel((hint + 1) * 5);
+		ApplicationClass.getInstance().updateScore(getLevel() * (hint *10));
 	}
 }

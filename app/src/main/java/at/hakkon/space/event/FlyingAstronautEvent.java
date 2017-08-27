@@ -59,18 +59,22 @@ public class FlyingAstronautEvent extends AbsEvent {
 				Person person = new Person("Hairy Mory");
 				ApplicationClass.getInstance().addShipMember(person);
 				Utility.getInstance().showTextDialog(context, text);
+				ApplicationClass.getInstance().updateScore(getLevel() * 100);
 			}else{
 				int damage = 25 * getLevel();
 				ApplicationClass.getInstance().updateShipHealth(-damage);
 				String text = "As you open the rescue pod the monkey seems to be as dangerous as confused and immediately runs off with a shrieking scream\n\nIt takes an hour to get ride of the crazy monkey. The ship takes " + damage + " points of damage." ;
 				Utility.getInstance().showTextDialog(context, text);
+				ApplicationClass.getInstance().updateScore(getLevel() * 50);
 			}
 		}else if (hint == 1){
 			String text = "You fire your weapons at the helpless astronaut and turn him into dust.\nAs you move along you hope that noone has seen what you did." ;
 			Utility.getInstance().showTextDialog(context, text);
+			ApplicationClass.getInstance().updateScore(getLevel() * 25);
 		}else if (hint == 2){
 			String text = "As you pass by the helpless astronaut you are not so sure anymore if this is a monkey after all." ;
 			Utility.getInstance().showTextDialog(context, text);
+			ApplicationClass.getInstance().updateScore(getLevel() * 10);
 		}
 	}
 }

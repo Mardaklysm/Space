@@ -1,0 +1,64 @@
+{
+  "project_info": {
+    "project_number": "1022682307044",
+    "project_id": "space-16449014"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022682307044:android:9e5473619744eafe",
+        "android_client_info": {
+          "package_name": "at.hakkon.space"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022682307044-8it0h91l9i9cd7qiski6govin5uv014h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "at.hakkon.space",
+            "certificate_hash": "d3879b4a860b2fee7bd26d3e650ed6d7e3a515be"
+          }
+        },
+        {
+          "client_id": "1022682307044-uljht62lb4desc9odc0roodimvvkjs71.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "at.hakkon.space",
+            "certificate_hash": "a1a66bc71f84d0903f457e8c4e636f20fc0ea231"
+          }
+        },
+        {
+          "client_id": "1022682307044-h2q4kkb5o1v9cg8iutjaf4klgjfbfhnh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "at.hakkon.space",
+            "certificate_hash": "25ccf10b09ceec711563b73c25e6a4f433bedebe"
+          }
+        },
+        {
+          "client_id": "1022682307044-8ir24gq8rfijn6ftk6d7a3top33k3n8u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNl4Tq4-2wDvLlPKvqw9SG5P3LUOpo5Jg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

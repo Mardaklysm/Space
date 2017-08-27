@@ -52,6 +52,7 @@ public class UnknownMetalBoxEvent extends AbsEvent {
 
 			ApplicationClass.getInstance().updateShipMoney(money);
 			ApplicationClass.getInstance().updateShipHealth(-health);
+			ApplicationClass.getInstance().updateScore(getLevel() * 100);
 		}else if (hint == 1){
 			int money = 100;
 			ship.updateMoney(money);
@@ -59,9 +60,11 @@ public class UnknownMetalBoxEvent extends AbsEvent {
 
 			ApplicationClass.getInstance().updateShipMoney(money);;
 			Utility.getInstance().showTextDialog(context,text);
+			ApplicationClass.getInstance().updateScore(getLevel() * 50);
 		}else if (hint == 2){
 			String text = "As you pass the box it explodes but you take no damage. Looks like it was a bomb after all.";
 			Utility.getInstance().showTextDialog(context,text);
+			ApplicationClass.getInstance().updateScore(getLevel() * 25);
 		}
 	}
 }

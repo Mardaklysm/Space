@@ -4,6 +4,8 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_planet">Planet</string>
+    <string name="title_social">Social</string>
     <string name="title_map">Map</string>
     <string name="title_ship">Ship</string>
+
 </resources>

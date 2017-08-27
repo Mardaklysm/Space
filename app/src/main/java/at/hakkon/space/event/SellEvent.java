@@ -35,6 +35,7 @@ public class SellEvent extends AbsEvent {
 	public void callbackImpl(Context context, int hint) {
 		if (hint == 1){
 			ApplicationClass.getInstance().sellItem(item);
+			ApplicationClass.getInstance().updateScore(item.getCashValue()/2);
 		}
 
 	}

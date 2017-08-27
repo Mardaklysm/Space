@@ -2,7 +2,11 @@ package at.hakkon.space.application;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.Games;
 
 import java.util.ArrayList;
 
@@ -21,14 +25,18 @@ import at.hakkon.space.utility.Utility;
 
 public class ApplicationClass extends android.app.Application {
 
+	public static final String LEADERBOARD_ID = "CgkI5LP25OEdEAIQBQ";
 	private static ApplicationClass instance;
 
 	private ArrayList<IShipListener> shipListeners = new ArrayList<>();
 	private ArrayList<IGalaxyListener> galaxyListeners = new ArrayList<>();
 	private ArrayList<IPlanetVisitListener> planetVisitListeners = new ArrayList<>();
+	private ArrayList<IMetaDataListener> metaDataListeners = new ArrayList<>();
 
 	private PlayerShip ship;
 	private Galaxy galaxy;
+
+
 
 	public static ApplicationClass getInstance() {
 		if (instance == null) {
@@ -57,10 +65,15 @@ public class ApplicationClass extends android.app.Application {
 		notifyGalaxyListeners(galaxy);
 		notifyPlanetVisitListener(ship.getCurrentPlanet());
 
+		score = 0;
 	}
 
 	public void restartGame(){
+
+		Games.Leaderboards.submitScore(ApplicationClass.getInstance().getGoogleApiClient(), ApplicationClass.LEADERBOARD_ID, score);
+
 		isInitialized = false;
+		score = 0;
 
 		Intent intent = new Intent(activeContext, MainActivity.class);
 
@@ -69,9 +82,6 @@ public class ApplicationClass extends android.app.Application {
 
 		activeContext.startActivity(intent);
 
-		//notifyShipListeners(ship);
-		//notifyGalaxyListeners(galaxy);
-		//notifyPlanetVisitListener(ship.getCurrentPlanet());
 	}
 
 	public PlayerShip getShip() {
@@ -113,6 +123,17 @@ public class ApplicationClass extends android.app.Application {
 		}
 	}
 
+	public void addMetaDataListener(IMetaDataListener listener) {
+		if (!metaDataListeners.contains(listener)) {
+			metaDataListeners.add(listener);
+		}
+	}
+
+	public void removeMetaDataListener(IMetaDataListener listener){
+		metaDataListeners.remove(listener);
+	}
+
+
 	public void removeGalaxyListener(IGalaxyListener listener) {
 		galaxyListeners.remove(listener);
 	}
@@ -145,6 +166,11 @@ public class ApplicationClass extends android.app.Application {
 		}
 	}
 
+	private void notifyMetaDataListener() {
+		for (IMetaDataListener listener : metaDataListeners) {
+			listener.scoreChanged(score);
+		}
+	}
 
 	public Galaxy getGalaxy() {
 		return galaxy;
@@ -216,5 +242,28 @@ public class ApplicationClass extends android.app.Application {
 		updateShipMoney(item.getCashValue());
 		ship.getInventory().remove(item);
 		notifyShipListeners(ship);
+	}
+
+	private GoogleApiClient googleApiClient;
+
+	public GoogleApiClient getGoogleApiClient(){
+		return googleApiClient;
+	}
+
+	public void setGoogleClient(GoogleApiClient googleApiClient) {
+		this.googleApiClient = googleApiClient;
+	}
+
+	private int score = 0;
+
+	public int updateScore(int value){
+		score+=value;
+		Log.d(TAG, "Score is now: " + value);
+		notifyMetaDataListener();
+		return score;
+	}
+
+	public int getScore(){
+		return score;
 	}
 }

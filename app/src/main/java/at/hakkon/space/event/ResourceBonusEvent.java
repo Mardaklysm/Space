@@ -18,6 +18,7 @@ public class ResourceBonusEvent extends AbsEvent {
 
 		Random r = new Random();
 		int resourceBonus = r.nextInt(100 * level - 50 * level) + 50 * level;
+		ApplicationClass.getInstance().updateScore(resourceBonus/2);
 
 		setResourceBonus(resourceBonus);
 	}

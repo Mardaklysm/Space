@@ -56,3 +56,4 @@ app/app-release.apk
 html/.project
 html/.pydevproject
 html/.project
+*.apk

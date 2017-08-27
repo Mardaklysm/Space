@@ -5,7 +5,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.gms.games.Games;
 
 import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
@@ -15,6 +18,7 @@ import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.listener.IGalaxyListener;
 import at.hakkon.space.listener.IPlanetVisitListener;
 import at.hakkon.space.listener.IShipListener;
+import at.hakkon.space.signin.GoogleSignInActivity;
 
 
 /**
@@ -39,7 +43,28 @@ public class PlanetFragment extends Fragment implements IShipListener, IPlanetVi
 		planetChanged();
 
 
+		initHighscoreButton();
+
+
 		return view;
+	}
+
+	private final static String TAG = "PlanetFragment";
+	private final static int REQUEST_CODE_OPENER = 10001;
+
+	private final static int REQUEST_LEADERBOARD = 100;
+
+	private void initHighscoreButton() {
+		Button button = (Button) view.findViewById(R.id.bShowHighscore);
+
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (GoogleSignInActivity.USE_GOOGLE_CLIENT) {
+					startActivityForResult(Games.Leaderboards.getLeaderboardIntent(ApplicationClass.getInstance().getGoogleApiClient(), getString(R.string.leaderboard_highscore)), REQUEST_LEADERBOARD);
+				}
+			}
+		});
 	}
 
 
@@ -66,13 +91,13 @@ public class PlanetFragment extends Fragment implements IShipListener, IPlanetVi
 
 	@Override
 	public void galaxyUpdated(Galaxy galaxy) {
-		if (!galaxy.getPlanets().contains(planet)){
+		if (!galaxy.getPlanets().contains(planet)) {
 			planet = galaxy.getFirstPlanet();
 		}
 	}
 
 	@Override
-	public void onDestroy(){
+	public void onDestroy() {
 		super.onDestroy();
 		ApplicationClass.getInstance().removeShipListener(this);
 		ApplicationClass.getInstance().removePlanetVisitListener(this);

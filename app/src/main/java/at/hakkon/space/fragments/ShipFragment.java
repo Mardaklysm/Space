@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.application.IMetaDataListener;
 import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Weapon;
@@ -29,7 +30,7 @@ import at.hakkon.space.listener.IShipListener;
  * Created by Markus on 05.07.2017.
  */
 
-public class ShipFragment extends Fragment implements IShipListener {
+public class ShipFragment extends Fragment implements IShipListener, IMetaDataListener {
 
 	private View view;
 
@@ -51,13 +52,17 @@ public class ShipFragment extends Fragment implements IShipListener {
 		TextView title = (TextView) view.findViewById(R.id.tvFragmentShipTitle);
 		title.setText("Ship: " + ApplicationClass.getInstance().getShip().getName());
 
+		ApplicationClass.getInstance().addMetaDataListener(this);
+
 		return view;
 	}
 
 
 	@Override
 	public void shipUpdated(PlayerShip ship) {
-		((TextView) view.findViewById(R.id.tvShipInfo)).setText(ship.getInformationDump());
+		String scoreText = "Score: " + ApplicationClass.getInstance().getScore() + "\n\n";
+
+		((TextView) view.findViewById(R.id.tvShipInfo)).setText(scoreText + ship.getInformationDump());
 
 		refreshRooms(ship);
 		refreshWeapons(ship);
@@ -173,5 +178,11 @@ public class ShipFragment extends Fragment implements IShipListener {
 	public void onDestroy() {
 		super.onDestroy();
 		ApplicationClass.getInstance().removeShipListener(this);
+		ApplicationClass.getInstance().removeMetaDataListener(this);
+	}
+
+	@Override
+	public void scoreChanged(int score) {
+		shipUpdated(ApplicationClass.getInstance().getShip());
 	}
 }

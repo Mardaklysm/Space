@@ -52,7 +52,7 @@ public class RoomView extends android.support.v7.widget.AppCompatButton {
 	double roundTwoDecimals(double d) {
 
 		BigDecimal a = new BigDecimal(d);
-		BigDecimal roundOff = a.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		BigDecimal roundOff = a.setScale(2, BigDecimal.ROUND_HALF_UP);
 		return roundOff.doubleValue();
 	}
 

@@ -123,6 +123,7 @@ public class ShipFragment extends Fragment implements IShipListener, IMetaDataLi
 		llShipInventory.removeAllViews();
 
 
+
 		ArrayList<IInventoryItem> inventory = ship.getInventory();
 
 		for (final IInventoryItem item : inventory) {
@@ -162,12 +163,12 @@ public class ShipFragment extends Fragment implements IShipListener, IMetaDataLi
 			@Override
 			public void onClick(View v) {
 				if (weapon.isEquipped()) {
+					weapon.equip(false);
 					button.getBackground().setColorFilter(null);
 				} else if (ship.getEquippedWeapons().size() < MAX_WEAPONS_EQUIP_COUNT) {
 					button.getBackground().setColorFilter(colorSelected, PorterDuff.Mode.DARKEN);
+					weapon.equip(true);
 				}
-
-				weapon.equip(!weapon.isEquipped());
 				refreshInventory(ship);
 			}
 		});

@@ -78,7 +78,7 @@ public class Weapon implements  IInventoryItem{
 		return energyCost;
 	}
 
-	private boolean isEquipped;
+	private boolean isEquipped = false;
 
 	public void equip(boolean equip){
 		isEquipped = equip;

@@ -18,7 +18,6 @@ import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.listener.IGalaxyListener;
 import at.hakkon.space.listener.IPlanetVisitListener;
 import at.hakkon.space.listener.IShipListener;
-import at.hakkon.space.signin.GoogleSignInActivity;
 
 
 /**
@@ -60,9 +59,7 @@ public class PlanetFragment extends Fragment implements IShipListener, IPlanetVi
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (GoogleSignInActivity.USE_GOOGLE_CLIENT) {
-					startActivityForResult(Games.Leaderboards.getLeaderboardIntent(ApplicationClass.getInstance().getGoogleApiClient(), getString(R.string.leaderboard_highscore)), REQUEST_LEADERBOARD);
-				}
+			startActivityForResult(Games.Leaderboards.getLeaderboardIntent(ApplicationClass.getInstance().getGoogleApiClient(), getString(R.string.leaderboard_highscore)), REQUEST_LEADERBOARD);
 			}
 		});
 	}

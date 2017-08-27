@@ -33,6 +33,7 @@ public class ResourceBonusEvent extends AbsEvent {
 		Utility.getInstance().showTextDialog(context, "You collected minerals worth " + getResourceBonus() + "€");
 
 		ApplicationClass.getInstance().updateShipMoney(getResourceBonus());
+		ApplicationClass.getInstance().updateScore(getResourceBonus());
 	}
 
 	@Override

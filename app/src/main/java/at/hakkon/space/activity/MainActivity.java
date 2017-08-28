@@ -1,5 +1,6 @@
 package at.hakkon.space.activity;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -7,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import com.google.android.gms.games.Games;
 
 import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
@@ -75,11 +78,22 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 
 	}
 
+	MediaPlayer music;
+
 	@Override
-	public void onResume(){
+	public void onResume() {
 		super.onResume();
 
 		ApplicationClass.getInstance().updateActiveContext(this);
+
+		Games.setViewForPopups(ApplicationClass.getInstance().getGoogleApiClient(), findViewById(R.id.gps_popup));
+
+		if (ApplicationClass.playMusic) {
+			music = MediaPlayer.create(this, R.raw.main_theme);
+			music.setLooping(true);
+			music.start();
+		}
+
 	}
 
 	public static MainActivity getInstance() {
@@ -108,5 +122,14 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 		((TextView) findViewById(R.id.tvHeaderCash)).setText("Cash: " + ship.getMoney());
 		((TextView) findViewById(R.id.tvHeaderFuel)).setText("Fuel: " + ship.getFuel());
 		((TextView) findViewById(R.id.tvHeaderHealth)).setText("Health: " + ship.getHealth());
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (ApplicationClass.playMusic) {
+			music.stop();
+		}
+
 	}
 }

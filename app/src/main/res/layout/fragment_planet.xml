@@ -28,6 +28,16 @@
             android:id="@+id/bShowHighscore"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:text="Show Highscore"/>
+        <Button
+            android:id="@+id/bShowAchievements"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:text="Show Achievements"/>
+        <CheckBox
+            android:id="@+id/cbPlayMusic"
+            android:layout_width="match_parent"
+            android:background="@color/colorDarkGrey1"
+            android:layout_height="wrap_content" android:text="Play Music"
+            android:textColor="@color/fontColorWhiteGray"/>
     </LinearLayout>
 
 

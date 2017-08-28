@@ -10,6 +10,7 @@ import com.google.android.gms.games.Games;
 
 import java.util.ArrayList;
 
+import at.hakkon.space.achievement.Achievements;
 import at.hakkon.space.activity.MainActivity;
 import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
@@ -35,6 +36,8 @@ public class ApplicationClass extends android.app.Application {
 
 	private PlayerShip ship;
 	private Galaxy galaxy;
+
+	public static  boolean playMusic = true;
 
 
 
@@ -192,6 +195,11 @@ public class ApplicationClass extends android.app.Application {
 	public void updateShipMoney(int value) {
 		ship.updateMoney(value);
 		notifyShipListeners(ship);
+		if (value >0){
+			Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_TREASURE_HUNTER_I, value);
+			Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_TREASURE_HUNTER_II, value);
+		}
+
 	}
 
 	public void updateShipHealth(int value) {

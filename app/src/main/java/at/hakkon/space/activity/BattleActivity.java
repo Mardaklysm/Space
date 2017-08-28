@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.google.android.gms.games.Games;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,6 +97,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		roundNr++;
 		addMessage("[Round " + roundNr + "]: Make your moves!");
+
 	}
 
 
@@ -324,8 +328,8 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		builder.setItems(charSequences, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				appClass.getShip().updateFuel(loot.getFuel());
-				appClass.getShip().updateMoney(loot.getMoney());
+				appClass.updateFuel(loot.getFuel());
+				appClass.updateShipMoney(loot.getMoney());
 				BattleActivity.super.onBackPressed();
 				//event.callback(this, which);
 			}
@@ -567,6 +571,11 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		super.onDestroy();
 
 		ApplicationClass.getInstance().removeShipListener(this);
+
+		if (ApplicationClass.playMusic){
+			music.stop();
+		}
+
 	}
 
 	@Override
@@ -597,4 +606,21 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	public static Context getInstance() {
 		return instance;
 	}
+
+
+	private MediaPlayer music;
+	@Override
+	public void onStart(){
+		super.onStart();
+
+		if (ApplicationClass.playMusic){
+			music = MediaPlayer.create(this,R.raw.battle01);
+			music.start();
+		}
+
+		Games.setViewForPopups(ApplicationClass.getInstance().getGoogleApiClient(), findViewById(R.id.gps_popup));
+
+	}
+
+
 }

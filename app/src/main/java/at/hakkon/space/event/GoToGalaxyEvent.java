@@ -3,6 +3,9 @@ package at.hakkon.space.event;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.android.gms.games.Games;
+
+import at.hakkon.space.achievement.Achievements;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.utility.Utility;
 
@@ -37,6 +40,10 @@ public class GoToGalaxyEvent extends AbsEvent {
 			Utility.getInstance().showTextDialog(context,"As you travel to the next Galaxy you can collect " + fuelBonus + " fuel");
 			ApplicationClass.getInstance().moveToNewGalaxy();
 			ApplicationClass.getInstance().updateScore(getLevel()* 200);
+
+			Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_EXPLORER_I, 1);
+			Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_EXPLORER_II, 1);
+			Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_EXPLORER_III, 1);
 			Log.i(TAG, "User decided to move to a new galaxy");
 		}else if (hint == 2){
 			Log.i(TAG, "User decided to NOT move to a new galaxy");

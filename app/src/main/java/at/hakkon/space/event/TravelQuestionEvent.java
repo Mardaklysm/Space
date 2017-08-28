@@ -3,6 +3,9 @@ package at.hakkon.space.event;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.android.gms.games.Games;
+
+import at.hakkon.space.achievement.Achievements;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.utility.Utility;
 
@@ -46,6 +49,9 @@ public class TravelQuestionEvent extends AbsEvent {
 		if (hint == 1){
 			moved = ApplicationClass.getInstance().moveToPlanet(getPlanet());
 
+			Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_EXPLORER_I, 1);
+			Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_EXPLORER_II, 1);
+			Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_EXPLORER_III, 1);
 			Log.i(TAG, "User decided to move to planet: " + getPlanet().getName());
 		}else if (hint == 2){
 			String text = "You decided so stay where it feels safe. This might have been the better decision anyway ...";

@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.google.android.gms.games.Games;
@@ -43,15 +45,36 @@ public class PlanetFragment extends Fragment implements IShipListener, IPlanetVi
 
 
 		initHighscoreButton();
+		initAchievementsButton();
 
 
+		CheckBox cb = (CheckBox) view.findViewById(R.id.cbPlayMusic);
+		cb.setChecked(ApplicationClass.playMusic);
+		cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				ApplicationClass.playMusic = isChecked;
+			}
+		});
 		return view;
 	}
 
 	private final static String TAG = "PlanetFragment";
-	private final static int REQUEST_CODE_OPENER = 10001;
 
 	private final static int REQUEST_LEADERBOARD = 100;
+	private final static int REQUEST_ACHIEVEMENTS = 101;
+
+
+	private void initAchievementsButton() {
+		Button button = (Button) view.findViewById(R.id.bShowAchievements);
+
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivityForResult(Games.Achievements.getAchievementsIntent(ApplicationClass.getInstance().getGoogleApiClient()), REQUEST_ACHIEVEMENTS);
+			}
+		});
+	}
 
 	private void initHighscoreButton() {
 		Button button = (Button) view.findViewById(R.id.bShowHighscore);
@@ -59,7 +82,7 @@ public class PlanetFragment extends Fragment implements IShipListener, IPlanetVi
 		button.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-			startActivityForResult(Games.Leaderboards.getLeaderboardIntent(ApplicationClass.getInstance().getGoogleApiClient(), getString(R.string.leaderboard_highscore)), REQUEST_LEADERBOARD);
+				startActivityForResult(Games.Leaderboards.getLeaderboardIntent(ApplicationClass.getInstance().getGoogleApiClient(), getString(R.string.leaderboard_highscore)), REQUEST_LEADERBOARD);
 			}
 		});
 	}

@@ -66,8 +66,7 @@ public class GoogleSignInActivity extends AppCompatActivity implements GoogleApi
 			mSignInClicked = false;
 			mResolvingConnectionFailure = false;
 			if (resultCode == RESULT_OK) {
-				//googleApiClient.connect();
-				startNextActivity();
+				googleApiClient.connect();
 			} else {
 				// Bring up an error dialog to alert the user that sign-in
 				// failed. The R.string.signin_failure should reference an error

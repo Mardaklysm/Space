@@ -1,18 +1,21 @@
 package at.hakkon.space.datamodel.ship;
 
+import com.google.android.gms.games.Games;
+
 import java.util.ArrayList;
 import java.util.Random;
 
+import at.hakkon.space.achievement.Achievements;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
+import at.hakkon.space.datamodel.room.GeneratorRoom;
 import at.hakkon.space.datamodel.room.MechanicRoom;
 import at.hakkon.space.datamodel.room.NavigationRoom;
 import at.hakkon.space.datamodel.room.WeaponRoom;
-import at.hakkon.space.datamodel.room.GeneratorRoom;
 
 /**
  * Created by Markus on 29.07.2017.
@@ -40,7 +43,7 @@ public abstract class AbsShip {
 
 	}
 
-	public void updateMaxHealth(int value){
+	public void updateMaxHealth(int value) {
 		maxHealth += value;
 		updateHealth(value);
 	}
@@ -103,7 +106,7 @@ public abstract class AbsShip {
 		ArrayList<Weapon> weapons = new ArrayList<>();
 
 		for (IInventoryItem item : inventory) {
-			if ((item instanceof Weapon )&& (((Weapon)item).isEquipped())) {
+			if ((item instanceof Weapon) && (((Weapon) item).isEquipped())) {
 				weapons.add((Weapon) item);
 			}
 		}
@@ -115,17 +118,30 @@ public abstract class AbsShip {
 	public void updateHealth(int value) {
 		int newHealth = health + value;
 
-		if (newHealth <0){
+		if (newHealth < 0) {
 			newHealth = 0;
 		}
-		if (newHealth > maxHealth){
+		if (newHealth > maxHealth) {
 			newHealth = maxHealth;
 		}
 		health = newHealth;
 
-		if (this instanceof PlayerShip){
+		if (this instanceof PlayerShip) {
 			ApplicationClass.getInstance().requestNotifyShipChangedEvent();
 		}
+
+		if (getShipType() == EShipType.Enemy_A && health <= 0) {
+			Games.Achievements.unlock(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_FIRST_TYPE_A_FIGHTER);
+		}
+
+		if (getShipType() == EShipType.Enemy_B && health <= 0) {
+			Games.Achievements.unlock(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_FIRST_TYPE_B_FIGHTER);
+		}
+
+		if (getShipType() != EShipType.Player_A && health <= 0) {
+			Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_KILL_10_SHIPS, 1);
+		}
+
 	}
 
 	public void addPerson(Person person) {
@@ -214,7 +230,7 @@ public abstract class AbsShip {
 		float evadeChanche = defender.getNavigationRoom().getEffectiveEfficency();
 
 		Random random = new Random();
-		float hitValue =  random.nextFloat();
+		float hitValue = random.nextFloat();
 
 		return hitValue > evadeChanche;
 	}

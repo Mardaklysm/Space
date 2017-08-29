@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 
 
 		appClass.initialize();
-		Games.setViewForPopups(ApplicationClass.getInstance().getGoogleApiClient(), findViewById(R.id.gps_popup));
+
 	}
 
 
@@ -89,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 		if (ApplicationClass.playMusic) {
 			ApplicationClass.getInstance().startMainMusic(this);
 		}
+
+		Games.setViewForPopups(ApplicationClass.getInstance().getGoogleApiClient(), findViewById(R.id.gps_popup));
 
 	}
 

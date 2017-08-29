@@ -61,7 +61,7 @@ public class Weapon implements IInventoryItem {
 	}
 
 	public static Weapon getNuke(int level) {
-		return new Weapon(level, "Nuke Lv." + level, 20 + 25 * level, 10 + 2 * level, true);
+		return new Weapon(level, "Nuke Lv." + level, 15 + 10 * level, 10 + 2 * level, true);
 	}
 
 	private AbsRoom target;

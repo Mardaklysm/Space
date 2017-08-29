@@ -19,14 +19,14 @@ import at.hakkon.space.datamodel.room.WeaponRoom;
 
 public class EnemyShipB extends AbsShip {
 
-	protected final static int START_HEALTH = 150;
+	protected final static int START_HEALTH = 15;
 
 //	public EnemyShipA(String name, int level, int health, ArrayList<Person> persons, ArrayList<AbsRoom> rooms) {
 //		super(name, level, health, persons, rooms);
 //	}
 
 	public EnemyShipB(String name, int level) {
-		super(name, level, START_HEALTH + 20 * (level - 1));
+		super(name, level, START_HEALTH + 15 * (level - 1));
 
 		Random random = new Random();
 
@@ -41,15 +41,19 @@ public class EnemyShipB extends AbsShip {
 			addInventory(Weapon.getLaser(1));
 		} else if (level == 4) {
 			addInventory(Weapon.getNuke(3));
+			addInventory(Weapon.getNuke(1));
 			addInventory(Weapon.getLaser(2));
 		} else if (level >= 6) {
 			addInventory(Weapon.getNuke(4));
+			addInventory(Weapon.getNuke(2));
 			addInventory(Weapon.getLaser(3));
 		} else if (level >= 8) {
 			addInventory(Weapon.getNuke(5));
+			addInventory(Weapon.getNuke(3));
 			addInventory(Weapon.getLaser(4));
 		} else if (level >= 10) {
 			addInventory(Weapon.getNuke(5 + level/10));
+			addInventory(Weapon.getNuke(1));
 			addInventory(Weapon.getLaser(level/2));
 		}
 

@@ -29,6 +29,7 @@ public class MineEvent extends AbsEvent {
 	private int payedMinerals;
 
 	boolean[] hasOption = new boolean[3];
+
 	@Override
 	protected void executeImpl(Context context) {
 		if (canBeExecuted()) {
@@ -52,13 +53,12 @@ public class MineEvent extends AbsEvent {
 			}
 
 
-
 			ArrayList<CharSequence> optionsList = new ArrayList<>();
 
-			String text = "As you get closer to the surface you can see a bunch of human sized creatures working a mine that goes deep under the surface.\n\nOne of the bigger furry creatures gets close to you and stares at you silently with his big six black eyes seemingly awaiting orders.";
+			String text = "As you get closer to the surface you can see a bunch of human sized creatures working a mine that goes deep under the surface.\n\nOne of the bigger furry creatures gets close to you and stares at you with his big six black eyes silently, seemingly awaiting orders.";
 
 			if (hasOption[0]) {
-				optionsList.add("Slowly walk backwards... Enter your space craft and get the fuck out of here !)");
+				optionsList.add("Slowly walk backwards... Enter your space craft and try to get away before you can end up as dinner");
 			}
 			if (hasOption[1]) {
 				optionsList.add("Drop " + payedMinerals + " in front of the creature and stare back without moving a muscle.");
@@ -69,7 +69,7 @@ public class MineEvent extends AbsEvent {
 
 			CharSequence[] options = new CharSequence[optionsList.size()];
 
-			for (int i=0; i< optionsList.size(); i++){
+			for (int i = 0; i < optionsList.size(); i++) {
 				options[i] = optionsList.get(i);
 			}
 
@@ -102,7 +102,7 @@ public class MineEvent extends AbsEvent {
 
 		int modHint = hint;
 
-		if (hint == 1 && !hasOption[1]){
+		if (hint == 1 && !hasOption[1]) {
 			modHint = 2;
 		}
 
@@ -114,12 +114,12 @@ public class MineEvent extends AbsEvent {
 				if (random.nextBoolean()) {
 					int damage = 5 * getLevel();
 					int minerals = 25 * getLevel();
-					text = "As you get back to the ship you seem to have enraged the local population which starts throwing rocks at the ship with their tiny paws as you take off.\n\nIt looks like some of the rocks contains rare minerals.\n\nYou take " + damage + " points of damage and gained " + minerals + "$ from the minerals.";
+					text = "As you get back to the ship you seem to have enraged the local population which starts throwing rocks at the ship with their tiny paws as you take off.\n\nIt looks like some of the rocks contain rare minerals.\n\nYou take " + damage + " points of damage and gained " + minerals + "$ from the minerals.";
 					ApplicationClass.getInstance().updateShipHealth(-damage);
 					ApplicationClass.getInstance().updateShipMoney(minerals);
 				} else {
-					text = "The creatures quickly loose interrest into you and start to descend into the cave again. As you take off you wonder what would have been inside...";
-						}
+					text = "The creatures quickly loose interrest into you and start to descend into the cave again.\n\nAs you take off you wonder what would have been inside...";
+				}
 				Utility.getInstance().showTextDialog(context, text);
 				break;
 			case 1:
@@ -145,12 +145,12 @@ public class MineEvent extends AbsEvent {
 
 				text = "A few more creatures come to pick up the golden statue chanting a repeating song and then descending into the cave again.\n\nAbout half an hour later they come back from the cave and hand you something.";
 
-				if (random.nextBoolean()){
+				if (random.nextBoolean()) {
 					Weapon weapon = Weapon.getNuke((int) (2 + Math.floor(getLevel() / 2)));
 					text += "\n\nA Weapon of Mass Destruction:\n" + weapon.getName();
 					ApplicationClass.getInstance().getShip().addInventory(weapon);
-				}else{
-					text+= "\n\nA bunch of rare biological crystals which get absorbed by your ship and improve its hull by " + healthIncrease + " points.";
+				} else {
+					text += "\n\nA bunch of rare biological crystals which get absorbed by your ship and improve its hull by " + healthIncrease + " points.";
 					ApplicationClass.getInstance().getShip().updateMaxHealth(healthIncrease);
 				}
 

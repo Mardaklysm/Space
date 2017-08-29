@@ -19,7 +19,7 @@ import at.hakkon.space.datamodel.room.WeaponRoom;
 
 public class EnemyShipA extends AbsShip {
 
-	protected final static int START_HEALTH = 250;
+	protected final static int START_HEALTH = 25;
 
 	public EnemyShipA(String name, int level) {
 		super(name, level, START_HEALTH  + 25 * (level -1));

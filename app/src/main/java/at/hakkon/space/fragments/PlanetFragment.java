@@ -54,6 +54,12 @@ public class PlanetFragment extends Fragment implements IShipListener, IPlanetVi
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				ApplicationClass.playMusic = isChecked;
+				if (isChecked) {
+					ApplicationClass.getInstance().startMainMusic(getActivity());
+				} else {
+					ApplicationClass.getInstance().stopMainMusic();
+				}
+
 			}
 		});
 		return view;

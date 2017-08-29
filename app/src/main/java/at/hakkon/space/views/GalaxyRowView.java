@@ -105,7 +105,9 @@ public class GalaxyRowView extends LinearLayout implements IPlanetVisitListener{
 			@Override
 			public void onClick(View v) {
 				if (planet.equals(ApplicationClass.getInstance().getShip().getCurrentPlanet())) {
-					planet.getEvent().execute(getContext());
+					if (planet.getEvent() != null){
+						planet.getEvent().execute(getContext());
+					}
 				}else{
 					TravelQuestionEvent travelQuestionEvent = new TravelQuestionEvent(1);
 					travelQuestionEvent.init(getContext(), ApplicationClass.getInstance().getShip(), planet);

@@ -1,13 +1,15 @@
 package at.hakkon.space.datamodel.room;
 
+import at.hakkon.space.datamodel.ship.AbsShip;
+
 /**
  * Created by Markus on 29.07.2017.
  */
 
 public class WeaponRoom extends AbsRoom {
 
-	public WeaponRoom(int level) {
-		super(level);
+	public WeaponRoom(AbsShip ship, int level) {
+		super(ship, level);
 	}
 
 	@Override

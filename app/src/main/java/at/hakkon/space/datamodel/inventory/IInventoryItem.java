@@ -12,5 +12,9 @@ public interface IInventoryItem {
 
 	int getCashValue();
 
+	String getDescription();
+
+	void equip(boolean equip);
+
 
 }

@@ -11,19 +11,24 @@ public abstract class AbsRoom {
 
 	private ArrayList<IInventoryItem> items = new ArrayList<>();
 
+	private AbsShip ship;
+
 	private ERoom room;
 
 	private int level = 1;
 
 	private int maxHealth;
 	private int health;
-	private int healthRegeneration;
 
-	public AbsRoom(int level) {
+	public AbsRoom(AbsShip ship, int level) {
 		this.level = level;
-		health = level * 40;
+		health = 20 + level * 10;
 		maxHealth = health;
-		healthRegeneration = level;
+		this.ship = ship;
+	}
+
+	public AbsShip getShip() {
+		return ship;
 	}
 
 	public boolean istDestroyed() {
@@ -31,6 +36,7 @@ public abstract class AbsRoom {
 	}
 
 	public void regenerate() {
+		int healthRegeneration = getShip().getMechanicRoom() == null ? 0 : (int) getShip().getMechanicRoom().getEffectiveEfficency();
 		health = Math.min(health + healthRegeneration, maxHealth);
 	}
 
@@ -63,23 +69,37 @@ public abstract class AbsRoom {
 	public AttackResult attackWithWeapon(AbsShip attacker, AbsShip defender, Weapon weapon) {
 		if (attacker.hits(defender)) {
 			int weaponDamage = defender.getWeaponRoom() == null ? 0 : Math.round(weapon.getDamage() * attacker.getWeaponRoom().getEffectiveEfficency());
-			int damageReduction = defender.getMechanicRoom() == null ? 0 : (int) Math.floor(defender.getMechanicRoom().getEffectiveEfficency());
-
+			//int damageReduction = defender.getMechanicRoom() == null ? 0 : (int) Math.floor(defender.getMechanicRoom().getEffectiveEfficency() / 2);
+			int damageReduction = 0;
 			int totalDamage = weaponDamage - damageReduction;
 
 			//Update ship health
 			defender.updateHealth(-totalDamage);
 
 			//Update Room health
-			health = Math.max(health -totalDamage,0);
+			health = Math.max(health - totalDamage, 0);
 
-			return new AttackResult(true,Math.max(0,totalDamage));
+			//Handle OneTimeWeapons
+			if (weapon.isOneTimeWeapon()) {
+				attacker.removeInventory(weapon);
+			}
+
+			return new AttackResult(true, Math.max(0, totalDamage));
 		} else {
-			return new AttackResult(false,0);
+			if (weapon.isOneTimeWeapon()) {
+				attacker.removeInventory(weapon);
+			}
+			return new AttackResult(false, 0);
 		}
 	}
 
-	protected abstract float getEfficency();
+	public abstract float getEfficency();
+
+	public float getEfficencyInPercent() {
+		float p1 = maxHealth / 100f;
+		float pOkay = health / p1;
+		return pOkay;
+	}
 
 	public float getEffectiveEfficency() {
 
@@ -88,7 +108,17 @@ public abstract class AbsRoom {
 		float p1 = maxHealth / 100f;
 		float pOkay = health / p1;
 
-		return efficiency * pOkay / 100;
+		if (pOkay > 99) {
+			pOkay = 100;
+		}
+
+
+		float result = efficiency * pOkay / 100;
+		if (getRoomType() == ERoom.Mechanic) {
+			return Math.max(1f, result);
+		}
+
+		return result;
 	}
 
 
@@ -101,7 +131,14 @@ public abstract class AbsRoom {
 	}
 
 	public void upgrade() {
-		ApplicationClass.getInstance().updateShipMoney(-getUpgradeCosts());
+		upgrade(true);
+	}
+
+	public void upgrade(boolean pay) {
+		if (pay) {
+			ApplicationClass.getInstance().updateShipMoney(-getUpgradeCosts());
+		}
+
 		level++;
 
 		ApplicationClass.getInstance().requestNotifyShipChangedEvent();
@@ -109,7 +146,15 @@ public abstract class AbsRoom {
 
 	public abstract String getUpgradeInformationText();
 
-	public int getMaxHealth(){
+	public int getMaxHealth() {
 		return maxHealth;
+	}
+
+	public void regenerate(boolean full) {
+		if (full) {
+			health = maxHealth;
+		} else {
+			regenerate();
+		}
 	}
 }

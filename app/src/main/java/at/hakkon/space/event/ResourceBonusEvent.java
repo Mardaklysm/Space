@@ -13,26 +13,38 @@ import at.hakkon.space.utility.Utility;
 
 public class ResourceBonusEvent extends AbsEvent {
 
+	private int resourceBonusFuel;
+
 	public ResourceBonusEvent(int level) {
 		super(level);
 
 		Random r = new Random();
-		int resourceBonus = r.nextInt(100 * level - 50 * level) + 50 * level;
-		ApplicationClass.getInstance().updateScore(resourceBonus/2);
+		int resourceBonusMoney = r.nextInt(100 * level - 50 * level) + 25 * level;
+		resourceBonusFuel = r.nextInt(5) + 5;
+		ApplicationClass.getInstance().updateScore(resourceBonusMoney / 2);
 
-		setResourceBonus(resourceBonus);
+		setResourceBonus(resourceBonusMoney);
 	}
 
 	@Override
 	protected void executeImpl(Context context) {
 		if (!canBeExecuted()) {
-			Utility.getInstance().showTextDialog(context, "There are no minerals left.");
+			Utility.getInstance().showTextDialog(context, "There are no resources left.");
 			return;
 		}
 
-		Utility.getInstance().showTextDialog(context, "You collected minerals worth " + getResourceBonus() + "€");
+		Random random = new Random();
 
-		ApplicationClass.getInstance().updateShipMoney(getResourceBonus());
+		if (random.nextBoolean()) {
+			//Add minerals
+			Utility.getInstance().showTextDialog(context, "You collected minerals worth " + getResourceBonus() + "€ by blowing up a nearby asteroid.");
+			ApplicationClass.getInstance().updateShipMoney(getResourceBonus());
+		} else {
+			//Add fuel
+			Utility.getInstance().showTextDialog(context, "You collected " + resourceBonusFuel + " fuel off a nearby asteroid belt.");
+			ApplicationClass.getInstance().updateFuel((int) Math.floor(getResourceBonus() / 25));
+		}
+
 		ApplicationClass.getInstance().updateScore(getResourceBonus());
 	}
 

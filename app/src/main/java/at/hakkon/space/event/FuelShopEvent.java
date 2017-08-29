@@ -12,8 +12,13 @@ import at.hakkon.space.utility.Utility;
  */
 
 public class FuelShopEvent extends AbsEvent {
+
+	private int exitHint;
+
+
 	public FuelShopEvent(int level) {
 		super(level);
+		setCanBeOverwritten(false);
 	}
 
 	@Override
@@ -23,8 +28,7 @@ public class FuelShopEvent extends AbsEvent {
 
 	@Override
 	protected void executeImpl(Context context) {
-		String text = "Refill station - We pump you up!";
-		CharSequence[] charSequences = new CharSequence[5];
+
 
 		ArrayList<CharSequence> choices = new ArrayList<>();
 		boolean canAfford = getShip().getMoney() >= 50;
@@ -42,17 +46,28 @@ public class FuelShopEvent extends AbsEvent {
 			multiplier++;
 		}
 
-		charSequences = new CharSequence[choices.size()];
+		choices.add("Leave the Store");
+		exitHint = choices.size()-1;
+
+		CharSequence[] charSequences = new CharSequence[choices.size()];
 		for (int i=0; i<choices.size(); i++){
 			charSequences[i] = choices.get(i);
+		}
+
+		String text = "Refill station - We pump you up!";
+		if (charSequences.length == 0){
+			text+="\nLooks like there is nothing we can do for you now!";
 		}
 		Utility.getInstance().showQuestionsDialog(context, text, charSequences, this);
 	}
 
 	@Override
 	public void callbackImpl(Context context, int hint) {
-		ApplicationClass.getInstance().updateShipMoney(-((hint + 1) * 50));
-		ApplicationClass.getInstance().updateFuel((hint + 1) * 5);
-		ApplicationClass.getInstance().updateScore(getLevel() * (hint *10));
+		if (hint != exitHint){
+			ApplicationClass.getInstance().updateShipMoney(-((hint + 1) * 50));
+			ApplicationClass.getInstance().updateFuel((hint + 1) * 5);
+			ApplicationClass.getInstance().updateScore(getLevel() * (hint *10));
+		}
+
 	}
 }

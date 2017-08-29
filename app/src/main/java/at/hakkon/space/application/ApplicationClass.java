@@ -2,6 +2,7 @@ package at.hakkon.space.application;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,6 +11,7 @@ import com.google.android.gms.games.Games;
 
 import java.util.ArrayList;
 
+import at.hakkon.space.R;
 import at.hakkon.space.achievement.Achievements;
 import at.hakkon.space.activity.MainActivity;
 import at.hakkon.space.datamodel.EGameOverReason;
@@ -100,7 +102,10 @@ public class ApplicationClass extends android.app.Application {
 			notifyShipListeners(getShip());
 		}
 
-		planet.getEvent().execute(getContext());
+		if (planet.getEvent() != null){
+			planet.getEvent().execute(getContext());
+		}
+
 		return moved;
 	}
 
@@ -273,5 +278,21 @@ public class ApplicationClass extends android.app.Application {
 
 	public int getScore(){
 		return score;
+	}
+
+	public static MediaPlayer music;
+
+	public void startMainMusic(Context context) {
+
+			if (music != null){
+				music.stop();
+			}
+			music = MediaPlayer.create(context, R.raw.main_theme);
+			music.setLooping(true);
+			music.start();
+	}
+
+	public void stopMainMusic() {
+		music.stop();
 	}
 }

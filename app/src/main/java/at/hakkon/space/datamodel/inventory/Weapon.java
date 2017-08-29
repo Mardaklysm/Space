@@ -9,18 +9,23 @@ import at.hakkon.space.datamodel.room.AbsRoom;
 public class Weapon implements IInventoryItem {
 
 	private String name;
-	private int health;
 	private int damage;
 	private int level;
 
+	private boolean isOneTimeWeapon = false;
+
 	private int energyCost;
 
-	public Weapon(int level, String name, int health, int damage, int energyCost) {
+	public Weapon(int level, String name, int damage, int energyCost) {
 		this.name = name;
-		this.health = health;
 		this.damage = damage;
 		this.energyCost = energyCost;
 		this.level = level;
+	}
+
+	public Weapon(int level, String name, int damage, int energyCost, boolean isOneTimeWeapon) {
+		this(level, name, damage, energyCost);
+		this.isOneTimeWeapon = isOneTimeWeapon;
 	}
 
 
@@ -29,9 +34,6 @@ public class Weapon implements IInventoryItem {
 		return name;
 	}
 
-	public int getHealth() {
-		return health;
-	}
 
 	public int getDamage() {
 		return damage;
@@ -41,30 +43,26 @@ public class Weapon implements IInventoryItem {
 		return Math.round(damage * modifier);
 	}
 
-	public int updateHalth(int health) {
-		return this.health;
-	}
 
 	public String getInformationDump() {
 		String retString = "";
 
-		retString += name + "(" + health + "HP, DMG: " + damage + ", Cost: " + energyCost + ")";
+		retString += name + "( DMG: " + damage + ", Cost: " + energyCost + ")";
 		return retString;
 	}
 
 	public static Weapon getLaser(int level) {
-		return new Weapon(level, "Laser Lv." + level, 5 * level, 5 * level, 3 * level);
+		return new Weapon(level, "Laser Lv." + level, 2 * level, 3 * level);
 	}
 
+
 	public static Weapon getRocket(int level) {
-		return new Weapon(level, "Rocket Lv." + level, 10 * level, 10 * level, 5 * level);
+		return new Weapon(level, "Rocket Lv." + level, 4 * level, 4 * level);
 	}
 
 	public static Weapon getNuke(int level) {
-		return new Weapon(level, "Nuke Lv." + level, 5 * level, 15 * level, 12 * level);
+		return new Weapon(level, "Nuke Lv." + level, 20 + 25 * level, 10 + 2 * level, true);
 	}
-
-
 
 	private AbsRoom target;
 
@@ -100,6 +98,11 @@ public class Weapon implements IInventoryItem {
 		return level * 50;
 	}
 
+	@Override
+	public String getDescription() {
+		return name;
+	}
+
 	public String getBattleLabel(float damageModifier) {
 		String retString = "";
 
@@ -108,5 +111,9 @@ public class Weapon implements IInventoryItem {
 		retString += (getTarget() != null ? "\n(" + getTarget().getName() + ")" : "\n ");
 
 		return retString;
+	}
+
+	public boolean isOneTimeWeapon() {
+		return isOneTimeWeapon;
 	}
 }

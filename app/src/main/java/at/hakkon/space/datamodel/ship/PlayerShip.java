@@ -10,9 +10,9 @@ import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
+import at.hakkon.space.datamodel.room.GeneratorRoom;
 import at.hakkon.space.datamodel.room.MechanicRoom;
 import at.hakkon.space.datamodel.room.NavigationRoom;
-import at.hakkon.space.datamodel.room.GeneratorRoom;
 import at.hakkon.space.datamodel.room.WeaponRoom;
 import at.hakkon.space.utility.Utility;
 
@@ -22,9 +22,9 @@ import at.hakkon.space.utility.Utility;
 
 public class PlayerShip extends AbsShip {
 
-	protected final static int START_HEALTH = 100;
+	protected final static int START_HEALTH = 200;
 
-	protected final static int START_FUEL = 300;
+	protected final static int START_FUEL = 100;
 	protected final static int START_MONEY = 500;
 
 
@@ -35,7 +35,7 @@ public class PlayerShip extends AbsShip {
 	private AbsPlanet startPlanet;
 
 	public PlayerShip(String name, int level) {
-		super(name, level, START_HEALTH, getInitPersons(), getInitRooms());
+		super(name, level, START_HEALTH);
 		this.money = START_MONEY;
 		this.fuel = START_FUEL;
 
@@ -43,28 +43,13 @@ public class PlayerShip extends AbsShip {
 		laser1.equip(true);
 		inventory.add(laser1);
 
-		Weapon laser2 = Weapon.getLaser(1);
-		laser2.equip(true);
-		inventory.add(laser2);
-
 		Weapon rocket1 = Weapon.getRocket(1);
 		rocket1.equip(true);
 		inventory.add(rocket1);
 
-		Weapon laser3 = Weapon.getLaser(1);
-		laser3.equip(false);
-		inventory.add(laser3);
-
-		Weapon laser4 = Weapon.getLaser(1);
-		laser4.equip(false);
-		inventory.add(laser4);
-
-		Weapon laser5 = Weapon.getLaser(1);
-		laser5.equip(false);
-		inventory.add(laser5);
 	}
 
-	private static ArrayList<Person> getInitPersons() {
+	protected ArrayList<Person> getInitPersons() {
 		ArrayList<Person> persons = new ArrayList<>();
 
 		persons.add(new Person("Markus"));
@@ -73,12 +58,12 @@ public class PlayerShip extends AbsShip {
 		return persons;
 	}
 
-	private static ArrayList<AbsRoom> getInitRooms() {
+	protected ArrayList<AbsRoom> getInitRooms() {
 		ArrayList<AbsRoom> rooms = new ArrayList<>();
-		rooms.add(new NavigationRoom(1));
-		rooms.add(new MechanicRoom(1));
-		rooms.add(new GeneratorRoom(1));
-		rooms.add(new WeaponRoom(1));
+		rooms.add(new NavigationRoom(this, 1));
+		rooms.add(new MechanicRoom(this, 1));
+		rooms.add(new GeneratorRoom(this, 1));
+		rooms.add(new WeaponRoom(this, 1));
 
 		return rooms;
 	}
@@ -149,6 +134,14 @@ public class PlayerShip extends AbsShip {
 		ApplicationClass.getInstance().updateFuel(-(Utility.getTravelCost(this, planet)));
 
 		currentPlanet = planet;
+
+		for (AbsRoom room : rooms) {
+			room.regenerate();
+			room.regenerate();
+			room.regenerate();
+		}
+
+
 		return true;
 	}
 
@@ -224,8 +217,6 @@ public class PlayerShip extends AbsShip {
 			ApplicationClass.getInstance().gameOver(EGameOverReason.OutOfHealth);
 		}
 	}
-
-
 
 
 }

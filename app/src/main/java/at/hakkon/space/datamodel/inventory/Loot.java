@@ -22,6 +22,7 @@ public class Loot {
 
 	public void addItem(IInventoryItem item){
 		if (!items.contains(item)){
+			item.equip(false);
 			items.add(item);
 		}
 	}

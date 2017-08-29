@@ -79,7 +79,7 @@ public class ShipFragment extends Fragment implements IShipListener, IMetaDataLi
 
 		for (final AbsRoom room : rooms) {
 			final Button button = new Button(getActivity());
-			button.setText(room.getName() + " (" + room.getEffectiveEfficency() + ")");
+			button.setText(room.getName() + " (" + room.getEfficency() + ")");
 
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override

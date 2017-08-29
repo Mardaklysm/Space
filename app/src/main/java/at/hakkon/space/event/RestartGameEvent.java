@@ -25,12 +25,12 @@ public class RestartGameEvent extends AbsEvent {
 
 	@Override
 	protected void executeImpl(Context context) {
-		Utility.getInstance().showYesNoDialog(context, "Game Over: " + reason.name() + "\nDo you want to restart the game? ", this);
+		Utility.getInstance().showYesNoDialog(context, "Game Over: " + reason.name() + "\nDo you want to restart the game (This is kinda rethorical ...) ? ", this);
 	}
 
 	@Override
 	public void callbackImpl(Context context, int hint) {
-		if (hint == 1){
+		if (reason != EGameOverReason.RestartRequested || hint == 1){
 			ApplicationClass.getInstance().restartGame();
 		}
 	}

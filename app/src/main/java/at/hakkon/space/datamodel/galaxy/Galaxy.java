@@ -3,6 +3,7 @@ package at.hakkon.space.datamodel.galaxy;
 import java.util.ArrayList;
 import java.util.Random;
 
+import at.hakkon.space.event.FuelShopEvent;
 import at.hakkon.space.event.GoToGalaxyEvent;
 import at.hakkon.space.event.RepairShopEvent;
 
@@ -51,23 +52,21 @@ public class Galaxy {
 			}
 		}
 
+		planets.get(0).setEvent(null);
+
 
 		addGoToGalaryEvent(planets.get(planets.size() - 1));
 
-		int shopPlanetIdx = random.nextInt(planets.size()-2) +1;
-		planets.get(shopPlanetIdx).setEvent(new RepairShopEvent(level));
 
-//		for (int i=0; i< MAX_STORE_COUNT; i++){
-//			boolean foundValidIndex = false;
-//			while (!foundValidIndex){
-//				int shopPlanetIdx = random.nextInt(planets.size()-1);
-//
-//				if ( !(planets.get(shopPlanetIdx).getEvent() instanceof RepairShopEvent)){
-//					foundValidIndex = true;
-//					planets.get(shopPlanetIdx).setEvent(new RepairShopEvent(level));
-//				}
-//			}
-//		}
+
+		int shopPlanetIdx = random.nextInt(planets.size()-2) +1;
+
+		if (random.nextBoolean()){
+			planets.get(shopPlanetIdx).setEvent(new RepairShopEvent(level));
+		}else{
+			planets.get(shopPlanetIdx).setEvent(new FuelShopEvent(level));
+		}
+
 
 	}
 

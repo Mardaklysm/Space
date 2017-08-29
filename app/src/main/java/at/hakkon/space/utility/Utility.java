@@ -47,6 +47,7 @@ public class Utility {
 		};
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(ApplicationClass.getInstance().getActiveContext());
+		builder.setCancelable(false);
 		builder.setMessage(text).setPositiveButton("Yes", dialogClickListener)
 				.setNegativeButton("No", dialogClickListener).show();
 
@@ -65,6 +66,10 @@ public class Utility {
 
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		if (charSequences.length > 0){
+			builder.setCancelable(false);
+		}
+
 
 		TextView textView = new TextView(context);
 		textView.setText(text);

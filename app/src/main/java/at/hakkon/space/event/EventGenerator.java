@@ -31,8 +31,13 @@ public class EventGenerator {
 
 
 		if (battleEncounter) {
-			int randShip = random.nextInt(2);
- 			event = createBattleEvent(level, EShipType.values()[randShip]);
+			if (level == 1){
+				event = createBattleEvent(level, EShipType.Enemy_A);
+			}else{
+				int randShip = random.nextInt(2);
+				event = createBattleEvent(level, EShipType.values()[randShip]);
+			}
+
 		} else {
 			int randId = random.nextInt(MAX_EVENT_COUNT);
 			switch (randId) {
@@ -46,13 +51,12 @@ public class EventGenerator {
 					event = new FlyingAstronautEvent(level);
 					break;
 				case 3:
-					event = new FuelShopEvent(level);
+					event = new MineEvent(level);
 					break;
 				default:
 					throw new RuntimeException("Invalid Event ID. I dont know any event with this ID: " + randId + ". :( ....");
 			}
 		}
-
 
 		return event;
 	}

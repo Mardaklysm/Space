@@ -87,4 +87,11 @@ public abstract class AbsEvent {
 	public void setEnabled(boolean enabled){
 		this.enabled = enabled;
 	}
+
+
+	private boolean canBeOverwritten = true;
+
+	protected void setCanBeOverwritten(boolean canBeOverwritten){
+		this.canBeOverwritten = canBeOverwritten;
+	}
 }

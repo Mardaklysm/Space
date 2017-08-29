@@ -19,6 +19,7 @@ public class GoToGalaxyEvent extends AbsEvent {
 
 	public GoToGalaxyEvent(int level) {
 		super(level);
+		setCanBeOverwritten(false);
 	}
 
 	@Override

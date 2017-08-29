@@ -75,7 +75,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		ApplicationClass.getInstance().addShipListener(this);
 
-		this.energyPlayer = (int) appClass.getShip().getGeneratorRoom().getEfficency();
+		this.energyPlayer = (int) appClass.getShip().getGeneratorRoom().getEffectiveEfficency();
 
 		//UI
 		updateHeader(ApplicationClass.getInstance().getShip());
@@ -98,45 +98,16 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		roundNr++;
 		addMessage("[Round " + roundNr + "]: Make your moves!");
 
+		refreshUI();
+
 	}
 
 
 	private void initWeaponButtonsListener(PlayerShip playerShip) {
-		ArrayList<Weapon> weapons = playerShip.getEquippedWeapons();
-
-		if (weapons.size() > 0) {
-			final Weapon weapon = playerShip.getEquippedWeapons().get(0);
-			addWeaponSelectionListener(findViewById(R.id.bBattleWeapon1), weapon);
-		} else {
-			findViewById(R.id.bBattleWeapon1).setVisibility(View.INVISIBLE);
-		}
-
-		if (weapons.size() > 1) {
-			Weapon weapon = playerShip.getEquippedWeapons().get(1);
-			addWeaponSelectionListener(findViewById(R.id.bBattleWeapon2), weapon);
-		} else {
-			findViewById(R.id.bBattleWeapon2).setVisibility(View.INVISIBLE);
-		}
-
-		if (weapons.size() > 2) {
-			Weapon weapon = playerShip.getEquippedWeapons().get(2);
-			addWeaponSelectionListener(findViewById(R.id.bBattleWeapon3), weapon);
-		} else {
-			findViewById(R.id.bBattleWeapon3).setVisibility(View.INVISIBLE);
-		}
-
-		if (weapons.size() > 3) {
-			Weapon weapon = playerShip.getEquippedWeapons().get(3);
-			addWeaponSelectionListener(findViewById(R.id.bBattleWeapon4), weapon);
-		} else {
-			findViewById(R.id.bBattleWeapon4).setVisibility(View.INVISIBLE);
-		}
-
 		((Button) findViewById(R.id.bBattleWeapon1)).setAllCaps(false);
 		((Button) findViewById(R.id.bBattleWeapon2)).setAllCaps(false);
 		((Button) findViewById(R.id.bBattleWeapon3)).setAllCaps(false);
 		((Button) findViewById(R.id.bBattleWeapon4)).setAllCaps(false);
-
 	}
 
 	private void addWeaponSelectionListener(View view, final Weapon weapon) {
@@ -180,6 +151,8 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 					String message = "Enemy (" + entry.getValue().getName() + ") took " + damage + " damage (" + entry.getKey().getName() + ")";
 					playActionAnimation(1, colorGreen, String.valueOf(damage));
 					addMessage(message);
+
+
 				} else {
 					String message = "Enemy (" + entry.getValue().getName() + ") evaded (" + entry.getKey().getName() + ")";
 					playActionAnimation(1, colorGreen, "Miss");
@@ -190,32 +163,35 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		}
 
 
-		//Fire weapons for Enemy AT the player
-		for (Weapon weapon : enemyShip.getWeapons()) {
-			if (energyEnemy - weapon.getEnergyCost() > 0) {
+		if (enemyShip.getHealth() > 0) {
+			//Fire weapons for Enemy AT the player
+			for (Weapon weapon : enemyShip.getWeapons()) {
+				if (energyEnemy - weapon.getEnergyCost() > 0) {
 
-				//Calculate room target
-				int rooms = appClass.getShip().getRooms().size();
+					//Calculate room target
+					int rooms = appClass.getShip().getRooms().size();
 
-				Random random = new Random();
-				int rndIdx = random.nextInt(rooms);
-				AbsRoom target = appClass.getShip().getRooms().get(rndIdx);
+					Random random = new Random();
+					int rndIdx = random.nextInt(rooms);
+					AbsRoom target = appClass.getShip().getRooms().get(rndIdx);
 
-				AttackResult attackResult = target.attackWithWeapon(enemyShip, appClass.getShip(), weapon);
-				int damage = attackResult.getDamage();
-				energyEnemy -= weapon.getEnergyCost();
+					AttackResult attackResult = target.attackWithWeapon(enemyShip, appClass.getShip(), weapon);
+					int damage = attackResult.getDamage();
+					energyEnemy -= weapon.getEnergyCost();
 
-				if (attackResult.isHit()) {
-					String message = "You " + target.getName() + " took " + damage + " damage (" + weapon.getName() + ")";
-					playActionAnimation(2, colorRed, String.valueOf(damage));
-					addMessage(message);
-				} else {
-					String message = "You evaded (" + weapon.getName() + ")";
-					playActionAnimation(1, colorRed, "Miss");
-					addMessage(message);
+					if (attackResult.isHit()) {
+						String message = "You " + target.getName() + " took " + damage + " damage (" + weapon.getName() + ")";
+						playActionAnimation(2, colorRed, String.valueOf(damage));
+						addMessage(message);
+					} else {
+						String message = "You evaded (" + weapon.getName() + ")";
+						playActionAnimation(1, colorRed, "Miss");
+						addMessage(message);
+					}
 				}
 			}
 		}
+
 
 		//PPREPARE NEXT ROUND
 		//resetUI
@@ -315,7 +291,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
+		builder.setCancelable(false);
 		TextView textView = new TextView(this);
 		textView.setText(message);
 
@@ -336,6 +312,10 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		}).show();
 
 		ApplicationClass.getInstance().updateScore(level * 100 + loot.getFuel() + loot.getMoney());
+
+		for (AbsRoom room : appClass.getShip().getRooms()) {
+			room.regenerate(true);
+		}
 
 	}
 
@@ -366,13 +346,13 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		int health = room.getHealth();
 		int maxHealth = room.getMaxHealth();
 
-		if (health <= maxHealth * 0.10) {
+		if (health <= maxHealth * 0.20) {
 			button.getBackground().setColorFilter(colorP10, PorterDuff.Mode.DARKEN);
-		} else if (health <= maxHealth * 0.25) {
-			button.getBackground().setColorFilter(colorP25, PorterDuff.Mode.DARKEN);
 		} else if (health <= maxHealth * 0.50) {
-			button.getBackground().setColorFilter(colorP50, PorterDuff.Mode.DARKEN);
+			button.getBackground().setColorFilter(colorP25, PorterDuff.Mode.DARKEN);
 		} else if (health <= maxHealth * 0.75) {
+			button.getBackground().setColorFilter(colorP50, PorterDuff.Mode.DARKEN);
+		} else if (health <= maxHealth * 0.99) {
 			button.getBackground().setColorFilter(colorP75, PorterDuff.Mode.DARKEN);
 		} else {
 			button.getBackground().setColorFilter(colorP100, PorterDuff.Mode.DARKEN);
@@ -448,7 +428,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			});
 		}
 
-		energyEnemy = (int) enemyShip.getGeneratorRoom().getEfficency();
+		energyEnemy = (int) enemyShip.getGeneratorRoom().getEffectiveEfficency();
 	}
 
 	private void selectTarget(Weapon weapon, AbsRoom target) {
@@ -527,28 +507,39 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		ArrayList<Weapon> weapons = playerShip.getEquippedWeapons();
 
+		findViewById(R.id.bBattleWeapon1).setVisibility(weapons.size() > 0 ? View.VISIBLE : View.INVISIBLE);
+		findViewById(R.id.bBattleWeapon2).setVisibility(weapons.size() > 1 ? View.VISIBLE : View.INVISIBLE);
+		findViewById(R.id.bBattleWeapon3).setVisibility(weapons.size() > 2 ? View.VISIBLE : View.INVISIBLE);
+		findViewById(R.id.bBattleWeapon4).setVisibility(weapons.size() > 3 ? View.VISIBLE : View.INVISIBLE);
+
+		mapWeaponButtons.clear();
+
 		if (weapons.size() > 0) {
 			Weapon weapon = playerShip.getEquippedWeapons().get(0);
-			((Button) findViewById(R.id.bBattleWeapon1)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEfficency()));
+			((Button) findViewById(R.id.bBattleWeapon1)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEffectiveEfficency()));
 			mapWeaponButtons.put(weapon, ((Button) findViewById(R.id.bBattleWeapon1)));
+			addWeaponSelectionListener(findViewById(R.id.bBattleWeapon1), weapon);
 		}
 
 		if (weapons.size() > 1) {
 			Weapon weapon = playerShip.getEquippedWeapons().get(1);
-			((Button) findViewById(R.id.bBattleWeapon2)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEfficency()));
+			((Button) findViewById(R.id.bBattleWeapon2)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEffectiveEfficency()));
 			mapWeaponButtons.put(weapon, ((Button) findViewById(R.id.bBattleWeapon2)));
+			addWeaponSelectionListener(findViewById(R.id.bBattleWeapon2), weapon);
 		}
 
 		if (weapons.size() > 2) {
 			Weapon weapon = playerShip.getEquippedWeapons().get(2);
-			((Button) findViewById(R.id.bBattleWeapon3)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEfficency()));
+			((Button) findViewById(R.id.bBattleWeapon3)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEffectiveEfficency()));
 			mapWeaponButtons.put(weapon, ((Button) findViewById(R.id.bBattleWeapon3)));
+			addWeaponSelectionListener(findViewById(R.id.bBattleWeapon3), weapon);
 		}
 
 		if (weapons.size() > 3) {
 			Weapon weapon = playerShip.getEquippedWeapons().get(3);
-			((Button) findViewById(R.id.bBattleWeapon4)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEfficency()));
+			((Button) findViewById(R.id.bBattleWeapon4)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEffectiveEfficency()));
 			mapWeaponButtons.put(weapon, ((Button) findViewById(R.id.bBattleWeapon4)));
+			addWeaponSelectionListener(findViewById(R.id.bBattleWeapon4), weapon);
 		}
 	}
 
@@ -572,7 +563,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		ApplicationClass.getInstance().removeShipListener(this);
 
-		if (ApplicationClass.playMusic){
+		if (ApplicationClass.playMusic) {
 			music.stop();
 		}
 
@@ -599,6 +590,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		String text = "Do you want to get away from the battle?";
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setCancelable(false);
 		builder.setMessage(text).setPositiveButton("Yes", dialogClickListener)
 				.setNegativeButton("No", dialogClickListener).show();
 	}
@@ -609,12 +601,13 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 
 	private MediaPlayer music;
+
 	@Override
-	public void onStart(){
+	public void onStart() {
 		super.onStart();
 
-		if (ApplicationClass.playMusic){
-			music = MediaPlayer.create(this,R.raw.battle01);
+		if (ApplicationClass.playMusic) {
+			music = MediaPlayer.create(this, R.raw.trainer_battle);
 			music.start();
 		}
 

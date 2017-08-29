@@ -32,14 +32,15 @@ public abstract class AbsShip {
 	protected ArrayList<AbsRoom> rooms = new ArrayList<>();
 	protected ArrayList<IInventoryItem> inventory = new ArrayList<>();
 
-	public AbsShip(String name, int level, int health, ArrayList<Person> persons, ArrayList<AbsRoom> rooms) {
+	public AbsShip(String name, int level, int health) {
 		this.name = name;
 		this.health = health;
 		this.maxHealth = health;
-
-		this.persons = persons;
-		this.rooms = rooms;
 		this.level = level;
+
+		this.persons = getInitPersons();
+		this.rooms = getInitRooms();
+
 
 	}
 
@@ -106,7 +107,7 @@ public abstract class AbsShip {
 		ArrayList<Weapon> weapons = new ArrayList<>();
 
 		for (IInventoryItem item : inventory) {
-			if ((item instanceof Weapon) && (((Weapon) item).isEquipped())) {
+			if ((item instanceof Weapon) && (item.isEquipped())) {
 				weapons.add((Weapon) item);
 			}
 		}
@@ -233,5 +234,12 @@ public abstract class AbsShip {
 		float hitValue = random.nextFloat();
 
 		return hitValue > evadeChanche;
+	}
+
+	abstract protected ArrayList<Person> getInitPersons();
+	abstract protected ArrayList<AbsRoom> getInitRooms();
+
+	public int getMaxHealth(){
+		return maxHealth;
 	}
 }

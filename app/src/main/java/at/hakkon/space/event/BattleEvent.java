@@ -20,6 +20,7 @@ public class BattleEvent extends AbsEvent {
 	public BattleEvent(int level, EShipType shipType) {
 		super(level);
 		this.shipType = shipType;
+
 	}
 
 	@Override

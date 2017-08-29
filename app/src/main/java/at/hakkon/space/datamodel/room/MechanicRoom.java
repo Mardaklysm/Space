@@ -1,6 +1,7 @@
 package at.hakkon.space.datamodel.room;
 
 import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.datamodel.ship.AbsShip;
 
 /**
  * Created by Markus on 29.07.2017.
@@ -8,8 +9,8 @@ import at.hakkon.space.application.ApplicationClass;
 
 public class MechanicRoom extends AbsRoom {
 
-	public MechanicRoom(int level) {
-		super(level);
+	public MechanicRoom(AbsShip ship, int level) {
+		super(ship, level);
 	}
 
 	@Override
@@ -30,7 +31,7 @@ public class MechanicRoom extends AbsRoom {
 
 	@Override
 	public String getUpgradeInformationText() {
-		return "Ship Health: +50\nDamage Reduction: (" + getEfficency() + ") => " + (getEfficency() +1) + "\nRoom Repair Rate(" + getEfficency() + ") => " + (getEfficency() +1);
+		return "Ship Health: +50\nRoom Repair Rate(" + getEfficency() + ") => " + (getEfficency() +1);
 	}
 
 

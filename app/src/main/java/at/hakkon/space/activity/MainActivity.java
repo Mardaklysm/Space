@@ -1,6 +1,5 @@
 package at.hakkon.space.activity;
 
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 					return true;
 				case R.id.navigation_map:
 					viewPager.setCurrentItem(1, false);
-					adapter.getMapFragment().setVisible();
 					return true;
 				case R.id.navigation_planet:
 					viewPager.setCurrentItem(2, false);
@@ -75,10 +73,10 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 
 
 		appClass.initialize();
-
+		Games.setViewForPopups(ApplicationClass.getInstance().getGoogleApiClient(), findViewById(R.id.gps_popup));
 	}
 
-	MediaPlayer music;
+
 
 	@Override
 	public void onResume() {
@@ -86,12 +84,10 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 
 		ApplicationClass.getInstance().updateActiveContext(this);
 
-		Games.setViewForPopups(ApplicationClass.getInstance().getGoogleApiClient(), findViewById(R.id.gps_popup));
+
 
 		if (ApplicationClass.playMusic) {
-			music = MediaPlayer.create(this, R.raw.main_theme);
-			music.setLooping(true);
-			music.start();
+			ApplicationClass.getInstance().startMainMusic(this);
 		}
 
 	}
@@ -128,7 +124,8 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 	public void onStop() {
 		super.onStop();
 		if (ApplicationClass.playMusic) {
-			music.stop();
+			ApplicationClass.getInstance().stopMainMusic();
+
 		}
 
 	}

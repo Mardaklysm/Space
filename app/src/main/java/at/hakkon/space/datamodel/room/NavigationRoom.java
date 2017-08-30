@@ -21,20 +21,26 @@ public class NavigationRoom extends AbsRoom {
 	/**
 	 * Percentage for evading attacks
 	 */
-	public float getEfficency() {
-		float value = getEfficency(getLevel());
+	public double getEfficency() {
+		double value = getEfficency(getLevel());
 		return value;
 	}
 
-	private float getEfficency(int level) {
-		float value = (float) level * 5f / 100f;
+	private double getEfficency(int level) {
+		double value = (double) level * 5f / 100f;
 
-		value = Math.min(value, 0.9f);
+		value = Math.min(value, 0.75f); //Cap evasion at 75%
+
 		return value;
 	}
 
 	@Override
 	public String getUpgradeInformationText() {
-		return "Evasion (" + getEfficency(getLevel()) + ") => " + getEfficency(getLevel()+1);
+		return "Evasion: " + (int)(getEfficency(getLevel()))*100 + "%" + " => " + (int)(((getEfficency(getLevel()+1)))*100) + "%";
+	}
+
+	@Override
+	protected int getMaxHealthForLevel(int level) {
+		return level * 5;
 	}
 }

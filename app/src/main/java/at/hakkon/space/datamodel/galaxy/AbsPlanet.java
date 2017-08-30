@@ -20,21 +20,12 @@ public abstract class AbsPlanet {
 		this.planetPosition = planetPosition;
 	}
 
-
-
-
-
 	public String getInformationDump(){
 		String retString = "";
 
 		retString+="Planet (" + name + ")";
 
 		return retString;
-	}
-
-	public int getTravelCosts(){
-		//TODO: Implement some cool star map
-		return 2;
 	}
 
 	public String getName() {
@@ -58,4 +49,28 @@ public abstract class AbsPlanet {
 		this.event = event;
 	}
 
+	public void revealName(){
+		switch (event.getEventType()){
+
+			case Nothing:
+				name = "Empty";
+				break;
+			case Shop:
+				name = "Shop";
+				break;
+			case Battle:
+				name = "Empty";
+				break;
+			case ResourceBonus:
+				name = "Empty";
+				break;
+			case Question:
+				name = "Empty";
+				break;
+			case TravelQuestion:
+				break;
+			case Upgrade:
+				break;
+		}
+	}
 }

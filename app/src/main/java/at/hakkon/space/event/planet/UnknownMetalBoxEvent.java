@@ -1,4 +1,4 @@
-package at.hakkon.space.event;
+package at.hakkon.space.event.planet;
 
 import android.content.Context;
 
@@ -8,6 +8,9 @@ import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.inventory.GenericLoot;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.ship.PlayerShip;
+import at.hakkon.space.event.AbsEvent;
+import at.hakkon.space.event.EEventType;
+import at.hakkon.space.datamodel.inventory.EGenricLootType;
 import at.hakkon.space.utility.Utility;
 
 /**

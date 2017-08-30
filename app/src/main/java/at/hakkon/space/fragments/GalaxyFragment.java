@@ -69,8 +69,7 @@ public class GalaxyFragment extends Fragment implements IGalaxyListener {
 			}
 
 
-
-			GalaxyRowView galaxyRowView = new GalaxyRowView(getActivity(), ApplicationClass.getInstance().getShip(), rowPlanets);
+			GalaxyRowView galaxyRowView = new GalaxyRowView(getActivity(), ApplicationClass.getInstance().getShip(), rowPlanets.get(0));
 			LinearLayout parent = (LinearLayout) view.findViewById(R.id.llGalaxyContent);
 
 			parent.addView(galaxyRowView);

@@ -1,4 +1,4 @@
-package at.hakkon.space.event;
+package at.hakkon.space.event.planet;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,6 +7,8 @@ import com.google.android.gms.games.Games;
 
 import at.hakkon.space.achievement.Achievements;
 import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.event.AbsEvent;
+import at.hakkon.space.event.EEventType;
 import at.hakkon.space.utility.Utility;
 
 /**

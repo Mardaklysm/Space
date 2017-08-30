@@ -1,7 +1,5 @@
 package at.hakkon.space.datamodel.inventory;
 
-import at.hakkon.space.event.EGenricLootType;
-
 /**
  * Created by Markus on 28.08.2017.
  */

@@ -1,9 +1,11 @@
-package at.hakkon.space.event;
+package at.hakkon.space.event.management;
 
 import android.content.Context;
 
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
+import at.hakkon.space.event.AbsEvent;
+import at.hakkon.space.event.EEventType;
 import at.hakkon.space.utility.Utility;
 
 /**

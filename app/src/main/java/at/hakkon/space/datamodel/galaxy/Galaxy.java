@@ -3,9 +3,9 @@ package at.hakkon.space.datamodel.galaxy;
 import java.util.ArrayList;
 import java.util.Random;
 
-import at.hakkon.space.event.FuelShopEvent;
-import at.hakkon.space.event.GoToGalaxyEvent;
-import at.hakkon.space.event.RepairShopEvent;
+import at.hakkon.space.event.planet.FuelShopEvent;
+import at.hakkon.space.event.planet.GoToGalaxyEvent;
+import at.hakkon.space.event.planet.RepairShopEvent;
 
 /**
  * Created by Markus on 29.07.2017.
@@ -42,7 +42,7 @@ public class Galaxy {
 		Random random = new Random();
 		for (int i = 0; i <= getGalaxyDepth(); i++) {
 
-			AbsPlanet planet = new GenericPlanet(this, "Generic Planet " + i, new PlanetPosition(planetX, planetY));
+			AbsPlanet planet = new GenericPlanet(this, "Unknown " + i, new PlanetPosition(planetX, planetY));
 			planets.add(planet);
 			planetY++;
 			planetX = random.nextInt(MAX_GALAXY_WIDTH);
@@ -52,6 +52,7 @@ public class Galaxy {
 			}
 		}
 
+		planets.get(0).revealName();
 		planets.get(0).setEvent(null);
 
 

@@ -1,10 +1,12 @@
-package at.hakkon.space.event;
+package at.hakkon.space.event.planet;
 
 import android.content.Context;
 
 import java.util.Random;
 
 import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.event.AbsEvent;
+import at.hakkon.space.event.EEventType;
 import at.hakkon.space.utility.Utility;
 
 /**
@@ -14,6 +16,8 @@ import at.hakkon.space.utility.Utility;
 public class ResourceBonusEvent extends AbsEvent {
 
 	private int resourceBonusFuel;
+
+	private boolean executed = false;
 
 	public ResourceBonusEvent(int level) {
 		super(level);
@@ -29,9 +33,11 @@ public class ResourceBonusEvent extends AbsEvent {
 	@Override
 	protected void executeImpl(Context context) {
 		if (!canBeExecuted()) {
-			Utility.getInstance().showTextDialog(context, "There are no resources left.");
+	//		Utility.getInstance().showTextDialog(context, "There are no resources left.");
 			return;
 		}
+
+		executed = true;
 
 		Random random = new Random();
 
@@ -56,5 +62,10 @@ public class ResourceBonusEvent extends AbsEvent {
 	@Override
 	public EEventType getEventType() {
 		return EEventType.ResourceBonus;
+	}
+
+	@Override
+	public boolean canBeExecuted(){
+		return !executed;
 	}
 }

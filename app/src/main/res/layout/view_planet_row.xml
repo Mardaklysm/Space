@@ -4,22 +4,15 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_margin="10dp"
-              android:background="@color/colorDarkGrey1" android:orientation="horizontal">
+              android:background="@color/colorDarkGrey1"
+              android:orientation="vertical">
 
     <Button
         android:id="@+id/bPos0"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_weight="1" android:text="Button"/>
-    <Button
-        android:id="@+id/bPos1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_weight="1" android:text="Button"/>
-    <Button
-        android:id="@+id/bPos2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_weight="1" android:text="Button"/>
-    <Button
-        android:id="@+id/bPos3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_weight="1" android:text="Button"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:drawableLeft="@mipmap/ic_planet"
+        android:singleLine="true" android:text="Unknown 1"/>
+
 </LinearLayout>

@@ -8,7 +8,7 @@
     <string name="package_name" translatable="false">at.hakkon.space</string>
 
     <!-- leaderboard Highscore -->
-    <string name="leaderboard_highscore" translatable="false">CgkI5LP25OEdEAIQBQ</string>
-
+   <!-- <string name="leaderboard_highscore" translatable="false">CgkI5LP25OEdEAIQBQ</string>-->
+   <!-- ? <string name="leaderboard_highscore" translatable="false">CgkI5LP25OEdEAIQDw</string> -->
 
 </resources>

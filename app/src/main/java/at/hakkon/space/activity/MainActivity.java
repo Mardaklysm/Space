@@ -103,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 		super.onDestroy();
 
 		ApplicationClass.getInstance().removeShipListener(this);
-		ApplicationClass.getInstance().removeShipListener(adapter.getPlanetFragment());
 		ApplicationClass.getInstance().removeShipListener(adapter.getShipFragment());
 
 

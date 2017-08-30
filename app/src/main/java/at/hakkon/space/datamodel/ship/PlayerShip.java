@@ -72,13 +72,7 @@ public class PlayerShip extends AbsShip {
 	public String getInformationDump() {
 		String retString = "";
 
-		retString += "Crew Members\n";
-
-		for (Person person : getPersons()) {
-			retString += person.getInformationDump();
-			retString += "\n\n";
-		}
-
+		retString += "Crew Members: " + getPersons().size();
 		return retString;
 	}
 

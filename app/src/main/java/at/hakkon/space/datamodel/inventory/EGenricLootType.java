@@ -1,4 +1,4 @@
-package at.hakkon.space.event;
+package at.hakkon.space.datamodel.inventory;
 
 /**
  * Created by Markus on 29.08.2017.

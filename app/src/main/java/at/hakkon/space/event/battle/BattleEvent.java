@@ -1,10 +1,12 @@
-package at.hakkon.space.event;
+package at.hakkon.space.event.battle;
 
 import android.content.Context;
 import android.content.Intent;
 
 import at.hakkon.space.activity.BattleActivity;
 import at.hakkon.space.datamodel.ship.EShipType;
+import at.hakkon.space.event.AbsEvent;
+import at.hakkon.space.event.EEventType;
 
 /**
  * Created by Markus on 04.08.2017.

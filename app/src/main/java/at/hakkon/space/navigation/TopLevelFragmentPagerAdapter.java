@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import at.hakkon.space.fragments.GalaxyFragment;
-import at.hakkon.space.fragments.PlanetFragment;
+import at.hakkon.space.fragments.SocialFragment;
 import at.hakkon.space.fragments.ShipFragment;
 
 public class TopLevelFragmentPagerAdapter extends FragmentStatePagerAdapter {
@@ -13,7 +13,7 @@ public class TopLevelFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
 	private ShipFragment tab1;
 	private GalaxyFragment tab2;
-	private PlanetFragment tab3;
+	private SocialFragment tab3;
 
 	private static TopLevelFragmentPagerAdapter instance;
 
@@ -46,7 +46,7 @@ public class TopLevelFragmentPagerAdapter extends FragmentStatePagerAdapter {
 				return tab2;
 			case 2:
 				if (tab3 == null) {
-					tab3 = new PlanetFragment();
+					tab3 = new SocialFragment();
 				}
 				return tab3;
 			default:
@@ -59,7 +59,7 @@ public class TopLevelFragmentPagerAdapter extends FragmentStatePagerAdapter {
 		return tab1;
 	}
 
-	public PlanetFragment getPlanetFragment() {
+	public SocialFragment getPlanetFragment() {
 		return tab3;
 	}
 

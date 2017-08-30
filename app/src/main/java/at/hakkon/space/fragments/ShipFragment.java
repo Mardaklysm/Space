@@ -21,9 +21,9 @@ import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.ship.PlayerShip;
-import at.hakkon.space.event.RestartGameEvent;
-import at.hakkon.space.event.SellEvent;
-import at.hakkon.space.event.UpgradeEvent;
+import at.hakkon.space.event.management.RestartGameEvent;
+import at.hakkon.space.event.management.SellEvent;
+import at.hakkon.space.event.management.UpgradeEvent;
 import at.hakkon.space.listener.IShipListener;
 
 /**

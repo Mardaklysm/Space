@@ -20,7 +20,7 @@ import at.hakkon.space.datamodel.galaxy.Galaxy;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.ship.PlayerShip;
-import at.hakkon.space.event.RestartGameEvent;
+import at.hakkon.space.event.management.RestartGameEvent;
 import at.hakkon.space.listener.IGalaxyListener;
 import at.hakkon.space.listener.IPlanetVisitListener;
 import at.hakkon.space.listener.IShipListener;
@@ -28,7 +28,7 @@ import at.hakkon.space.utility.Utility;
 
 public class ApplicationClass extends android.app.Application {
 
-	public static final String LEADERBOARD_ID = "CgkI5LP25OEdEAIQBQ";
+	public static final String LEADERBOARD_ID = "CgkI5LP25OEdEAIQEA";
 	private static ApplicationClass instance;
 
 	private ArrayList<IShipListener> shipListeners = new ArrayList<>();
@@ -96,14 +96,17 @@ public class ApplicationClass extends android.app.Application {
 
 	public boolean moveToPlanet(AbsPlanet planet) {
 		boolean moved = getShip().moveToPlanet(planet);
-
+		planet.revealName();
 		if (moved) {
 			notifyPlanetVisitListener(planet);
 			notifyShipListeners(getShip());
 		}
 
+
+
 		if (planet.getEvent() != null){
 			planet.getEvent().execute(getContext());
+
 		}
 
 		return moved;

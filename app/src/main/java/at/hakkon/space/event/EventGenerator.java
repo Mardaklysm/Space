@@ -3,6 +3,11 @@ package at.hakkon.space.event;
 import java.util.Random;
 
 import at.hakkon.space.datamodel.ship.EShipType;
+import at.hakkon.space.event.battle.BattleEvent;
+import at.hakkon.space.event.planet.FlyingAstronautEvent;
+import at.hakkon.space.event.planet.MineEvent;
+import at.hakkon.space.event.planet.ResourceBonusEvent;
+import at.hakkon.space.event.planet.UnknownMetalBoxEvent;
 
 /**
  * Created by Markus on 29.07.2017.

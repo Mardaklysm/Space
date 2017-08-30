@@ -3,37 +3,35 @@ package at.hakkon.space.views;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import java.util.ArrayList;
-
 import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.ship.PlayerShip;
-import at.hakkon.space.event.TravelQuestionEvent;
+import at.hakkon.space.event.planet.TravelQuestionEvent;
 import at.hakkon.space.listener.IPlanetVisitListener;
 
 /**
  * Created by Markus on 29.07.2017.
  */
 
-public class GalaxyRowView extends LinearLayout implements IPlanetVisitListener{
+public class GalaxyRowView extends LinearLayout implements IPlanetVisitListener {
 
 	private View view;
 	private PlayerShip ship;
 
-	private  ArrayList<AbsPlanet> planets;
+	private AbsPlanet planet;
 
-	public GalaxyRowView(Context context, PlayerShip ship, ArrayList<AbsPlanet> planets) {
+	public GalaxyRowView(Context context, PlayerShip ship, AbsPlanet planet) {
 		super(context);
 
-		this.planets = planets;
+		this.planet = planet;
 		this.ship = ship;
-
 
 
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -47,68 +45,58 @@ public class GalaxyRowView extends LinearLayout implements IPlanetVisitListener{
 
 	public void updateView() {
 
-		boolean posExists0 = false;
-		boolean posExists1 = false;
-		boolean posExists2 = false;
-		boolean posExists3 = false;
+		Button btn = (Button) view.findViewById(R.id.bPos0);
 
-		for (AbsPlanet planet: planets){
-			int position = planet.getPlanetPosition().getX();
+		int position = planet.getPlanetPosition().getX();
+		addButtonListener(btn, planet);
+		btn.setText(planet.getName());
 
-			switch (position){
-				case 0: addButtonListener((Button) view.findViewById(R.id.bPos0), planet); posExists0 = true; break;
-				case 1: addButtonListener((Button) view.findViewById(R.id.bPos1), planet); posExists1 = true; break;
-				case 2: addButtonListener((Button) view.findViewById(R.id.bPos2), planet); posExists2 = true; break;
-				case 3: addButtonListener((Button) view.findViewById(R.id.bPos3), planet); posExists3 = true; break;
-			}
-
-
-
-			if (planet.equals(ship.getCurrentPlanet())){
-				int color = Color.parseColor("#00ff00");
-				switch (position){
-					case 0: view.findViewById(R.id.bPos0).getBackground().setColorFilter(color, PorterDuff.Mode.DARKEN); break;
-					case 1: view.findViewById(R.id.bPos1).getBackground().setColorFilter(color, PorterDuff.Mode.DARKEN); break;
-					case 2: view.findViewById(R.id.bPos2).getBackground().setColorFilter(color, PorterDuff.Mode.DARKEN); break;
-					case 3: view.findViewById(R.id.bPos3).getBackground().setColorFilter(color, PorterDuff.Mode.DARKEN); break;
-				}
-			}else{
-				int color = Color.parseColor("#00ff00");
-				switch (position){
-					case 0: view.findViewById(R.id.bPos0).getBackground().setColorFilter(null); break;
-					case 1: view.findViewById(R.id.bPos1).getBackground().setColorFilter(null); break;
-					case 2: view.findViewById(R.id.bPos2).getBackground().setColorFilter(null); break;
-					case 3: view.findViewById(R.id.bPos3).getBackground().setColorFilter(null); break;
-				}
-			}
+		if (planet.equals(ship.getCurrentPlanet())) {
+			btn.getBackground().setColorFilter(Color.parseColor("#00ff00"), PorterDuff.Mode.DARKEN);
+		} else {
+			btn.getBackground().setColorFilter(null);
 		}
 
-		if (!posExists0){
-			view.findViewById(R.id.bPos0).setVisibility(INVISIBLE);
+		//Move view based on its position
+
+		//Position is form left to right 0 -> 3
+
+		int margin = (int) getResources().getDimension(R.dimen.planet_button_positioning_margin);
+		if (position == 0) {
+
+		} else if (position == 1) {
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+			params.gravity = Gravity.LEFT;
+
+			params.setMargins(margin, 0, 0, 0);
+			btn.setLayoutParams(params);
+		} else if (position == 2) {
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+			params.gravity = Gravity.RIGHT;
+
+			params.setMargins(0, 0, margin, 0);
+			btn.setLayoutParams(params);
+		} else if (position == 3) {
+			LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT);
+			params.gravity = Gravity.RIGHT;
+
+			btn.setLayoutParams(params);
 		}
-		if (!posExists1){
-			view.findViewById(R.id.bPos1).setVisibility(INVISIBLE);
-		}
-		if (!posExists2){
-			view.findViewById(R.id.bPos2).setVisibility(INVISIBLE);
-		}
-		if (!posExists3){
-			view.findViewById(R.id.bPos3).setVisibility(INVISIBLE);
-		}
+
 
 	}
 
 
-	private void addButtonListener(Button button, final AbsPlanet planet){
+	private void addButtonListener(Button button, final AbsPlanet planet) {
 		button.setText(planet.getName());
 		button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (planet.equals(ApplicationClass.getInstance().getShip().getCurrentPlanet())) {
-					if (planet.getEvent() != null){
+					if (planet.getEvent() != null) {
 						planet.getEvent().execute(getContext());
 					}
-				}else{
+				} else {
 					TravelQuestionEvent travelQuestionEvent = new TravelQuestionEvent(1);
 					travelQuestionEvent.init(getContext(), ApplicationClass.getInstance().getShip(), planet);
 					travelQuestionEvent.execute(getContext());
@@ -117,12 +105,6 @@ public class GalaxyRowView extends LinearLayout implements IPlanetVisitListener{
 			}
 		});
 
-	}
-
-
-
-	public ArrayList<AbsPlanet> getPlanets(){
-		return planets;
 	}
 
 

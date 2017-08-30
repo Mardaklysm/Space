@@ -19,10 +19,10 @@ import at.hakkon.space.datamodel.room.WeaponRoom;
 
 public class EnemyBossShipA extends AbsShip {
 
-	protected final static int START_HEALTH = 5;
+	protected final static int START_HEALTH = 50;
 
 	public EnemyBossShipA(String name, int level) {
-		super(name, level, START_HEALTH + 3 * level);
+		super(name, level, START_HEALTH + 30 * level);
 
 		Random random = new Random();
 

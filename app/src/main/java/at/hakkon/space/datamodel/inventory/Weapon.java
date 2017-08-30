@@ -8,11 +8,13 @@ import at.hakkon.space.datamodel.room.AbsRoom;
 
 public class Weapon implements IInventoryItem {
 
+	private boolean alwaysHits = false;
 	private String name;
 	private int damage;
 	private int level;
 
 	private boolean isOneTimeWeapon = false;
+	private boolean attacksAll = false;
 
 	private int energyCost;
 
@@ -21,11 +23,13 @@ public class Weapon implements IInventoryItem {
 		this.damage = damage;
 		this.energyCost = energyCost;
 		this.level = level;
+		this.alwaysHits = false;
 	}
 
-	public Weapon(int level, String name, int damage, int energyCost, boolean isOneTimeWeapon) {
+	public Weapon(int level, String name, int damage, int energyCost, boolean isOneTimeWeapon, boolean attacksAll) {
 		this(level, name, damage, energyCost);
 		this.isOneTimeWeapon = isOneTimeWeapon;
+		this.attacksAll = attacksAll;
 	}
 
 
@@ -39,8 +43,8 @@ public class Weapon implements IInventoryItem {
 		return damage;
 	}
 
-	public int getDamage(float modifier) {
-		return Math.round(damage * modifier);
+	public int getDamage(double modifier) {
+		return (int) Math.round(damage * modifier);
 	}
 
 
@@ -52,16 +56,22 @@ public class Weapon implements IInventoryItem {
 	}
 
 	public static Weapon getLaser(int level) {
-		return new Weapon(level, "Laser Lv." + level, 2 * level, 3 * level);
+		return new Weapon(level, "Laser Lv." + level, 4 * level, 3 * level);
 	}
 
 
 	public static Weapon getRocket(int level) {
-		return new Weapon(level, "Rocket Lv." + level, 4 * level, 4 * level);
+		return new Weapon(level, "Rocket Lv." + level, 2 * level, 3 * level, false, true);
 	}
 
 	public static Weapon getNuke(int level) {
-		return new Weapon(level, "Nuke Lv." + level, 15 + 10 * level, 10 + 2 * level, true);
+		Weapon weapon = new Weapon(level, "Nuke Lv." + level, 10 + 5 * level, 10 + 3 * level, true, true);
+		weapon.setAlwaysHits(true);
+		return weapon;
+	}
+
+	public void setAlwaysHits(boolean alwaysHits) {
+		this.alwaysHits = alwaysHits;
 	}
 
 	private AbsRoom target;
@@ -103,7 +113,7 @@ public class Weapon implements IInventoryItem {
 		return name;
 	}
 
-	public String getBattleLabel(float damageModifier) {
+	public String getBattleLabel(double damageModifier) {
 		String retString = "";
 
 		//Costs,Name, Danage
@@ -115,5 +125,13 @@ public class Weapon implements IInventoryItem {
 
 	public boolean isOneTimeWeapon() {
 		return isOneTimeWeapon;
+	}
+
+	public boolean alwaysHits() {
+		return alwaysHits;
+	}
+
+	public boolean attacksAll() {
+		return attacksAll;
 	}
 }

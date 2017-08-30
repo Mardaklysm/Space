@@ -25,6 +25,8 @@ public class EventGenerator {
 		return instance;
 	}
 
+	private int lastEventId = -1;
+
 	private final static int MAX_EVENT_COUNT = 4;
 
 	public AbsEvent generateRandomEvent(int level) {
@@ -45,6 +47,13 @@ public class EventGenerator {
 
 		} else {
 			int randId = random.nextInt(MAX_EVENT_COUNT);
+
+			//Make sure that we never have the same event twice in a row!
+			while (randId == lastEventId){
+				randId = random.nextInt(MAX_EVENT_COUNT);
+			}
+			lastEventId = randId;
+
 			switch (randId) {
 				case 0:
 					event = new ResourceBonusEvent(level);
@@ -67,6 +76,6 @@ public class EventGenerator {
 	}
 
 	private AbsEvent createBattleEvent(int level, EShipType shipType) {
-		return new BattleEvent(level, shipType);
+		return new BattleEvent(level, shipType, false);
 	}
 }

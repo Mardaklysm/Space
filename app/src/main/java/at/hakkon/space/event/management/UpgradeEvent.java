@@ -32,14 +32,14 @@ public class UpgradeEvent extends AbsEvent {
 		if (ApplicationClass.getInstance().getShip().getMoney() >= room.getUpgradeCosts()) {
 			String text = "";
 			//text += room.getName() + " Lv." + room.getLevel() + " (" + room.getEfficency() + ")";
-			text += room.getName() + " (" + room.getEffectiveEfficency() + ")\n\n";
+			text += room.getName() + " (" + room.getEfficency() + ")\n\n";
 			text += "Upgrade this room for " + room.getUpgradeCosts() + "$ ?\n\n";
 			text += room.getUpgradeInformationText();
 			Utility.getInstance().showYesNoDialog(context, text, this);
 		} else {
 			String text = "";
 			//text += room.getName() + " Lv." + room.getLevel() + " (" + room.getEfficency() + ")";
-			text += room.getName() + " (" + room.getEffectiveEfficency() + ")\n\n";
+			text += room.getName() + " (" + room.getEfficency() + ")\n\n";
 			text += "You are missing " + (room.getUpgradeCosts() - ApplicationClass.getInstance().getShip().getMoney()) + "$ to upgrade!";
 			Utility.getInstance().showTextDialog(context, text);
 		}

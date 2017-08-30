@@ -14,16 +14,16 @@ public abstract class AbsPlanet {
 	private String name;
 	private PlanetPosition planetPosition;
 
-	public AbsPlanet(Galaxy galaxy, String name, PlanetPosition planetPosition){
-		this.galaxy =galaxy;
+	public AbsPlanet(Galaxy galaxy, String name, PlanetPosition planetPosition) {
+		this.galaxy = galaxy;
 		this.name = name;
 		this.planetPosition = planetPosition;
 	}
 
-	public String getInformationDump(){
+	public String getInformationDump() {
 		String retString = "";
 
-		retString+="Planet (" + name + ")";
+		retString += "Planet (" + name + ")";
 
 		return retString;
 	}
@@ -32,7 +32,7 @@ public abstract class AbsPlanet {
 		return name;
 	}
 
-	public Galaxy getGalaxy(){
+	public Galaxy getGalaxy() {
 		return galaxy;
 	}
 
@@ -45,27 +45,35 @@ public abstract class AbsPlanet {
 		return event;
 	}
 
-	public void setEvent(AbsEvent event){
+	public void setEvent(AbsEvent event) {
 		this.event = event;
 	}
 
-	public void revealName(){
-		switch (event.getEventType()){
+	public void revealName() {
+		if (getGalaxy().getPlanets().get(getGalaxy().getPlanets().size()-1).equals(this)){
+			name = "Boss";
+			return;
+		}
 
+		switch (event.getEventType()) {
+
+			case Boss:
+				name = "Boss";
+				break;
 			case Nothing:
-				name = "Empty";
+				name = "Clear";
 				break;
 			case Shop:
 				name = "Shop";
 				break;
 			case Battle:
-				name = "Empty";
+				name = "Clear";
 				break;
 			case ResourceBonus:
-				name = "Empty";
+				name = "Clear";
 				break;
 			case Question:
-				name = "Empty";
+				name = "Clear";
 				break;
 			case TravelQuestion:
 				break;

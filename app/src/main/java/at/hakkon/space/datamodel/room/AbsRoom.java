@@ -6,6 +6,7 @@ import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.ship.AbsShip;
+import at.hakkon.space.utility.Utility;
 
 public abstract class AbsRoom {
 
@@ -22,9 +23,10 @@ public abstract class AbsRoom {
 
 	public AbsRoom(AbsShip ship, int level) {
 		this.level = level;
-		health = 20 + level * 10;
-		maxHealth = health;
+		health = getMaxHealthForLevel(level);
+
 		this.ship = ship;
+		this.maxHealth = health;
 	}
 
 	public AbsShip getShip() {
@@ -67,8 +69,8 @@ public abstract class AbsRoom {
 	}
 
 	public AttackResult attackWithWeapon(AbsShip attacker, AbsShip defender, Weapon weapon) {
-		if (attacker.hits(defender)) {
-			int weaponDamage = defender.getWeaponRoom() == null ? 0 : Math.round(weapon.getDamage() * attacker.getWeaponRoom().getEffectiveEfficency());
+		if (attacker.hits(defender) || weapon.alwaysHits()) {
+			int weaponDamage = defender.getWeaponRoom() == null ? 0 : (int) Math.round(weapon.getDamage() * attacker.getWeaponRoom().getEffectiveEfficency());
 			//int damageReduction = defender.getMechanicRoom() == null ? 0 : (int) Math.floor(defender.getMechanicRoom().getEffectiveEfficency() / 2);
 			int damageReduction = 0;
 			int totalDamage = weaponDamage - damageReduction;
@@ -93,27 +95,32 @@ public abstract class AbsRoom {
 		}
 	}
 
-	public abstract float getEfficency();
+	public abstract double getEfficency();
 
-	public float getEfficencyInPercent() {
-		float p1 = maxHealth / 100f;
-		float pOkay = health / p1;
+	public double getEfficencyInPercent() {
+		double p1 = maxHealth / 100f;
+		double pOkay = health / p1;
 		return pOkay;
 	}
 
-	public float getEffectiveEfficency() {
+	public double getEffectiveEfficency() {
 
-		float efficiency = getEfficency();
+		double efficiency = getEfficency();
 
-		float p1 = maxHealth / 100f;
-		float pOkay = health / p1;
+		if (efficiency == 0){
+			return 0;
+		}
+
+		double p1 = maxHealth / 100f;
+		double pOkay = health / p1;
 
 		if (pOkay > 99) {
 			pOkay = 100;
 		}
 
 
-		float result = efficiency * pOkay / 100;
+		double result = efficiency * pOkay / 100;
+		result = Utility.roundTwoDecimals(result);
 		if (getRoomType() == ERoom.Mechanic) {
 			return Math.max(1f, result);
 		}
@@ -157,4 +164,6 @@ public abstract class AbsRoom {
 			regenerate();
 		}
 	}
+
+	abstract protected int getMaxHealthForLevel(int level);
 }

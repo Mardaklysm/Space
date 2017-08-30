@@ -56,8 +56,6 @@ public class TravelQuestionEvent extends AbsEvent {
 			Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_EXPLORER_III, 1);
 			Log.i(TAG, "User decided to move to planet: " + getPlanet().getName());
 		}else if (hint == 2){
-			String text = "You decided so stay where it feels safe. This might have been the better decision anyway ...";
-			Utility.getInstance().showTextDialog(context,text);
 			Log.i(TAG, "User decided to NOT move to planet: " + getPlanet().getName());
 		}
 	}

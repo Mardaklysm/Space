@@ -16,4 +16,8 @@ public class Achievements {
 	final public static String ID_EXPLORER_II = "CgkI5LP25OEdEAIQDQ";
 	final public static String ID_EXPLORER_III = "CgkI5LP25OEdEAIQDg";
 
+	final public static String ID_GALAXY_1 = "CgkI5LP25OEdEAIQEg";
+	final public static String ID_GALAXY_3 = "CgkI5LP25OEdEAIQEQ";
+	final public static String ID_GALAXY_5 = "CgkI5LP25OEdEAIQEw";
+	final public static String ID_GALAXY_10 = "CgkI5LP25OEdEAIQFA";
 }

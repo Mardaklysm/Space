@@ -1,5 +1,7 @@
 package at.hakkon.space.datamodel.ship;
 
+import android.util.Log;
+
 import com.google.android.gms.games.Games;
 
 import java.util.ArrayList;
@@ -228,10 +230,12 @@ public abstract class AbsShip {
 
 
 	public boolean hits(AbsShip defender) {
-		float evadeChanche = defender.getNavigationRoom().getEffectiveEfficency();
+		double evadeChanche = defender.getNavigationRoom().getEffectiveEfficency();
 
 		Random random = new Random();
-		float hitValue = random.nextFloat();
+		double hitValue = random.nextDouble();
+
+		Log.d("AbsShip", "hitValue(" + hitValue +") > evadeChanche(" + evadeChanche + "). EVADE: " + (hitValue >evadeChanche));
 
 		return hitValue > evadeChanche;
 	}

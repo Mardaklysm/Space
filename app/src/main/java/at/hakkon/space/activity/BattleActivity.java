@@ -34,9 +34,11 @@ import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.room.AttackResult;
 import at.hakkon.space.datamodel.ship.AbsShip;
 import at.hakkon.space.datamodel.ship.EShipType;
+import at.hakkon.space.datamodel.ship.EnemyBossShipA;
 import at.hakkon.space.datamodel.ship.EnemyShipA;
 import at.hakkon.space.datamodel.ship.EnemyShipB;
 import at.hakkon.space.datamodel.ship.PlayerShip;
+import at.hakkon.space.event.planet.GoToGalaxyEvent;
 import at.hakkon.space.listener.IShipListener;
 import at.hakkon.space.utility.Utility;
 import at.hakkon.space.views.RoomView;
@@ -60,6 +62,10 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 	private static BattleActivity instance;
 
+	public static IBattleCallback callback;
+
+	private boolean isBossBattle;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,6 +76,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		//Get parameters;
 		int enemyShipTypeOrdinal = getIntent().getIntExtra("enemyShipTypeOrdinal", 0);
 		level = getIntent().getIntExtra("level", 1);
+		isBossBattle = getIntent().getBooleanExtra("isBossBattle", false);
 
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -143,22 +150,32 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		//HANDLE BATTLE
 		//Fire weapons for player AT the enemy
 		for (Map.Entry<Weapon, AbsRoom> entry : mapWeaponRooms.entrySet()) {
-			if (entry.getKey().hasTarget()) {
-				AttackResult attackResult = entry.getValue().attackWithWeapon(appClass.getShip(), enemyShip, entry.getKey());
+			Weapon weapon = entry.getKey();
+			ArrayList<AbsRoom> targets = new ArrayList<>();
+			if (weapon.attacksAll()) {
+				for (AbsRoom room : enemyShip.getRooms()) {
+					targets.add(room);
+				}
+			} else {
+				targets.add(entry.getValue());
+			}
+			for (AbsRoom room : targets) {
+				AttackResult attackResult = room.attackWithWeapon(appClass.getShip(), enemyShip, weapon);
 				int damage = attackResult.getDamage();
 
 				if (attackResult.isHit()) {
-					String message = "Enemy (" + entry.getValue().getName() + ") took " + damage + " damage (" + entry.getKey().getName() + ")";
+					String message = "Enemy (" + room.getName() + ") took " + damage + " damage (" + weapon.getName() + ")";
 					playActionAnimation(1, colorGreen, String.valueOf(damage));
 					addMessage(message);
 
 
 				} else {
-					String message = "Enemy (" + entry.getValue().getName() + ") evaded (" + entry.getKey().getName() + ")";
+					String message = "Enemy (" + room.getName() + ") evaded (" + weapon.getName() + ")";
 					playActionAnimation(1, colorGreen, "Miss");
 					addMessage(message);
 				}
 			}
+
 			entry.getKey().setTarget(null);
 		}
 
@@ -175,19 +192,31 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 					int rndIdx = random.nextInt(rooms);
 					AbsRoom target = appClass.getShip().getRooms().get(rndIdx);
 
-					AttackResult attackResult = target.attackWithWeapon(enemyShip, appClass.getShip(), weapon);
-					int damage = attackResult.getDamage();
-					energyEnemy -= weapon.getEnergyCost();
-
-					if (attackResult.isHit()) {
-						String message = "You " + target.getName() + " took " + damage + " damage (" + weapon.getName() + ")";
-						playActionAnimation(2, colorRed, String.valueOf(damage));
-						addMessage(message);
+					ArrayList<AbsRoom> targets = new ArrayList<>();
+					if (weapon.attacksAll()) {
+						for (AbsRoom room : enemyShip.getRooms()) {
+							targets.add(room);
+						}
 					} else {
-						String message = "You evaded (" + weapon.getName() + ")";
-						playActionAnimation(1, colorRed, "Miss");
-						addMessage(message);
+						targets.add(target);
 					}
+					for (AbsRoom room : targets) {
+						AttackResult attackResult = room.attackWithWeapon(enemyShip, appClass.getShip(), weapon);
+						int damage = attackResult.getDamage();
+						energyEnemy -= weapon.getEnergyCost();
+
+						if (attackResult.isHit()) {
+							String message = "** " + room.getName() + " took " + damage + " damage (" + weapon.getName() + ")";
+							playActionAnimation(2, colorRed, String.valueOf(damage));
+							addMessage(message);
+						} else {
+							String message = "** " + "You evaded (" + weapon.getName() + ")";
+							playActionAnimation(1, colorRed, "Miss");
+							addMessage(message);
+						}
+					}
+
+
 				}
 			}
 		}
@@ -282,12 +311,21 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		message += "Fuel: " + loot.getFuel() + "\n";
 		message += "Money: " + loot.getMoney() + "\n";
 
-		message += "\nItems\n";
+		if (!enemyShip.getLoot().getItems().isEmpty()) {
+			message += "\nItems\n";
 
-		for (IInventoryItem item : enemyShip.getLoot().getItems()) {
-			message += "-" + item.getName() + "\n";
-			appClass.getShip().getInventory().add(item);
+			for (IInventoryItem item : enemyShip.getLoot().getItems()) {
+				message += "-" + item.getName() + "\n";
+				appClass.getShip().getInventory().add(item);
+			}
 		}
+
+		for (AbsRoom room : ApplicationClass.getInstance().getShip().getRooms()) {
+			room.regenerate(true);
+		}
+
+
+		ApplicationClass.getInstance().updateScore(level * 100 + loot.getFuel() + loot.getMoney());
 
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -306,16 +344,21 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			public void onClick(DialogInterface dialog, int which) {
 				appClass.updateFuel(loot.getFuel());
 				appClass.updateShipMoney(loot.getMoney());
-				BattleActivity.super.onBackPressed();
+
+				if (isBossBattle) {
+					GoToGalaxyEvent.move(MainActivity.getInstance(), level + 1);
+					BattleActivity.super.onBackPressed();
+
+
+				} else {
+					BattleActivity.super.onBackPressed();
+				}
+
+
 				//event.callback(this, which);
 			}
 		}).show();
 
-		ApplicationClass.getInstance().updateScore(level * 100 + loot.getFuel() + loot.getMoney());
-
-		for (AbsRoom room : appClass.getShip().getRooms()) {
-			room.regenerate(true);
-		}
 
 	}
 
@@ -398,9 +441,13 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			case Enemy_B:
 				enemyShip = new EnemyShipB("Enemy B", level);
 				break;
+			case Enemy_Boss_A:
+				enemyShip = new EnemyBossShipA("Boss A", level);
+				break;
 			case Player_A:
 				throw new RuntimeException("Ship cant be Player Ship");
-
+			default:
+				throw new RuntimeException("Unsupported Ship type");
 		}
 
 		//Init room Widgets
@@ -582,7 +629,14 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				if (which == DialogInterface.BUTTON_POSITIVE) {
-					BattleActivity.super.onBackPressed();
+					Random random = new Random();
+
+					if (random.nextBoolean()) {
+						Utility.getInstance().showTextDialog(BattleActivity.this, "You couldn't escape!");
+						nextRound();
+					} else {
+						BattleActivity.super.onBackPressed();
+					}
 				}
 			}
 		};
@@ -614,6 +668,5 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		Games.setViewForPopups(ApplicationClass.getInstance().getGoogleApiClient(), findViewById(R.id.gps_popup));
 
 	}
-
 
 }

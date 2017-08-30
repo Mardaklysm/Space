@@ -235,7 +235,6 @@ public class ApplicationClass extends android.app.Application {
 		ship.setCurrentPlanet(galaxy.getFirstPlanet());
 		ship.setStartPlanet(galaxy.getFirstPlanet());
 
-
 		notifyGalaxyListeners(this.galaxy);
 	}
 

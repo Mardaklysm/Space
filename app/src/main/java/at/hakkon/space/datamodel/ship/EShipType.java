@@ -6,5 +6,5 @@ package at.hakkon.space.datamodel.ship;
 
 public enum EShipType {
 
-	Enemy_A, Enemy_B, Player_A
+	Enemy_A, Enemy_B, Enemy_Boss_A, Player_A
 }

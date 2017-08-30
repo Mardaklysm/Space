@@ -55,19 +55,17 @@ public class Galaxy {
 		planets.get(0).revealName();
 		planets.get(0).setEvent(null);
 
-
-		addGoToGalaryEvent(planets.get(planets.size() - 1));
+		AbsPlanet lastPlanet = planets.get(planets.size() - 1);
+		addGoToGalaryEvent(lastPlanet);
+		lastPlanet.revealName();
 
 
 
 		int shopPlanetIdx = random.nextInt(planets.size()-2) +1;
+		planets.get(shopPlanetIdx).setEvent(new FuelShopEvent(level));
 
-		if (random.nextBoolean()){
-			planets.get(shopPlanetIdx).setEvent(new RepairShopEvent(level));
-		}else{
-			planets.get(shopPlanetIdx).setEvent(new FuelShopEvent(level));
-		}
-
+		shopPlanetIdx = random.nextInt(planets.size()-2) +1;
+		planets.get(shopPlanetIdx).setEvent(new RepairShopEvent(level));
 
 	}
 

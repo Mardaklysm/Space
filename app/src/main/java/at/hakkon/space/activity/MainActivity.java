@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.google.android.gms.games.Games;
 
 import at.hakkon.space.R;
+import at.hakkon.space.achievement.Achievements;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.listener.IShipListener;
@@ -84,14 +85,28 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 
 		ApplicationClass.getInstance().updateActiveContext(this);
 
-
-
 		if (ApplicationClass.playMusic) {
 			ApplicationClass.getInstance().startMainMusic(this);
 		}
 
 		Games.setViewForPopups(ApplicationClass.getInstance().getGoogleApiClient(), findViewById(R.id.gps_popup));
 
+
+		Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_EXPLORER_I, 1);
+		Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_EXPLORER_II, 1);
+		Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_EXPLORER_III, 1);
+
+		int level = ApplicationClass.getInstance().getGalaxy().getLevel();
+
+		if (level == 2){
+			Games.Achievements.unlock(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_GALAXY_1);
+		}else if (level == 4){
+			Games.Achievements.unlock(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_GALAXY_3);
+		}else if (level == 6){
+			Games.Achievements.unlock(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_GALAXY_5);
+		}else if (level == 11){
+			Games.Achievements.unlock(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_GALAXY_10);
+		}
 	}
 
 	public static MainActivity getInstance() {

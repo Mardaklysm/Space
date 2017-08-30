@@ -18,41 +18,47 @@ public class BattleEvent extends AbsEvent {
 
 	private boolean executed = false;
 
+	private boolean isBossBattle;
 
-	public BattleEvent(int level, EShipType shipType) {
+
+	public BattleEvent(int level, EShipType shipType, boolean isBossBattle) {
 		super(level);
 		this.shipType = shipType;
-
+		this.isBossBattle = isBossBattle;
 	}
 
 	@Override
 	public EEventType getEventType() {
-		return EEventType.Battle;
+		return isBossBattle ? EEventType.Boss : EEventType.Battle;
 	}
 
 	@Override
 	protected void executeImpl(Context context) {
-		if (shipType == null){
+		if (shipType == null) {
 			throw new RuntimeException("Enemy cant be null!");
 		}
-		if (!canBeExecuted()){
+		if (!canBeExecuted()) {
 			return;
 		}
 		executed = true;
 		Intent intent = new Intent(context, BattleActivity.class);
 		intent.putExtra("enemyShipTypeOrdinal", shipType.ordinal());
 		intent.putExtra("level", getLevel());
+		intent.putExtra("isBossBattle", isBossBattle);
 		context.startActivity(intent);
 
 	}
 
 	@Override
 	public void callbackImpl(Context context, int hint) {
-
 	}
 
 	@Override
-	public boolean canBeExecuted(){
+	public boolean canBeExecuted() {
 		return !executed;
+	}
+
+	public boolean isBossBattle() {
+		return isBossBattle;
 	}
 }

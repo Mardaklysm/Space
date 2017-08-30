@@ -55,7 +55,7 @@ public class UnknownMetalBoxEvent extends AbsEvent {
 
 			if (random.nextBoolean()) {
 				int money = 75 * getLevel();
-				int health = 20 + 10 * getLevel();
+				int health = 10 + 5 * getLevel();
 				String text = "As you try to carefully open the box with a sledgehammer it explodes damaging your ship for " + health + " points of damage.\n\nAt the bright side you could salvage the metallic remains for " + money + "€";
 
 				Utility.getInstance().showTextDialog(context, text);
@@ -66,7 +66,7 @@ public class UnknownMetalBoxEvent extends AbsEvent {
 			} else {
 				if (random.nextBoolean()) {
 					//Found a weapon
-					int level = Math.max(1, (int) Math.ceil(getLevel() / 2));
+					int level = getLevel();
 					Weapon weapon = random.nextBoolean() ? Weapon.getLaser(level) : Weapon.getRocket(level);
 					String text = "You found a weapon in the box:\n" + weapon.getName();
 					Utility.getInstance().showTextDialog(context, text);

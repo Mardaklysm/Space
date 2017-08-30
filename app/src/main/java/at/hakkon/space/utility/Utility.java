@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.ship.PlayerShip;
@@ -59,14 +61,13 @@ public class Utility {
 	}
 
 
-
 	private AlertDialog alertDialog;
 
 	public void showQuestionsDialog(final Context context, String text, CharSequence[] charSequences, final AbsEvent event) {
 
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		if (charSequences.length > 0){
+		if (charSequences.length > 0) {
 			builder.setCancelable(false);
 		}
 
@@ -92,13 +93,18 @@ public class Utility {
 		int distanceY = Math.abs(startPlanet.getPlanetPosition().getY() - planet.getPlanetPosition().getY());
 
 
-		int totDistance = distanceX + distanceY *2;
+		int totDistance = distanceX + distanceY * 2;
 
 		return totDistance;
 
 
 	}
 
+	public static double roundTwoDecimals(double d) {
+		BigDecimal a = new BigDecimal(d);
+		BigDecimal roundOff = a.setScale(2, BigDecimal.ROUND_HALF_UP);
+		return roundOff.doubleValue();
+	}
 }
 
 

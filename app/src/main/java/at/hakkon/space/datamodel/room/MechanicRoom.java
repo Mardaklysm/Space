@@ -19,8 +19,16 @@ public class MechanicRoom extends AbsRoom {
 	}
 
 	@Override
-	public float getEfficency() {
-		return getLevel() ;
+	public double getEfficency() {
+		return getEfficency(getLevel());
+	}
+
+
+	private double getEfficency(int level) {
+		if (level == 1) {
+			return 0;
+		}
+		return level - 1;
 	}
 
 	@Override
@@ -31,7 +39,12 @@ public class MechanicRoom extends AbsRoom {
 
 	@Override
 	public String getUpgradeInformationText() {
-		return "Ship Health: +50\nRoom Repair Rate(" + getEfficency() + ") => " + (getEfficency() +1);
+		return "Ship Health: +50\nRoom Repair Rate: " + getEfficency(getLevel()) + " => " + (getEfficency(getLevel() +1));
+	}
+
+	@Override
+	protected int getMaxHealthForLevel(int level) {
+		return 5 + level * 5;
 	}
 
 

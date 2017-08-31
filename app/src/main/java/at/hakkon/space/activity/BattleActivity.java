@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -104,7 +105,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		roundNr++;
 		addMessage("[Round " + roundNr + "]: Make your moves!");
 
-		refreshUI();
+
 	}
 
 
@@ -180,7 +181,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		if (enemyShip.getHealth() > 0) {
 			//Fire weapons for Enemy AT the player
 			for (Weapon weapon : enemyShip.getWeapons()) {
-				if (energyEnemy - weapon.getEnergyCost() > 0) {
+				if (energyEnemy - weapon.getEnergyCost() >= 0) {
 
 					//Calculate room target
 					int rooms = appClass.getShip().getRooms().size();
@@ -197,10 +198,13 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 					} else {
 						targets.add(target);
 					}
+
+					energyEnemy -= weapon.getEnergyCost();
+
 					for (AbsRoom room : targets) {
 						AttackResult attackResult = room.attackWithWeapon(enemyShip, appClass.getShip(), weapon);
 						int damage = attackResult.getDamage();
-						energyEnemy -= weapon.getEnergyCost();
+
 
 						if (attackResult.isHit()) {
 							String message = "** " + room.getName() + " took " + damage + " damage (" + weapon.getName() + ")";
@@ -283,7 +287,6 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	}
 
 	private void playActionAnimation(int position, int color, String text) {
-
 		//Left
 		if (position == 1) {
 
@@ -292,13 +295,14 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		}
 
-		final LinearLayout ll = (LinearLayout) findViewById(R.id.llSpacer);
+		final LinearLayout ll = (LinearLayout) findViewById(R.id.llActionContainerTable);
 
 		final TextView tv = new TextView(this);
 
 		tv.setText(text);
 		tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 		tv.setTextColor(color);
+		tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, getResources().getDimension(R.dimen.font_size_battle_action_view));
 		ll.addView(tv);
 
 		Animation animation = AnimationUtils.loadAnimation(this, R.anim.move01);
@@ -402,7 +406,6 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	private void refreshUI() {
 
 		updateTitle();
-		energyChanged();
 
 		for (RoomView roomView : roomViews) {
 			roomView.update();
@@ -414,6 +417,12 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		updatePlayerRoomWidget(ship.getMechanicRoom(), (Button) findViewById(R.id.bPShipMechanicRoom));
 		updatePlayerRoomWidget(ship.getGeneratorRoom(), (Button) findViewById(R.id.bPShipGeneratorRoom));
 
+		//Refresh health and energy counters
+		((TextView)findViewById(R.id.tvBattleHealthPlayer)).setText(String.valueOf(appClass.getShip().getHealth()));
+		((TextView)findViewById(R.id.tvBattleEnergyPlayer)).setText(String.valueOf(energyPlayer));
+
+		((TextView)findViewById(R.id.tvBattleHealthEnemy)).setText(String.valueOf(enemyShip.getHealth()));
+		((TextView)findViewById(R.id.tvBattleEnergyEnemy)).setText(String.valueOf(energyEnemy));
 	}
 
 	private void updatePlayerRoomWidget(AbsRoom room, Button button) {
@@ -431,12 +440,6 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		} else {
 			button.getBackground().setColorFilter(colorP100, PorterDuff.Mode.DARKEN);
 		}
-	}
-
-	private void energyChanged() {
-		String text = "Weapon Energy: " + energyPlayer;
-		TextView textView = (TextView) findViewById(R.id.tvWeaponTitle);
-		textView.setText(text);
 	}
 
 	private void updateTitle() {
@@ -654,7 +657,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		refreshUI();
 		ApplicationClass.getInstance().updateActiveContext(this);
 	}
 

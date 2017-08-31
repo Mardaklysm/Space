@@ -10,4 +10,6 @@
     <dimen name= "planet_button_size">100dp</dimen>
 
     <dimen name= "planet_button_positioning_margin">50dp</dimen>
+
+    <dimen name="font_size_battle_action_view">7sp</dimen>
 </resources>

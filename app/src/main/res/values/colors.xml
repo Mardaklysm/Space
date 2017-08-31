@@ -13,4 +13,8 @@
     <color name="fontColorBlack">#ff000000</color>
     <color name="fontColorWhiteGray">#b2ffffff</color>
     <color name="fontColorGray1">#afafaf</color>
+
+    <color name="colorHealth">#40bd3d</color>
+
+    <color name="colorEnergy">#2869e1</color>
 </resources>

@@ -22,6 +22,7 @@ import com.google.android.gms.games.Games;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
@@ -61,8 +62,6 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	private int level;
 
 	private static BattleActivity instance;
-
-	public static IBattleCallback callback;
 
 	private boolean isBossBattle;
 
@@ -106,7 +105,6 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		addMessage("[Round " + roundNr + "]: Make your moves!");
 
 		refreshUI();
-
 	}
 
 
@@ -120,7 +118,6 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	private void addWeaponSelectionListener(View view, final Weapon weapon) {
 		view.setOnClickListener(new View.OnClickListener() {
 			@Override
-			//TODO UNSELECT THE SELECTED AND SLEECT THE CURRENT ONE USABILITY!!!!!!!!!!!!!!!!
 			public void onClick(View v) {
 				selectWeapon(weapon);
 
@@ -221,11 +218,17 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			}
 		}
 
+		//Update Energy Pool
+		energyPlayer += appClass.getShip().getGeneratorRoom().getEffectiveEfficency();
+		energyEnemy += enemyShip.getGeneratorRoom().getEffectiveEfficency();
 
-		//PPREPARE NEXT ROUND
-		//resetUI
+
+		//Unselect weapons
 		selectWeapon(null);
-		resetWeaponCommandLists();
+
+		//resetWeaponCommandLists();
+		reloadWeapons();
+
 		updateWeaponButtons(appClass.getShip());
 
 
@@ -244,9 +247,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			room.regenerate();
 		}
 
-		//AddEnergy
-		energyPlayer += appClass.getShip().getGeneratorRoom().getEffectiveEfficency();
-		energyEnemy += enemyShip.getGeneratorRoom().getEffectiveEfficency();
+
 
 		//Update message log
 		roundNr++;
@@ -255,6 +256,29 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		//update UI
 		refreshUI();
 
+
+	}
+
+	private void reloadWeapons() {
+		ArrayList<Weapon> weaponsForRemoval = new ArrayList<>();
+
+		for(Iterator<Map.Entry<Weapon, AbsRoom>> it = mapWeaponRooms.entrySet().iterator(); it.hasNext(); ) {
+			Map.Entry<Weapon, AbsRoom> entry = it.next();
+			Weapon weapon = entry.getKey();
+			AbsRoom room = entry.getValue();
+
+			if (weapon.isOneTimeWeapon()){
+				weaponsForRemoval.add(weapon);
+			}else if (room != null){
+				if (!selectTarget(weapon, room, false)){
+					weaponsForRemoval.add(weapon);
+				}
+			}
+		}
+
+		for (Weapon weapon: weaponsForRemoval){
+			mapWeaponRooms.remove(weapon);
+		}
 
 	}
 
@@ -303,6 +327,17 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 	}
 
+	private void gameCleanup(){
+		for (AbsRoom room : ApplicationClass.getInstance().getShip().getRooms()) {
+			room.regenerate(true);
+		}
+
+		//Unload weapons
+		for (Weapon weapon: ApplicationClass.getInstance().getShip().getWeapons()){
+			weapon.setTarget(null);
+		}
+	}
+
 	private void battleOver() {
 		addMessage("Enemy has been destroyed !!!");
 		final Loot loot = enemyShip.getLoot();
@@ -320,12 +355,12 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			}
 		}
 
-		for (AbsRoom room : ApplicationClass.getInstance().getShip().getRooms()) {
-			room.regenerate(true);
-		}
+		gameCleanup();
 
 
 		ApplicationClass.getInstance().updateScore(level * 100 + loot.getFuel() + loot.getMoney());
+
+
 
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -348,14 +383,10 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 				if (isBossBattle) {
 					GoToGalaxyEvent.move(MainActivity.getInstance(), level + 1);
 					BattleActivity.super.onBackPressed();
-
-
 				} else {
 					BattleActivity.super.onBackPressed();
 				}
 
-
-				//event.callback(this, which);
 			}
 		}).show();
 
@@ -470,7 +501,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 					if (selectedWeapon.getTarget() != null && selectedWeapon.getTarget().equals(room)) {
 						return;
 					}
-					selectTarget(selectedWeapon, room);
+					selectTarget(selectedWeapon, room, true);
 				}
 			});
 		}
@@ -478,13 +509,15 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		energyEnemy = (int) enemyShip.getGeneratorRoom().getEffectiveEfficency();
 	}
 
-	private void selectTarget(Weapon weapon, AbsRoom target) {
+	private boolean selectTarget(Weapon weapon, AbsRoom target, boolean showDialogs) {
 
 		boolean canAffordToTarget = energyPlayer - weapon.getEnergyCost() >= 0;
 
 		if (target != null && !canAffordToTarget) {
-			Utility.getInstance().showTextDialog(this, "Not have enough energy!");
-			return;
+			if (showDialogs) {
+				Utility.getInstance().showTextDialog(this, "Not have enough energy!");
+			}
+			return false;
 		}
 		//Refund
 		if (weapon.getTarget() != null && target == null) {
@@ -497,13 +530,15 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			}
 		}
 
-		selectedWeapon.setTarget(target);
+		weapon.setTarget(target);
 
 		mapWeaponButtons.get(weapon).getBackground().setColorFilter(target == null ? colorSelected : colorWeaponLocked, PorterDuff.Mode.DARKEN);
 		mapWeaponButtons.get(weapon).setText(weapon.getBattleLabel(ApplicationClass.getInstance().getShip().getWeaponRoom().getEffectiveEfficency()));
 
 
 		refreshUI();
+
+		return true;
 	}
 
 	private Weapon selectedWeapon;
@@ -532,7 +567,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		//Reset target if the weapong ets reselected after already having a target selected previously
 		if (weapon != null && weapon.getTarget() != null) {
-			selectTarget(weapon, null);
+			selectTarget(weapon, null, true);
 		}
 
 		refreshUI();
@@ -545,9 +580,9 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			Button button = entry.getValue();
 			button.getBackground().setColorFilter(null);
 		}
-
-		mapWeaponRooms.clear();
 		mapWeaponButtons.clear();
+		mapWeaponRooms.clear();
+
 	}
 
 	private void updateWeaponButtons(PlayerShip playerShip) {
@@ -635,6 +670,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 						Utility.getInstance().showTextDialog(BattleActivity.this, "You couldn't escape!");
 						nextRound();
 					} else {
+						gameCleanup();
 						BattleActivity.super.onBackPressed();
 					}
 				}

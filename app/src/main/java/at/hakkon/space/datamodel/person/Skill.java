@@ -1,10 +1,12 @@
 package at.hakkon.space.datamodel.person;
 
+import java.io.Serializable;
+
 /**
  * Created by Markus on 29.07.2017.
  */
 
-public class Skill {
+public class Skill implements Serializable{
 
 	private ESkill skill;
 

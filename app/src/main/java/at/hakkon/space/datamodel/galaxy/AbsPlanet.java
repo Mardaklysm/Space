@@ -1,12 +1,14 @@
 package at.hakkon.space.datamodel.galaxy;
 
+import java.io.Serializable;
+
 import at.hakkon.space.event.AbsEvent;
 
 /**
  * Created by Markus on 29.07.2017.
  */
 
-public abstract class AbsPlanet {
+public abstract class AbsPlanet implements Serializable {
 
 	private AbsEvent event;
 

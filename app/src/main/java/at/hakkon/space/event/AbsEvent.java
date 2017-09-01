@@ -1,7 +1,9 @@
 package at.hakkon.space.event;
 
 import android.content.Context;
+import android.util.Log;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import at.hakkon.space.application.ApplicationClass;
@@ -12,7 +14,7 @@ import at.hakkon.space.datamodel.galaxy.AbsPlanet;
  * Created by Markus on 29.07.2017.
  */
 
-public abstract class AbsEvent {
+public abstract class AbsEvent implements Serializable {
 
 	private boolean enabled = true;
 	private boolean executed = false;
@@ -20,9 +22,11 @@ public abstract class AbsEvent {
 	private int level;
 	private int resourceBonus;
 
-	private Context context;
-	private PlayerShip ship;
-	private AbsPlanet planet;
+	private transient Context context;
+	private transient PlayerShip ship;
+	private transient AbsPlanet planet;
+
+	private final static String TAG = "Event";
 
 	public AbsEvent(int level){
 		this.level = level;
@@ -48,7 +52,9 @@ public abstract class AbsEvent {
 
 	public void execute(Context context){//TODO: Do we need a booelan return value here??
 		if (enabled){
+			Log.i(TAG, "Executing event: " + getClass().getName());
 			executeImpl(context);
+			executed = true;
 		}
 	}
 
@@ -60,7 +66,7 @@ public abstract class AbsEvent {
 
 	public void callback(Context context, int hint){
 		callbackImpl(context, hint);
-		executed = true;
+
 	}
 
 	public abstract void callbackImpl(Context context, int hint);

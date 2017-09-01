@@ -1,12 +1,13 @@
 package at.hakkon.space.datamodel.inventory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Markus on 05.08.2017.
  */
 
-public class Loot {
+public class Loot implements Serializable{
 
 	private int money = 0;
 	private int fuel = 0;

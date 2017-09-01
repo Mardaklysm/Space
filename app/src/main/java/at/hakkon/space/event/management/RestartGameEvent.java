@@ -27,6 +27,9 @@ public class RestartGameEvent extends AbsEvent {
 
 	@Override
 	protected void executeImpl(Context context) {
+		if (reason != EGameOverReason.RestartRequested){
+			ApplicationClass.getInstance().deleteSaveFile();
+		}
 		Utility.getInstance().showYesNoDialog(context, "Game Over: " + reason.name() + "\nDo you want to restart the game (This is kinda rethorical ...) ? ", this);
 	}
 

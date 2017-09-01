@@ -57,3 +57,5 @@ html/.project
 html/.pydevproject
 html/.project
 *.apk
+app/release/output.json
+app/release/output.json

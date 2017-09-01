@@ -1,10 +1,12 @@
 package at.hakkon.space.datamodel.galaxy;
 
+import java.io.Serializable;
+
 /**
  * Created by Markus on 30.07.2017.
  */
 
-public class PlanetPosition {
+public class PlanetPosition implements Serializable {
 
 	private int x;
 	private int y;

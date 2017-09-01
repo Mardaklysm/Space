@@ -1,10 +1,12 @@
 package at.hakkon.space.datamodel.room;
 
+import java.io.Serializable;
+
 /**
  * Created by Markus on 24.08.2017.
  */
 
-public class AttackResult {
+public class AttackResult implements Serializable{
 
 	private boolean hit;
 	private int damage;

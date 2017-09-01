@@ -1,10 +1,12 @@
 package at.hakkon.space.datamodel.inventory;
 
+import java.io.Serializable;
+
 /**
  * Created by Markus on 28.08.2017.
  */
 
-public class GenericLoot implements IInventoryItem {
+public class GenericLoot implements IInventoryItem, Serializable {
 
 	private String name;
 	private int value;

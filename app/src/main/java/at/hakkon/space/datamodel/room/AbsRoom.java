@@ -1,5 +1,6 @@
 package at.hakkon.space.datamodel.room;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import at.hakkon.space.application.ApplicationClass;
@@ -8,7 +9,7 @@ import at.hakkon.space.datamodel.inventory.Weapon;
 import at.hakkon.space.datamodel.ship.AbsShip;
 import at.hakkon.space.utility.Utility;
 
-public abstract class AbsRoom {
+public abstract class AbsRoom implements Serializable {
 
 	private ArrayList<IInventoryItem> items = new ArrayList<>();
 

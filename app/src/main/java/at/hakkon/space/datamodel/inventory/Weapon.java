@@ -1,12 +1,14 @@
 package at.hakkon.space.datamodel.inventory;
 
+import java.io.Serializable;
+
 import at.hakkon.space.datamodel.room.AbsRoom;
 
 /**
  * Created by Markus on 29.07.2017.
  */
 
-public class Weapon implements IInventoryItem {
+public class Weapon implements IInventoryItem, Serializable {
 
 	private boolean alwaysHits = false;
 	private String name;

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.android.gms.games.Games;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -23,7 +24,7 @@ import at.hakkon.space.datamodel.room.WeaponRoom;
  * Created by Markus on 29.07.2017.
  */
 
-public abstract class AbsShip {
+public abstract class AbsShip implements Serializable {
 
 	private String name;
 	private int health;

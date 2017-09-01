@@ -9,12 +9,20 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.Games;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import at.hakkon.space.R;
 import at.hakkon.space.achievement.Achievements;
 import at.hakkon.space.activity.MainActivity;
 import at.hakkon.space.datamodel.EGameOverReason;
+import at.hakkon.space.datamodel.SaveFile;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
@@ -39,8 +47,7 @@ public class ApplicationClass extends android.app.Application {
 	private PlayerShip ship;
 	private Galaxy galaxy;
 
-	public static  boolean playMusic = true;
-
+	public static boolean playMusic = true;
 
 
 	public static ApplicationClass getInstance() {
@@ -58,11 +65,13 @@ public class ApplicationClass extends android.app.Application {
 			return;
 		}
 
-		galaxy = new Galaxy("Starting Galaxy", 1);
+		if (!loadGame()) {
+			galaxy = new Galaxy("Starting Galaxy", 1);
 
-		ship = new PlayerShip("Weinreise", 1);
-		ship.setStartPlanet(galaxy.getFirstPlanet());
-		ship.setCurrentPlanet(galaxy.getFirstPlanet());
+			ship = new PlayerShip("Weinreise", 1);
+			ship.setStartPlanet(galaxy.getFirstPlanet());
+			ship.setCurrentPlanet(galaxy.getFirstPlanet());
+		}
 
 		isInitialized = true;
 
@@ -73,7 +82,8 @@ public class ApplicationClass extends android.app.Application {
 		score = 0;
 	}
 
-	public void restartGame(){
+	public void restartGame() {
+		ApplicationClass.getInstance().deleteSaveFile();
 
 		Games.Leaderboards.submitScore(ApplicationClass.getInstance().getGoogleApiClient(), ApplicationClass.LEADERBOARD_ID, score);
 
@@ -104,15 +114,19 @@ public class ApplicationClass extends android.app.Application {
 
 
 
-		if (planet.getEvent() != null){
+
+		if (planet.getEvent() != null) {
 			planet.getEvent().execute(getContext());
-
+			Log.i(TAG, "Executing event for for planet: " + planet.getName());
+		}else{
+			Log.i(TAG, "No event found for planet: " + planet.getName());
 		}
-
+		saveGame();
 		return moved;
 	}
 
-	public Context getContext(){
+
+	public Context getContext() {
 		return MainActivity.getInstance();
 	}
 
@@ -140,7 +154,7 @@ public class ApplicationClass extends android.app.Application {
 		}
 	}
 
-	public void removeMetaDataListener(IMetaDataListener listener){
+	public void removeMetaDataListener(IMetaDataListener listener) {
 		metaDataListeners.remove(listener);
 	}
 
@@ -196,14 +210,14 @@ public class ApplicationClass extends android.app.Application {
 		Toast.makeText(context, text, Toast.LENGTH_SHORT);
 	}
 
-	public void requestNotifyShipChangedEvent(){
+	public void requestNotifyShipChangedEvent() {
 		notifyShipListeners(getShip());
 	}
 
 	public void updateShipMoney(int value) {
 		ship.updateMoney(value);
 		notifyShipListeners(ship);
-		if (value >0){
+		if (value > 0) {
 			Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_TREASURE_HUNTER_I, value);
 			Games.Achievements.increment(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_TREASURE_HUNTER_II, value);
 		}
@@ -229,13 +243,15 @@ public class ApplicationClass extends android.app.Application {
 
 
 	public void moveToNewGalaxy() {
-		int galaxyLevel = galaxy.getLevel() +1;
-		Galaxy newGalaxy = new Galaxy("Galaxy " + galaxyLevel,galaxyLevel);
+		int galaxyLevel = galaxy.getLevel() + 1;
+		Galaxy newGalaxy = new Galaxy("Galaxy " + galaxyLevel, galaxyLevel);
 		this.galaxy = newGalaxy;
 		ship.setCurrentPlanet(galaxy.getFirstPlanet());
 		ship.setStartPlanet(galaxy.getFirstPlanet());
 
 		notifyGalaxyListeners(this.galaxy);
+
+		saveGame();
 	}
 
 	public void updateFuel(int fuel) {
@@ -245,11 +261,11 @@ public class ApplicationClass extends android.app.Application {
 
 	private Context activeContext;
 
-	public void updateActiveContext(Context context){
+	public void updateActiveContext(Context context) {
 		activeContext = context;
 	}
 
-	public Context getActiveContext(){
+	public Context getActiveContext() {
 		return activeContext;
 	}
 
@@ -261,7 +277,7 @@ public class ApplicationClass extends android.app.Application {
 
 	private GoogleApiClient googleApiClient;
 
-	public GoogleApiClient getGoogleApiClient(){
+	public GoogleApiClient getGoogleApiClient() {
 		return googleApiClient;
 	}
 
@@ -271,14 +287,14 @@ public class ApplicationClass extends android.app.Application {
 
 	private int score = 0;
 
-	public int updateScore(int value){
-		score+=value;
-		Log.d(TAG, "Score is now: " + value);
+	public int updateScore(int value) {
+		score += value;
+		Log.i(TAG, "Score is now: " + value);
 		notifyMetaDataListener();
 		return score;
 	}
 
-	public int getScore(){
+	public int getScore() {
 		return score;
 	}
 
@@ -286,15 +302,83 @@ public class ApplicationClass extends android.app.Application {
 
 	public void startMainMusic(Context context) {
 
-			if (music != null){
-				music.stop();
-			}
-			music = MediaPlayer.create(context, R.raw.main_theme);
-			music.setLooping(true);
-			music.start();
+		if (music != null) {
+			music.stop();
+		}
+		music = MediaPlayer.create(context, R.raw.main_theme);
+		music.setLooping(true);
+		music.start();
 	}
 
 	public void stopMainMusic() {
 		music.stop();
+	}
+
+	private final String SAVE_FILE = "space_save_file";
+
+	private void saveGame() {
+		Log.i(TAG, "Saving Game!");
+		SaveFile saveFile = new SaveFile(ship, galaxy);
+
+		try {
+			FileOutputStream fos = MainActivity.getInstance().openFileOutput(SAVE_FILE, Context.MODE_PRIVATE);
+
+			ObjectOutputStream os = new ObjectOutputStream(fos);
+			os.writeObject(saveFile);
+			os.close();
+			fos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * @return True if a save game got found and loaded, else False
+	 */
+	private boolean loadGame() {
+		Log.i(TAG, "Loading Save File!");
+		FileInputStream fis = null;
+		try {
+			fis = MainActivity.getInstance().openFileInput(SAVE_FILE);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		}
+		ObjectInputStream is = null;
+		try {
+			is = new ObjectInputStream(fis);
+
+			SaveFile saveFile = (SaveFile) is.readObject();
+
+			this.galaxy = saveFile.getGalaxy();
+			this.ship = saveFile.getPlayerShip();
+			return true;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}finally{
+			try {
+				is.close();
+				fis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return false;
+	}
+
+	public boolean deleteSaveFile(){
+
+		File file = new File(MainActivity.getInstance().getFilesDir() + "/" + SAVE_FILE);
+		boolean deleted = file.delete();
+		Log.i(TAG, "Deleted Save File: " + deleted);
+
+		return deleted;
 	}
 }

@@ -1,5 +1,6 @@
 package at.hakkon.space.datamodel.galaxy;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,7 +12,7 @@ import at.hakkon.space.event.planet.RepairShopEvent;
  * Created by Markus on 29.07.2017.
  */
 
-public class Galaxy {
+public class Galaxy implements Serializable {
 
 	private int level;
 	private String name;

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorWhite"
+                android:background="@color/colorBlack"
                 android:orientation="vertical">
 
     <include
@@ -11,7 +11,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
     />
-
 
     <TextView
         android:id="@+id/tvBattleTitle"
@@ -45,145 +44,100 @@
 
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/llBottom"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        android:weightSum="1">
+    <LinearLayout android:id="@+id/llBottom"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentBottom="true"
+                  android:layout_alignParentStart="true"
+                  android:gravity="bottom"
+                  android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/llBattlePlayer"
-            android:layout_width="164dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorLightGrey1"
-            android:orientation="vertical">
-            <Button
-                android:id="@+id/bBattleWeapon1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Weapon 1" android:textSize="@dimen/font_size_weapon_button"/>
-            <Button
-                android:id="@+id/bBattleWeapon2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Weapon 2" android:textSize="@dimen/font_size_weapon_button"/>
-            <Button
-                android:id="@+id/bBattleWeapon3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Weapon 3" android:textSize="@dimen/font_size_weapon_button"/>
-            <Button
-                android:id="@+id/bBattleWeapon4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Weapon 4" android:textSize="@dimen/font_size_weapon_button"/>
-            <Button
-                android:id="@+id/bBattleNextRound"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:text="Confirm"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                android:background="@color/colorDarkGrey1" android:orientation="horizontal">
-                <Button
-                    android:id="@+id/bPShipNavigationRoom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:layout_weight="1"
-                    android:text="N"/>
-                <Button
-                    android:id="@+id/bPShipWeaponRoom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:layout_weight="1"
-                    android:text="W"/>
-                <Button
-                    android:id="@+id/bPShipMechanicRoom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:layout_weight="1"
-                    android:text="M"/>
-                <Button
-                    android:id="@+id/bPShipGeneratorRoom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:layout_weight="1"
-                    android:text="G"/>
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/llActionContainer"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@color/colorDarkGrey1"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <LinearLayout
-                android:id="@+id/llActionContainerHeader"
-                android:layout_width="fill_parent"
+                android:id="@+id/llBattlePlayer"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/colorDarkGrey1"
+                android:background="@color/colorLightGrey1"
                 android:orientation="vertical">
-                <LinearLayout
-                    android:id="@+id/llActionContainerHeaderTop"
+                <TextView
+                    android:id="@+id/tvPlayerRoomsTitle"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/tvBattleHealthPlayer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="0" android:textAlignment="center"
-                        android:textColor="@color/colorHealth"/>
-                    <TextView
-                        android:id="@+id/tvBattleHealthEnemy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" android:text="0"
-                        android:textAlignment="center" android:textColor="@color/colorHealth"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/llActionContainerHeaderBottom"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/tvBattleEnergyPlayer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="0"
-                        android:textAlignment="center" android:textColor="@color/colorEnergy"/>
-                    <TextView
-                        android:id="@+id/tvBattleEnergyEnemy"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="0"
-                        android:textAlignment="center" android:textColor="@color/colorEnergy"/>
-                </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:text="Player Ship Rooms"
+                    android:textAlignment="center" android:textColor="@color/fontColorWhiteGray"/>
             </LinearLayout>
+
+
             <LinearLayout
-                android:id="@+id/llActionContainerTable"
+                android:id="@+id/llActionContainer"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:background="@color/colorDarkGrey1"
                 android:orientation="vertical">
-            </LinearLayout>
-        </LinearLayout>
 
-        <ScrollView
-            android:id="@+id/scrollView3"
-            android:layout_width="130dp"
-            android:layout_height="fill_parent"
-            android:background="@color/colorLightGrey1"
-            android:fillViewport="true">
+                <LinearLayout
+                    android:id="@+id/llActionContainerHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorDarkGrey1"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:id="@+id/llActionContainerHeaderTop"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/tvBattleHealthPlayer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="0" android:textAlignment="center"
+                            android:textColor="@color/colorHealth"/>
+                        <TextView
+                            android:id="@+id/tvBattleHealthEnemy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" android:text="0"
+                            android:textAlignment="center" android:textColor="@color/colorHealth"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/llActionContainerHeaderBottom"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/tvBattleEnergyPlayer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="0"
+                            android:textAlignment="center" android:textColor="@color/colorEnergy"/>
+                        <TextView
+                            android:id="@+id/tvBattleEnergyEnemy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="0"
+                            android:textAlignment="center" android:textColor="@color/colorEnergy"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <FrameLayout
+                    android:id="@+id/llActionContainerTable"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorDarkGrey1"
+                    android:orientation="vertical">
+                </FrameLayout>
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/llBattleEnemy"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/colorLightGrey1"
                 android:orientation="vertical">
@@ -193,6 +147,66 @@
                     android:layout_height="wrap_content" android:text="Enemy Ship Rooms"
                     android:textAlignment="center" android:textColor="@color/fontColorWhiteGray"/>
             </LinearLayout>
-        </ScrollView>
+
+
+        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="20dp"
+                      android:background="@color/colorDarkGrey1"
+                      android:orientation="horizontal">
+            <TextView android:id="@+id/tvTitleWeaponBar"
+                      android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:text="Ship Weapons"
+                      android:textAlignment="center" android:textColor="@color/colorWhite"
+                      android:textSize="24sp"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/llBattleWeaponBar"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:paddingBottom="10dp"
+                      android:paddingTop="10dp"
+
+                      android:layout_weight="1"
+                      android:background="@color/colorLightGrey1"
+                      android:orientation="horizontal">
+            <Button
+                android:id="@+id/bBattleWeapon1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:lines="3"
+                android:text="Weapon1\nLine2\nLine3"
+                android:textSize="@dimen/font_size_weapon_button"/>
+            <Button
+                android:id="@+id/bBattleWeapon2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:lines="3"
+                android:text="Weapon 2\nLine2\nLine3"
+                android:textSize="@dimen/font_size_weapon_button"/>
+            <Button
+                android:id="@+id/bBattleWeapon3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:lines="3"
+                android:text="Weapon 3\nLine2\nLine3"
+                android:textSize="@dimen/font_size_weapon_button"/>
+            <Button
+                android:id="@+id/bBattleWeapon4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:lines="3"
+                android:text="Weapon 4\nLine2\nLine3"
+                android:textSize="@dimen/font_size_weapon_button"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/bBattleNextRound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp" android:text="Confirm"/>
     </LinearLayout>
 </RelativeLayout>

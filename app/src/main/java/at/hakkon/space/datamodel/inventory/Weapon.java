@@ -119,7 +119,16 @@ public class Weapon implements IInventoryItem, Serializable {
 		String retString = "";
 
 		//Costs,Name, Danage
-		retString += "(" + getEnergyCost() + ") " + getName() + " x" + getDamage(damageModifier);
+		retString += getName() + "\n(" + getDamage(damageModifier) + ")\nEnergy " + getEnergyCost();
+		//retString += "...";
+		return retString;
+	}
+
+	public String getBattleLabel2(double damageModifier) {
+		String retString = "";
+
+		//Costs,Name, Danage
+		retString += "(" + getEnergyCost() + ")\n" + getName() + " x" + getDamage(damageModifier);
 		retString += (getTarget() != null ? "\n(" + getTarget().getName() + ")" : "\n ");
 
 		return retString;

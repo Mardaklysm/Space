@@ -1,6 +1,7 @@
 package at.hakkon.space.views;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -41,12 +42,47 @@ public class RoomView extends android.support.v7.widget.AppCompatButton {
 		String text = room.getName() + "\n(" + Utility.roundTwoDecimals(room.getEffectiveEfficency()) + ")";
 		this.setText(text);
 
+		int health = room.getHealth();
+		int maxHealth = room.getMaxHealth();
+
+		float alpha = (float)health/(float)maxHealth;
+
+		setAlpha(Math.max(0.1f,alpha));
+
+		/**
+		if (health <= maxHealth * 0.20) {
+			setAlpha(0.2f);
+			//getBackground().setColorFilter(colorP10, PorterDuff.Mode.DARKEN);
+		} else if (health <= maxHealth * 0.50) {
+			setAlpha(0.5f);
+			//getBackground().setColorFilter(colorP25, PorterDuff.Mode.DARKEN);
+		} else if (health <= maxHealth * 0.75) {
+			//getBackground().setColorFilter(colorP50, PorterDuff.Mode.DARKEN);
+			setAlpha(0.75f);
+		} else if (health <= maxHealth * 0.99) {
+			//getBackground().setAlpha(220);
+			setAlpha(0.9f);
+			//getBackground().setColorFilter(colorP75, PorterDuff.Mode.DARKEN);
+		} else {
+		//getBackground().setColorFilter(colorP100, PorterDuff.Mode.DARKEN);
+			getBackground().setAlpha(255);
+		}
+		**/
+
 	}
+
+
 
 
 	public AbsShip getShip() {
 		return ship;
 	}
+
+	private static int colorP10 = Color.parseColor("#de3923");
+	private static int colorP25 = Color.parseColor("#de8a27");
+	private static int colorP50 = Color.parseColor("#e7e02a");
+	private static int colorP75 = Color.parseColor("#aeba24");
+	private static int colorP100 = Color.parseColor("#4ca22a");
 
 
 }

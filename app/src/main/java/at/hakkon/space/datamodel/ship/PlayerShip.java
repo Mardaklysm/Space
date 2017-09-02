@@ -49,6 +49,14 @@ public class PlayerShip extends AbsShip {
 		AbsWeapon rocket1 = new WeaponRocket(1);
 		rocket1.equip(true);
 		inventory.add(rocket1);
+/**
+		inventory.add(new RedCrystal(500));
+		inventory.add(new BlueCrystal(500));
+
+		AbsWeapon nuke1 = new WeaponNuke(1);
+		nuke1.equip(true);
+		inventory.add(nuke1);
+**/
 	}
 
 	protected ArrayList<Person> getInitPersons() {

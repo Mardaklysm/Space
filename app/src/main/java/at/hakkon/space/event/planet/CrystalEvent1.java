@@ -119,7 +119,11 @@ public class CrystalEvent1 extends AbsEvent {
 				IInventoryItem crystal1 = new BlueCrystal(500);
 				IInventoryItem crystal2 = new RedCrystal(500);
 
+				getShip().addInventory(crystal1);
+				getShip().addInventory(crystal2);
+
 				text = "The obviously surprised ships both blow up in the blast of the Nuke.\n\nYou discover some interresting looking Crystals in the debrise.\n\nLoot\n -" + crystal1.getName() + " (" + crystal1.getDescription() + ")\n -" + crystal2.getName() + " (" + crystal2.getDescription() + ")";
+
 
 				Utility.getInstance().showTextDialog(context, text);
 				break;

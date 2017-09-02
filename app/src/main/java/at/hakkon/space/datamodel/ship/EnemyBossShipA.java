@@ -34,21 +34,18 @@ public class EnemyBossShipA extends AbsShip {
 		} else if (level == 2) {
 			addInventory(new WeaponRocket(1));
 			addInventory(new WeaponNuke(1));
-			addInventory(new WeaponNuke(1));
 		} else if (level == 3) {
-			addInventory(new WeaponLaser(3));
+			addInventory(new WeaponLaser(2));
+			addInventory(new WeaponRocket(2));
+			addInventory(new WeaponNuke(1));
+		} else if (level >= 4) {
+			addInventory(new WeaponLaser(2));
 			addInventory(new WeaponRocket(3));
 			addInventory(new WeaponNuke(2));
-
-		} else if (level >= 4) {
-			addInventory(new WeaponLaser(3));
+		} else if (level >= 6) {
+			addInventory(new WeaponLaser(4));
 			addInventory(new WeaponLaser(4));
 			addInventory(new WeaponRocket(4));
-			addInventory(new WeaponNuke(2));
-		} else if (level >= 6) {
-			addInventory(new WeaponLaser(5));
-			addInventory(new WeaponLaser(5));
-			addInventory(new WeaponRocket(5));
 			addInventory(new WeaponNuke(3));
 		} else if (level >= 8) {
 			addInventory(new WeaponLaser(6));

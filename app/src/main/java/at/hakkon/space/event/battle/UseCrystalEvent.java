@@ -87,7 +87,8 @@ public class UseCrystalEvent extends AbsEvent {
 			if (hint == 0){
 				getShip().useRedCrystal(room, redCrystal);
 			}
-		}else if (blueCrystal!= null){
+		}
+		if (blueCrystal!= null){
 			if ((redCrystal != null && hint == 1) || (redCrystal == null && hint == 0)){
 				getShip().useBlueCrystal(room, blueCrystal);
 			}

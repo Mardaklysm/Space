@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,7 @@ import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
+import at.hakkon.space.datamodel.galaxy.PlanetPosition;
 import at.hakkon.space.listener.IGalaxyListener;
 import at.hakkon.space.views.GalaxyRowView;
 
@@ -49,6 +51,8 @@ public class GalaxyFragment extends Fragment implements IGalaxyListener {
 	public void galaxyUpdated(Galaxy galaxy) {
 		this.galaxy = galaxy;
 		updatePlanets();
+
+		setVisible();
 	}
 
 	private ArrayList<GalaxyRowView> rows = new ArrayList<>();
@@ -81,12 +85,14 @@ public class GalaxyFragment extends Fragment implements IGalaxyListener {
 	}
 
 
+
+
 	public void setVisible() {
 		//TODO: Implement some cool scroll animation to keep the current planet in focus.
-		/**
+
 		ScrollView scrollView = (ScrollView) view.findViewById(R.id.fragmentMapScrollView);
 
-		Button shipPlanetButton;
+		//Button shipPlanetButton;
 
 		PlanetPosition planetPosition = ApplicationClass.getInstance().getShip().getCurrentPlanet().getPlanetPosition();
 
@@ -99,7 +105,7 @@ public class GalaxyFragment extends Fragment implements IGalaxyListener {
 		if (viewToScrollTo != null) {
 			scrollView.scrollTo(0, viewToScrollTo.getBottom());
 		}
-		 **/
+
 
 	}
 

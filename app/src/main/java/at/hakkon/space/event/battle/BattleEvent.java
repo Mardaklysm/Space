@@ -3,7 +3,7 @@ package at.hakkon.space.event.battle;
 import android.content.Context;
 import android.content.Intent;
 
-import at.hakkon.space.activity.BattleActivity2;
+import at.hakkon.space.activity.BattleActivity;
 import at.hakkon.space.datamodel.ship.EShipType;
 import at.hakkon.space.event.AbsEvent;
 import at.hakkon.space.event.EEventType;
@@ -41,7 +41,7 @@ public class BattleEvent extends AbsEvent {
 			return;
 		}
 		executed = true;
-		Intent intent = new Intent(context, BattleActivity2.class);
+		Intent intent = new Intent(context, BattleActivity.class);
 		intent.putExtra("enemyShipTypeOrdinal", shipType.ordinal());
 		intent.putExtra("level", getLevel());
 		intent.putExtra("isBossBattle", isBossBattle);

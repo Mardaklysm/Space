@@ -44,7 +44,7 @@ public class MechanicRoom extends AbsRoom {
 
 	@Override
 	protected int getMaxHealthForLevel(int level) {
-		return 5 + level * 5;
+		return 15 + level * 5;
 	}
 
 

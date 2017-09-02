@@ -6,7 +6,9 @@ import java.util.Random;
 
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.inventory.GenericLoot;
-import at.hakkon.space.datamodel.inventory.Weapon;
+import at.hakkon.space.datamodel.inventory.weapon.AbsWeapon;
+import at.hakkon.space.datamodel.inventory.weapon.WeaponLaser;
+import at.hakkon.space.datamodel.inventory.weapon.WeaponRocket;
 import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.event.AbsEvent;
 import at.hakkon.space.event.EEventType;
@@ -67,14 +69,14 @@ public class UnknownMetalBoxEvent extends AbsEvent {
 				if (random.nextBoolean()) {
 					//Found a weapon
 					int level = getLevel();
-					Weapon weapon = random.nextBoolean() ? Weapon.getLaser(level) : Weapon.getRocket(level);
+					AbsWeapon weapon = random.nextBoolean() ? new WeaponLaser(level) : new WeaponRocket(level);
 					String text = "You found a weapon in the box:\n" + weapon.getName();
 					Utility.getInstance().showTextDialog(context, text);
 
 					ApplicationClass.getInstance().getShip().addInventory(weapon);
 					ApplicationClass.getInstance().updateScore(getLevel() * 150);
 				} else {
-					int money = 300 + 50 * getLevel();
+					int money = 250 + 50 * getLevel();
 					int size = 20 + 5 * getLevel();
 					String text = "As you try to carefully open the box you can uncover a rare piece of art:\n\nA shiny, glowing statue!";
 

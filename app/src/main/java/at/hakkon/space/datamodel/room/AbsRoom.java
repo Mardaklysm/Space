@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
-import at.hakkon.space.datamodel.inventory.Weapon;
+import at.hakkon.space.datamodel.inventory.weapon.AbsWeapon;
 import at.hakkon.space.datamodel.ship.AbsShip;
 import at.hakkon.space.utility.Utility;
 
@@ -69,8 +69,17 @@ public abstract class AbsRoom implements Serializable {
 		return health;
 	}
 
-	public AttackResult attackWithWeapon(AbsShip attacker, AbsShip defender, Weapon weapon) {
+	public AttackResult attackWithWeapon(AbsShip attacker, AbsShip defender, AbsWeapon weapon) {
 		if (attacker.hits(defender) || weapon.alwaysHits()) {
+			//Handle OneTimeWeapons
+			if (weapon.isOneTimeWeapon()) {
+				attacker.removeInventory(weapon);
+			}
+
+			if (shieldValue > 0) {
+				shieldValue--;
+				return new AttackResult(false, true, 0);
+			}
 			int weaponDamage = defender.getWeaponRoom() == null ? 0 : (int) Math.round(weapon.getDamage() * attacker.getWeaponRoom().getEffectiveEfficency());
 			//int damageReduction = defender.getMechanicRoom() == null ? 0 : (int) Math.floor(defender.getMechanicRoom().getEffectiveEfficency() / 2);
 			int damageReduction = 0;
@@ -82,17 +91,13 @@ public abstract class AbsRoom implements Serializable {
 			//Update Room health
 			health = Math.max(health - totalDamage, 0);
 
-			//Handle OneTimeWeapons
-			if (weapon.isOneTimeWeapon()) {
-				attacker.removeInventory(weapon);
-			}
 
-			return new AttackResult(true, Math.max(0, totalDamage));
+			return new AttackResult(true, false, Math.max(0, totalDamage));
 		} else {
 			if (weapon.isOneTimeWeapon()) {
 				attacker.removeInventory(weapon);
 			}
-			return new AttackResult(false, 0);
+			return new AttackResult(false, false, 0);
 		}
 	}
 
@@ -108,7 +113,7 @@ public abstract class AbsRoom implements Serializable {
 
 		double efficiency = getEfficency();
 
-		if (efficiency == 0){
+		if (efficiency == 0) {
 			return 0;
 		}
 
@@ -167,4 +172,18 @@ public abstract class AbsRoom implements Serializable {
 	}
 
 	abstract protected int getMaxHealthForLevel(int level);
+
+	private int shieldValue = 0;
+
+	public void shield(int shieldValue) {
+		this.shieldValue = shieldValue;
+	}
+
+	public boolean isShielded() {
+		return shieldValue > 0;
+	}
+
+	public void nextRound(){
+		shieldValue--;
+	}
 }

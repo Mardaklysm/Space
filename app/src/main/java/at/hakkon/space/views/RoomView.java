@@ -2,6 +2,7 @@ package at.hakkon.space.views;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.util.TypedValue;
 import android.view.View;
 
@@ -49,6 +50,12 @@ public class RoomView extends android.support.v7.widget.AppCompatButton {
 
 		setAlpha(Math.max(0.1f,alpha));
 
+		if (room.isShielded()){
+			getBackground().setColorFilter(colorShieldOn, PorterDuff.Mode.DARKEN);
+		}else{
+			getBackground().setColorFilter(null);
+		}
+
 		/**
 		if (health <= maxHealth * 0.20) {
 			setAlpha(0.2f);
@@ -83,6 +90,8 @@ public class RoomView extends android.support.v7.widget.AppCompatButton {
 	private static int colorP50 = Color.parseColor("#e7e02a");
 	private static int colorP75 = Color.parseColor("#aeba24");
 	private static int colorP100 = Color.parseColor("#4ca22a");
+
+	private static int colorShieldOn = Color.parseColor("#1273ec");
 
 
 }

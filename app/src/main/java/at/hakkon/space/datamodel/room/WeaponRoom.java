@@ -42,7 +42,7 @@ public class WeaponRoom extends AbsRoom {
 
 	@Override
 	protected int getMaxHealthForLevel(int level) {
-		return 20 + level * 10;
+		return 30 + level * 15;
 	}
 
 }

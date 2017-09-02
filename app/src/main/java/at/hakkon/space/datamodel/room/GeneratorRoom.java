@@ -23,7 +23,7 @@ public class GeneratorRoom extends AbsRoom {
 	}
 
 	private double getEfficency(int level) {
-		return 3 + level;
+		return 3 + level+3;
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class GeneratorRoom extends AbsRoom {
 
 	@Override
 	protected int getMaxHealthForLevel(int level) {
-		return 10 + level * 5;
+		return 20 + level * 5;
 	}
 
 

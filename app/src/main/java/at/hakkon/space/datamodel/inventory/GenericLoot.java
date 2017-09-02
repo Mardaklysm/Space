@@ -47,7 +47,7 @@ public class GenericLoot implements IInventoryItem, Serializable {
 
 	@Override
 	public String getDescription() {
-		return name;
+		return description;
 	}
 
 	public EGenricLootType getType() {

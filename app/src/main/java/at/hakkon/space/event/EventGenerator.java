@@ -4,6 +4,7 @@ import java.util.Random;
 
 import at.hakkon.space.datamodel.ship.EShipType;
 import at.hakkon.space.event.battle.BattleEvent;
+import at.hakkon.space.event.planet.CrystalEvent1;
 import at.hakkon.space.event.planet.FlyingAstronautEvent;
 import at.hakkon.space.event.planet.MineEvent;
 import at.hakkon.space.event.planet.ResourceBonusEvent;
@@ -27,7 +28,7 @@ public class EventGenerator {
 
 	private int lastEventId = -1;
 
-	private final static int MAX_EVENT_COUNT = 4;
+	private final static int MAX_EVENT_COUNT = 5;
 
 	public AbsEvent generateRandomEvent(int level) {
 
@@ -38,9 +39,9 @@ public class EventGenerator {
 
 
 		if (battleEncounter) {
-			if (level == 1){
+			if (level == 1) {
 				event = createBattleEvent(level, EShipType.Enemy_A);
-			}else{
+			} else {
 				int randShip = random.nextInt(2);
 				event = createBattleEvent(level, EShipType.values()[randShip]);
 			}
@@ -49,7 +50,7 @@ public class EventGenerator {
 			int randId = random.nextInt(MAX_EVENT_COUNT);
 
 			//Make sure that we never have the same event twice in a row!
-			while (randId == lastEventId){
+			while (randId == lastEventId) {
 				randId = random.nextInt(MAX_EVENT_COUNT);
 			}
 			lastEventId = randId;
@@ -66,6 +67,9 @@ public class EventGenerator {
 					break;
 				case 3:
 					event = new MineEvent(level);
+					break;
+				case 4:
+					event = new CrystalEvent1(level);
 					break;
 				default:
 					throw new RuntimeException("Invalid Event ID. I dont know any event with this ID: " + randId + ". :( ....");

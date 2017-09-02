@@ -48,7 +48,7 @@ public class ResourceBonusEvent extends AbsEvent {
 		} else {
 			//Add fuel
 			Utility.getInstance().showTextDialog(context, "You collected " + resourceBonusFuel + " fuel off a nearby asteroid belt.");
-			ApplicationClass.getInstance().updateFuel((int) Math.floor(getResourceBonus() / 25));
+			ApplicationClass.getInstance().updateFuel(resourceBonusFuel);
 		}
 
 		ApplicationClass.getInstance().updateScore(getResourceBonus());

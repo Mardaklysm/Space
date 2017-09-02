@@ -10,10 +10,12 @@ public class AttackResult implements Serializable{
 
 	private boolean hit;
 	private int damage;
+	private boolean shielded;
 
-	public AttackResult(boolean hit, int damage){
+	public AttackResult(boolean hit, boolean shielded, int damage){
 		this.hit = hit;
 		this.damage = damage;
+		this.shielded = shielded;
 	}
 
 	public boolean isHit() {
@@ -22,5 +24,9 @@ public class AttackResult implements Serializable{
 
 	public int getDamage() {
 		return damage;
+	}
+
+	public boolean isShielded() {
+		return shielded;
 	}
 }

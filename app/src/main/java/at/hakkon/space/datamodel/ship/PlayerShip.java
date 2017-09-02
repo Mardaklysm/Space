@@ -1,13 +1,16 @@
 package at.hakkon.space.datamodel.ship;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Loot;
-import at.hakkon.space.datamodel.inventory.Weapon;
+import at.hakkon.space.datamodel.inventory.weapon.AbsWeapon;
+import at.hakkon.space.datamodel.inventory.weapon.WeaponLaser;
+import at.hakkon.space.datamodel.inventory.weapon.WeaponRocket;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.room.GeneratorRoom;
@@ -22,9 +25,9 @@ import at.hakkon.space.utility.Utility;
 
 public class PlayerShip extends AbsShip {
 
-	protected final static int START_HEALTH = 200;
+	protected final static int START_HEALTH = 100;
 
-	protected final static int START_FUEL = 100;
+	protected final static int START_FUEL = 50;
 	protected final static int START_MONEY = 500;
 
 
@@ -39,14 +42,13 @@ public class PlayerShip extends AbsShip {
 		this.money = START_MONEY;
 		this.fuel = START_FUEL;
 
-		Weapon laser1 = Weapon.getLaser(1);
+		AbsWeapon laser1 = new WeaponLaser(1);
 		laser1.equip(true);
 		inventory.add(laser1);
 
-		Weapon rocket1 = Weapon.getRocket(1);
+		AbsWeapon rocket1 = new WeaponRocket(1);
 		rocket1.equip(true);
 		inventory.add(rocket1);
-
 	}
 
 	protected ArrayList<Person> getInitPersons() {
@@ -66,6 +68,11 @@ public class PlayerShip extends AbsShip {
 		rooms.add(new WeaponRoom(this, 1));
 
 		return rooms;
+	}
+
+	@Override
+	public HashMap<AbsWeapon, AbsRoom> getAttackMap(AbsShip target, int energy) {
+		return null;
 	}
 
 	@Override
@@ -97,9 +104,9 @@ public class PlayerShip extends AbsShip {
 			retString += "\n";
 		}
 
-		ArrayList<Weapon> weapons = getWeapons();
+		ArrayList<AbsWeapon> weapons = getWeapons();
 		retString += "\nWeapons List (" + weapons.size() + ")\n";
-		for (Weapon weapon : weapons) {
+		for (AbsWeapon weapon : weapons) {
 			retString += weapon.getInformationDump();
 			retString += "\n";
 		}

@@ -42,13 +42,10 @@
         </activity>
 
         <activity
-            android:name=".activity.BattleActivity2"
+            android:name=".activity.BattleActivity"
             android:label="BattleActivity">
         </activity>
-        <activity
-            android:name=".activity.BattleActivity2"
-            android:label="BattleActivity2">
-        </activity>
+
     </application>
 
 </manifest>

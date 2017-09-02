@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.datamodel.inventory.EGenricLootType;
 import at.hakkon.space.datamodel.inventory.GenericLoot;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
-import at.hakkon.space.datamodel.inventory.Weapon;
+import at.hakkon.space.datamodel.inventory.weapon.AbsWeapon;
+import at.hakkon.space.datamodel.inventory.weapon.WeaponNuke;
 import at.hakkon.space.event.AbsEvent;
 import at.hakkon.space.event.EEventType;
-import at.hakkon.space.datamodel.inventory.EGenricLootType;
 import at.hakkon.space.utility.Utility;
 
 /**
@@ -135,7 +136,7 @@ public class MineEvent extends AbsEvent {
 				} else {
 					text = "A few more creatures come to pick up your donation and then descend into the cave again.\n\nAbout half an hour later the bigger creatures comes back from the cave and hands you something.";
 
-					Weapon weapon = Weapon.getNuke((int) (1 + Math.floor(getLevel() / 2)));
+					AbsWeapon weapon = new WeaponNuke((int) (1 + Math.floor(getLevel() / 2)));
 					text += "\n\nA Weapon of Mass Destruction:\n " + weapon.getName();
 					ApplicationClass.getInstance().getShip().addInventory(weapon);
 				}
@@ -149,7 +150,7 @@ public class MineEvent extends AbsEvent {
 				text = "A few more creatures come to pick up the golden statue chanting a repeating song and then descending into the cave again.\n\nAbout half an hour later they come back from the cave and hand you something.";
 
 				if (random.nextBoolean()) {
-					Weapon weapon = Weapon.getNuke((int) (2 + Math.floor(getLevel() / 2)));
+					AbsWeapon weapon = new WeaponNuke((int) (2 + Math.floor(getLevel() / 2)));
 					text += "\n\nA Weapon of Mass Destruction:\n" + weapon.getName();
 					ApplicationClass.getInstance().getShip().addInventory(weapon);
 				} else {

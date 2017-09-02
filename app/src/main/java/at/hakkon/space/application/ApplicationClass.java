@@ -17,10 +17,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import at.hakkon.space.R;
 import at.hakkon.space.achievement.Achievements;
 import at.hakkon.space.activity.MainActivity;
+import at.hakkon.space.datamodel.EFaction;
 import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.SaveFile;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
@@ -49,6 +51,8 @@ public class ApplicationClass extends android.app.Application {
 
 	public static boolean playMusic = true;
 
+	HashMap<EFaction, Integer> karmaMap = new HashMap<>();
+
 
 	public static ApplicationClass getInstance() {
 		if (instance == null) {
@@ -72,6 +76,10 @@ public class ApplicationClass extends android.app.Application {
 			ship.setStartPlanet(galaxy.getFirstPlanet());
 			ship.setCurrentPlanet(galaxy.getFirstPlanet());
 		}
+
+		karmaMap.put(EFaction.Red, 0);
+		karmaMap.put(EFaction.Blue, 0);
+		karmaMap.put(EFaction.Green, 0);
 
 		isInitialized = true;
 
@@ -113,12 +121,10 @@ public class ApplicationClass extends android.app.Application {
 		}
 
 
-
-
 		if (planet.getEvent() != null) {
 			planet.getEvent().execute(getContext());
 			Log.i(TAG, "Executing event for for planet: " + planet.getName());
-		}else{
+		} else {
 			Log.i(TAG, "No event found for planet: " + planet.getName());
 		}
 		saveGame();
@@ -318,7 +324,7 @@ public class ApplicationClass extends android.app.Application {
 
 	private void saveGame() {
 		Log.i(TAG, "Saving Game!");
-		SaveFile saveFile = new SaveFile(ship, galaxy);
+		SaveFile saveFile = new SaveFile(ship, galaxy, karmaMap);
 
 		try {
 			FileOutputStream fos = MainActivity.getInstance().openFileOutput(SAVE_FILE, Context.MODE_PRIVATE);
@@ -355,13 +361,15 @@ public class ApplicationClass extends android.app.Application {
 
 			this.galaxy = saveFile.getGalaxy();
 			this.ship = saveFile.getPlayerShip();
+			this.karmaMap = saveFile.getKarmaMap();
+
 			return true;
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-		}finally{
+		} finally {
 			try {
 				is.close();
 				fis.close();
@@ -373,7 +381,31 @@ public class ApplicationClass extends android.app.Application {
 		return false;
 	}
 
-	public boolean deleteSaveFile(){
+	public void updateKarma(EFaction faction, int karma) {
+		if (karmaMap.containsKey(faction)) {
+			karmaMap.put(faction, karmaMap.get(faction) + karma);
+		} else {
+			karmaMap.put(faction, karma);
+		}
+
+		if (karma > 0) {
+			switch (faction) {
+				case Blue:
+					Games.Achievements.unlock(googleApiClient, Achievements.ID_FIRST_KARMA_PLUS_BLUE);
+					break;
+				case Red:
+					Games.Achievements.unlock(googleApiClient, Achievements.ID_FIRST_KARMA_PLUS_RED);
+					break;
+				case Green:
+					Games.Achievements.unlock(googleApiClient, Achievements.ID_FIRST_KARMA_PLUS_GREEN);
+					break;
+				default: throw new RuntimeException("Unknown Faction!");
+			}
+		}
+
+	}
+
+	public boolean deleteSaveFile() {
 
 		File file = new File(MainActivity.getInstance().getFilesDir() + "/" + SAVE_FILE);
 		boolean deleted = file.delete();

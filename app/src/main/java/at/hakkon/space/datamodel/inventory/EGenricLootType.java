@@ -5,5 +5,5 @@ package at.hakkon.space.datamodel.inventory;
  */
 
 public enum EGenricLootType {
-	Generic, Statue
+	Generic, Crystal_Blue, Crystal_Red, Statue
 }

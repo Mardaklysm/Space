@@ -1,14 +1,15 @@
-package at.hakkon.space.datamodel.inventory;
+package at.hakkon.space.datamodel.inventory.weapon;
 
 import java.io.Serializable;
 
+import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.room.AbsRoom;
 
 /**
  * Created by Markus on 29.07.2017.
  */
 
-public class Weapon implements IInventoryItem, Serializable {
+public abstract class AbsWeapon implements IInventoryItem, Serializable {
 
 	private boolean alwaysHits = false;
 	private String name;
@@ -20,16 +21,14 @@ public class Weapon implements IInventoryItem, Serializable {
 
 	private int energyCost;
 
-	public Weapon(int level, String name, int damage, int energyCost) {
+
+	public AbsWeapon(int level, String name, int damage, int energyCost, boolean isOneTimeWeapon, boolean attacksAll) {
 		this.name = name;
 		this.damage = damage;
 		this.energyCost = energyCost;
 		this.level = level;
 		this.alwaysHits = false;
-	}
 
-	public Weapon(int level, String name, int damage, int energyCost, boolean isOneTimeWeapon, boolean attacksAll) {
-		this(level, name, damage, energyCost);
 		this.isOneTimeWeapon = isOneTimeWeapon;
 		this.attacksAll = attacksAll;
 	}
@@ -55,21 +54,6 @@ public class Weapon implements IInventoryItem, Serializable {
 
 		retString += name + "( DMG: " + damage + ", Cost: " + energyCost + ")";
 		return retString;
-	}
-
-	public static Weapon getLaser(int level) {
-		return new Weapon(level, "Laser Lv." + level, 4 * level, 3 * level);
-	}
-
-
-	public static Weapon getRocket(int level) {
-		return new Weapon(level, "Rocket Lv." + level, 2 * level, 3 * level, false, true);
-	}
-
-	public static Weapon getNuke(int level) {
-		Weapon weapon = new Weapon(level, "Nuke Lv." + level, 10 + 5 * level, 10 + 3 * level, true, true);
-		weapon.setAlwaysHits(true);
-		return weapon;
 	}
 
 	public void setAlwaysHits(boolean alwaysHits) {
@@ -105,10 +89,9 @@ public class Weapon implements IInventoryItem, Serializable {
 		return isEquipped;
 	}
 
-	@Override
-	public int getCashValue() {
-		return level * 50;
-	}
+	public abstract EWeaponType getWeaponType();
+
+
 
 	@Override
 	public String getDescription() {
@@ -120,17 +103,6 @@ public class Weapon implements IInventoryItem, Serializable {
 
 		//Costs,Name, Danage
 		retString += getName() + "\n(" + getDamage(damageModifier) + ")\nEnergy " + getEnergyCost();
-		//retString += "...";
-		return retString;
-	}
-
-	public String getBattleLabel2(double damageModifier) {
-		String retString = "";
-
-		//Costs,Name, Danage
-		retString += "(" + getEnergyCost() + ")\n" + getName() + " x" + getDamage(damageModifier);
-		retString += (getTarget() != null ? "\n(" + getTarget().getName() + ")" : "\n ");
-
 		return retString;
 	}
 
@@ -144,5 +116,9 @@ public class Weapon implements IInventoryItem, Serializable {
 
 	public boolean attacksAll() {
 		return attacksAll;
+	}
+
+	public int getLevel() {
+		return level;
 	}
 }

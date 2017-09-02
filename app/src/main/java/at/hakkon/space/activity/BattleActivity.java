@@ -37,7 +37,7 @@ import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Loot;
-import at.hakkon.space.datamodel.inventory.Weapon;
+import at.hakkon.space.datamodel.inventory.weapon.AbsWeapon;
 import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.room.AttackResult;
 import at.hakkon.space.datamodel.ship.AbsShip;
@@ -46,6 +46,7 @@ import at.hakkon.space.datamodel.ship.EnemyBossShipA;
 import at.hakkon.space.datamodel.ship.EnemyShipA;
 import at.hakkon.space.datamodel.ship.EnemyShipB;
 import at.hakkon.space.datamodel.ship.PlayerShip;
+import at.hakkon.space.event.battle.UseCrystalEvent;
 import at.hakkon.space.event.planet.GoToGalaxyEvent;
 import at.hakkon.space.listener.IShipListener;
 import at.hakkon.space.utility.Utility;
@@ -63,8 +64,8 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 	private int roundNr = 0;
 
-	private HashMap<Weapon, Button> mapWeaponButtons = new HashMap<>();
-	private HashMap<Weapon, AbsRoom> mapWeaponRooms = new HashMap<>();
+	private HashMap<AbsWeapon, Button> mapWeaponButtons = new HashMap<>();
+	private HashMap<AbsWeapon, AbsRoom> mapWeaponRooms = new HashMap<>();
 
 	private int level;
 
@@ -72,12 +73,28 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 	private boolean isBossBattle;
 
+	private ArrayList<MessageData> messageDataQueue = new ArrayList<>();
+
+
+	private HashMap<AbsRoom, RoomView> mapRooms = new HashMap<>();
+
+	private AbsWeapon selectedWeapon;
+	private int colorSelected = Color.parseColor("#dbd530");
+	private int colorWeaponLocked = Color.parseColor("#42bc31");
+
+	private int colorGreen = Color.parseColor("#52bc35");
+	private int colorRed = Color.parseColor("#912416");
+
+	private MediaPlayer music;
+
+	private Timer messageAnimationTimer = new Timer();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		instance = this;
 		ApplicationClass.getInstance().updateActiveContext(this);
-		setContentView(R.layout.activity_battle_2);
+		setContentView(R.layout.activity_battle);
 
 		//Get parameters;
 		int enemyShipTypeOrdinal = getIntent().getIntExtra("enemyShipTypeOrdinal", 0);
@@ -115,10 +132,10 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		addMessage("[Round " + roundNr + "]: Make your moves!");
 
 		startAnimationTimerTask(this);
+
+
 	}
 
-
-	private HashMap<AbsRoom, RoomView> mapRooms = new HashMap<>();
 
 	private void initPlayerShipRooms() {
 
@@ -132,6 +149,14 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			parent.addView(roomView);
 			roomViewsPlayer.add(roomView);
 			mapRooms.put(room, roomView);
+
+			roomView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					UseCrystalEvent event = new UseCrystalEvent(room,level);
+					event.execute(BattleActivity.this);
+				}
+			});
 		}
 	}
 
@@ -143,7 +168,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		((Button) findViewById(R.id.bBattleWeapon4)).setAllCaps(false);
 	}
 
-	private void addWeaponSelectionListener(View view, final Weapon weapon) {
+	private void addWeaponSelectionListener(View view, final AbsWeapon weapon) {
 		view.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -167,11 +192,21 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	}
 
 	private void nextRound() {
+
+		//Refresh rooms
+		for(AbsRoom room: appClass.getShip().getRooms()){
+			room.nextRound();
+		}
+
+		for(AbsRoom room: enemyShip.getRooms()){
+			room.nextRound();
+		}
+
 		//HANDLE BATTLE
 		//Fire weapons for player AT the enemy
 
-		for (Map.Entry<Weapon, AbsRoom> entry : mapWeaponRooms.entrySet()) {
-			Weapon weapon = entry.getKey();
+		for (Map.Entry<AbsWeapon, AbsRoom> entry : mapWeaponRooms.entrySet()) {
+			AbsWeapon weapon = entry.getKey();
 			ArrayList<AbsRoom> targets = new ArrayList<>();
 			if (weapon.attacksAll()) {
 				targets.addAll(enemyShip.getRooms());
@@ -183,14 +218,13 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 				AttackResult attackResult = room.attackWithWeapon(appClass.getShip(), enemyShip, weapon);
 				int damage = attackResult.getDamage();
 				playDamageAnimation(mapRooms.get(room));
-				if (attackResult.isHit()) {
-					String message = "Enemy (" + room.getName() + ") took " + damage + " damage (" + weapon.getName() + ")";
+
+				if (attackResult.isShielded()) {
+					addActionMessage(new MessageData(1, colorGreen, "Shield"));
+				} else if (attackResult.isHit()) {
 					addActionMessage(new MessageData(1, colorGreen, String.valueOf(damage)));
-					addMessage(message);
 				} else {
-					String message = "Enemy (" + room.getName() + ") evaded (" + weapon.getName() + ")";
 					addActionMessage(new MessageData(1, colorGreen, "Miss"));
-					addMessage(message);
 				}
 			}
 
@@ -200,15 +234,12 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		if (enemyShip.getHealth() > 0) {
 			//Fire weapons for Enemy AT the player
-			for (Weapon weapon : enemyShip.getWeapons()) {
+			HashMap<AbsWeapon, AbsRoom> map = enemyShip.getAttackMap(appClass.getShip(), energyEnemy);
+			for (Map.Entry<AbsWeapon, AbsRoom> entry : map.entrySet()) {
+				AbsWeapon weapon = entry.getKey();
+				AbsRoom target = entry.getValue();
+
 				if (energyEnemy - weapon.getEnergyCost() >= 0) {
-
-					//Calculate room target
-					int rooms = appClass.getShip().getRooms().size();
-
-					Random random = new Random();
-					int rndIdx = random.nextInt(rooms);
-					AbsRoom target = appClass.getShip().getRooms().get(rndIdx);
 
 					ArrayList<AbsRoom> targets = new ArrayList<>();
 					if (weapon.attacksAll()) {
@@ -221,7 +252,8 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 					for (AbsRoom room : targets) {
 						AttackResult attackResult = room.attackWithWeapon(enemyShip, appClass.getShip(), weapon);
-						int damage = attackResult.getDamage();						if (attackResult.isHit()) {
+						int damage = attackResult.getDamage();
+						if (attackResult.isHit()) {
 							playDamageAnimation(mapRooms.get(room));
 							String message = "** " + room.getName() + " took " + damage + " damage (" + weapon.getName() + ")";
 							addActionMessage(new MessageData(2, colorRed, String.valueOf(damage)));
@@ -317,11 +349,11 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	}
 
 	private void reloadWeapons() {
-		ArrayList<Weapon> weaponsForRemoval = new ArrayList<>();
+		ArrayList<AbsWeapon> weaponsForRemoval = new ArrayList<>();
 
-		for (Iterator<Map.Entry<Weapon, AbsRoom>> it = mapWeaponRooms.entrySet().iterator(); it.hasNext(); ) {
-			Map.Entry<Weapon, AbsRoom> entry = it.next();
-			Weapon weapon = entry.getKey();
+		for (Iterator<Map.Entry<AbsWeapon, AbsRoom>> it = mapWeaponRooms.entrySet().iterator(); it.hasNext(); ) {
+			Map.Entry<AbsWeapon, AbsRoom> entry = it.next();
+			AbsWeapon weapon = entry.getKey();
 			AbsRoom room = entry.getValue();
 
 			if (weapon.isOneTimeWeapon()) {
@@ -333,13 +365,11 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			}
 		}
 
-		for (Weapon weapon : weaponsForRemoval) {
+		for (AbsWeapon weapon : weaponsForRemoval) {
 			mapWeaponRooms.remove(weapon);
 		}
 
 	}
-
-	private ArrayList<MessageData> messageDataQueue = new ArrayList<>();
 
 
 	private void addActionMessage(MessageData message) {
@@ -352,7 +382,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		}
 
 		//Unload weapons
-		for (Weapon weapon : ApplicationClass.getInstance().getShip().getWeapons()) {
+		for (AbsWeapon weapon : ApplicationClass.getInstance().getShip().getWeapons()) {
 			weapon.setTarget(null);
 		}
 	}
@@ -509,7 +539,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		energyEnemy = (int) enemyShip.getGeneratorRoom().getEffectiveEfficency();
 	}
 
-	private boolean selectTarget(Weapon weapon, AbsRoom target, boolean showDialogs) {
+	private boolean selectTarget(AbsWeapon weapon, AbsRoom target, boolean showDialogs) {
 
 		boolean canAffordToTarget = energyPlayer - weapon.getEnergyCost() >= 0;
 
@@ -539,17 +569,11 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		return true;
 	}
 
-	private Weapon selectedWeapon;
-	private int colorSelected = Color.parseColor("#dbd530");
-	private int colorWeaponLocked = Color.parseColor("#42bc31");
 
-	private int colorGreen = Color.parseColor("#52bc35");
-	private int colorRed = Color.parseColor("#912416");
-
-	private void selectWeapon(Weapon weapon) {
+	private void selectWeapon(AbsWeapon weapon) {
 
 
-		for (Map.Entry<Weapon, Button> entry : mapWeaponButtons.entrySet()) {
+		for (Map.Entry<AbsWeapon, Button> entry : mapWeaponButtons.entrySet()) {
 			if (!entry.getKey().hasTarget()) {
 				entry.getValue().getBackground().setColorFilter(null);
 			}
@@ -572,7 +596,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 	private void updateWeaponButtons(PlayerShip playerShip) {
 
-		ArrayList<Weapon> weapons = playerShip.getEquippedWeapons();
+		ArrayList<AbsWeapon> weapons = playerShip.getEquippedWeapons();
 
 		findViewById(R.id.bBattleWeapon1).setVisibility(weapons.size() > 0 ? View.VISIBLE : View.INVISIBLE);
 		findViewById(R.id.bBattleWeapon2).setVisibility(weapons.size() > 1 ? View.VISIBLE : View.INVISIBLE);
@@ -582,28 +606,28 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		mapWeaponButtons.clear();
 
 		if (weapons.size() > 0) {
-			Weapon weapon = playerShip.getEquippedWeapons().get(0);
+			AbsWeapon weapon = playerShip.getEquippedWeapons().get(0);
 			((Button) findViewById(R.id.bBattleWeapon1)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEffectiveEfficency()));
 			mapWeaponButtons.put(weapon, ((Button) findViewById(R.id.bBattleWeapon1)));
 			addWeaponSelectionListener(findViewById(R.id.bBattleWeapon1), weapon);
 		}
 
 		if (weapons.size() > 1) {
-			Weapon weapon = playerShip.getEquippedWeapons().get(1);
+			AbsWeapon weapon = playerShip.getEquippedWeapons().get(1);
 			((Button) findViewById(R.id.bBattleWeapon2)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEffectiveEfficency()));
 			mapWeaponButtons.put(weapon, ((Button) findViewById(R.id.bBattleWeapon2)));
 			addWeaponSelectionListener(findViewById(R.id.bBattleWeapon2), weapon);
 		}
 
 		if (weapons.size() > 2) {
-			Weapon weapon = playerShip.getEquippedWeapons().get(2);
+			AbsWeapon weapon = playerShip.getEquippedWeapons().get(2);
 			((Button) findViewById(R.id.bBattleWeapon3)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEffectiveEfficency()));
 			mapWeaponButtons.put(weapon, ((Button) findViewById(R.id.bBattleWeapon3)));
 			addWeaponSelectionListener(findViewById(R.id.bBattleWeapon3), weapon);
 		}
 
 		if (weapons.size() > 3) {
-			Weapon weapon = playerShip.getEquippedWeapons().get(3);
+			AbsWeapon weapon = playerShip.getEquippedWeapons().get(3);
 			((Button) findViewById(R.id.bBattleWeapon4)).setText(weapon.getBattleLabel(playerShip.getWeaponRoom().getEffectiveEfficency()));
 			mapWeaponButtons.put(weapon, ((Button) findViewById(R.id.bBattleWeapon4)));
 			addWeaponSelectionListener(findViewById(R.id.bBattleWeapon4), weapon);
@@ -615,7 +639,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	public void shipUpdated(PlayerShip ship) {
 		updateHeader(ship);
 		updateWeaponButtons(ship);
-
+		refreshUI();
 	}
 
 	private void updateHeader(PlayerShip ship) {
@@ -675,8 +699,6 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	}
 
 
-	private MediaPlayer music;
-
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -690,19 +712,18 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 	}
 
-	private Timer messageAnimationTimer = new Timer();
 
 	private void startAnimationTimerTask(final Context context) {
 		messageAnimationTimer = new Timer();
 		messageAnimationTimer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if (messageDataQueue.isEmpty()) {
-					return;
-				}
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
+						if (messageDataQueue.isEmpty()) {
+							return;
+						}
 						MessageData message = messageDataQueue.get(0);
 						messageDataQueue.remove(message);
 						//Left

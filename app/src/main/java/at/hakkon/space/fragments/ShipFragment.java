@@ -18,7 +18,7 @@ import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.application.IMetaDataListener;
 import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
-import at.hakkon.space.datamodel.inventory.Weapon;
+import at.hakkon.space.datamodel.inventory.weapon.AbsWeapon;
 import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.event.management.RestartGameEvent;
@@ -102,14 +102,14 @@ public class ShipFragment extends Fragment implements IShipListener, IMetaDataLi
 
 		PlayerShip playerShip = ApplicationClass.getInstance().getShip();
 
-		ArrayList<Weapon> allWeapons = playerShip.getWeapons();
-		ArrayList<Weapon> equippedWeapons = playerShip.getEquippedWeapons();
+		ArrayList<AbsWeapon> allWeapons = playerShip.getWeapons();
+		ArrayList<AbsWeapon> equippedWeapons = playerShip.getEquippedWeapons();
 
-		for (Weapon weapon : equippedWeapons) {
+		for (AbsWeapon weapon : equippedWeapons) {
 			createWeaponButton(ship, weapon);
 		}
 
-		for (Weapon weapon : allWeapons) {
+		for (AbsWeapon weapon : allWeapons) {
 			if (weapon.isEquipped()) {
 				continue;
 			}
@@ -145,7 +145,7 @@ public class ShipFragment extends Fragment implements IShipListener, IMetaDataLi
 	private int colorSelected = Color.parseColor("#42bc31");
 	private final static int MAX_WEAPONS_EQUIP_COUNT = 4;
 
-	private void createWeaponButton(final PlayerShip ship, final Weapon weapon) {
+	private void createWeaponButton(final PlayerShip ship, final AbsWeapon weapon) {
 		LinearLayout llShipWeapons = (LinearLayout) view.findViewById(R.id.llShipWeapons);
 
 		final Button button = new Button(getActivity());

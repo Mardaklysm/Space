@@ -41,6 +41,6 @@ public class NavigationRoom extends AbsRoom {
 
 	@Override
 	protected int getMaxHealthForLevel(int level) {
-		return level * 5;
+		return 5 + level * 5;
 	}
 }

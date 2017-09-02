@@ -16,10 +16,10 @@
         android:id="@+id/tvBattleTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/header"
-        android:background="@color/colorLightGrey1"
-        android:text="Battle Log Title"
-        android:textColor="@color/fontColorBlack"/>
+        android:background="@color/colorLightGrey1" android:text="Battle Log Title"
+        android:textColor="@color/fontColorWhiteGray"/>
     <ScrollView
         android:id="@+id/scBattle"
         android:layout_width="match_parent"

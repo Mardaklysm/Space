@@ -5,7 +5,9 @@ import java.util.Random;
 
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Loot;
-import at.hakkon.space.datamodel.inventory.Weapon;
+import at.hakkon.space.datamodel.inventory.weapon.WeaponLaser;
+import at.hakkon.space.datamodel.inventory.weapon.WeaponNuke;
+import at.hakkon.space.datamodel.inventory.weapon.WeaponRocket;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.room.GeneratorRoom;
@@ -19,47 +21,46 @@ import at.hakkon.space.datamodel.room.WeaponRoom;
 
 public class EnemyBossShipA extends AbsShip {
 
-	protected final static int START_HEALTH = 50;
+	protected final static int START_HEALTH = 0;
 
 	public EnemyBossShipA(String name, int level) {
-		super(name, level, START_HEALTH + 30 * level);
+		super(name, level, START_HEALTH + 100 * level);
 
 		Random random = new Random();
 
 		if (level == 1) {
-			addInventory(Weapon.getLaser(1));
-			addInventory(Weapon.getNuke(1));
+			addInventory(new WeaponLaser(1));
+			addInventory(new WeaponNuke(1));
 		} else if (level == 2) {
-			addInventory(Weapon.getRocket(1));
-			addInventory(Weapon.getNuke(1));
-			addInventory(Weapon.getNuke(1));
+			addInventory(new WeaponRocket(1));
+			addInventory(new WeaponNuke(1));
+			addInventory(new WeaponNuke(1));
 		} else if (level == 3) {
-			addInventory(Weapon.getLaser(3));
-			addInventory(Weapon.getRocket(3));
-			addInventory(Weapon.getNuke(2));
+			addInventory(new WeaponLaser(3));
+			addInventory(new WeaponRocket(3));
+			addInventory(new WeaponNuke(2));
 
 		} else if (level >= 4) {
-			addInventory(Weapon.getLaser(3));
-			addInventory(Weapon.getLaser(4));
-			addInventory(Weapon.getRocket(4));
-			addInventory(Weapon.getNuke(2));
+			addInventory(new WeaponLaser(3));
+			addInventory(new WeaponLaser(4));
+			addInventory(new WeaponRocket(4));
+			addInventory(new WeaponNuke(2));
 		} else if (level >= 6) {
-			addInventory(Weapon.getLaser(5));
-			addInventory(Weapon.getLaser(5));
-			addInventory(Weapon.getRocket(5));
-			addInventory(Weapon.getNuke(3));
+			addInventory(new WeaponLaser(5));
+			addInventory(new WeaponLaser(5));
+			addInventory(new WeaponRocket(5));
+			addInventory(new WeaponNuke(3));
 		} else if (level >= 8) {
-			addInventory(Weapon.getLaser(6));
-			addInventory(Weapon.getLaser(6));
-			addInventory(Weapon.getLaser(6));
-			addInventory(Weapon.getRocket(6));
-			addInventory(Weapon.getNuke(4));
+			addInventory(new WeaponLaser(6));
+			addInventory(new WeaponLaser(6));
+			addInventory(new WeaponLaser(6));
+			addInventory(new WeaponRocket(6));
+			addInventory(new WeaponNuke(4));
 		} else if (level >= 10) {
-			addInventory(Weapon.getLaser(4 + level / 2));
-			addInventory(Weapon.getLaser(4 + level / 2));
-			addInventory(Weapon.getRocket(4 + level / 2));
-			addInventory(Weapon.getRocket(4 + level / 2));
-			addInventory(Weapon.getNuke(Math.min(10,level/2)));
+			addInventory(new WeaponLaser(4 + level / 2));
+			addInventory(new WeaponRocket(4 + level / 2));
+			addInventory(new WeaponRocket(4 + level / 2));
+			addInventory(new WeaponNuke(Math.min(10,level/2)));
 		}
 
 	}
@@ -102,10 +103,10 @@ public class EnemyBossShipA extends AbsShip {
 	protected ArrayList<AbsRoom> getInitRooms() {
 		ArrayList<AbsRoom> rooms = new ArrayList<>();
 
-		rooms.add(new NavigationRoom(this, 2 + getLevel()));
-		rooms.add(new WeaponRoom(this, 2 + getLevel()));
-		rooms.add(new GeneratorRoom(this, 2 + getLevel()));
-		rooms.add(new MechanicRoom(this, 2 + getLevel()));
+		rooms.add(new NavigationRoom(this, 1 + getLevel()));
+		rooms.add(new WeaponRoom(this, 1 + getLevel()));
+		rooms.add(new GeneratorRoom(this, 1 + getLevel()));
+		rooms.add(new MechanicRoom(this, 1 + getLevel()));
 
 		return rooms;
 	}
@@ -113,7 +114,7 @@ public class EnemyBossShipA extends AbsShip {
 	@Override
 	public Loot getLoot() {
 		Random random = new Random();
-		int randCash = (random.nextInt(150 - 100) + 100) * getLevel() * 3;
+		int randCash = (random.nextInt(150 - 100) + 100) + getLevel() * 100;
 
 		ArrayList<IInventoryItem> items = new ArrayList<>();
 

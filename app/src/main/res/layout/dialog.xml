@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@color/colorLightGrey1"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvDialogTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="Title"
+                android:textAlignment="center" android:textColor="@color/fontColorWhiteGray"/>
+            <TextView
+                android:id="@+id/tvDialogSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:text="SubTitle"
+                android:textAlignment="center" android:textColor="@color/fontColorWhiteGray"/>
+            <LinearLayout
+                android:id="@+id/llDialogChoices"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/button4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:text="Button"/>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    </LinearLayout>
+</RelativeLayout>

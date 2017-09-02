@@ -5,7 +5,8 @@ import java.util.Random;
 
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Loot;
-import at.hakkon.space.datamodel.inventory.Weapon;
+import at.hakkon.space.datamodel.inventory.weapon.WeaponLaser;
+import at.hakkon.space.datamodel.inventory.weapon.WeaponNuke;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
 import at.hakkon.space.datamodel.room.GeneratorRoom;
@@ -26,33 +27,35 @@ public class EnemyShipB extends AbsShip {
 //	}
 
 	public EnemyShipB(String name, int level) {
-		super(name, level, START_HEALTH + 10 * (level - 1));
+		super(name, level, START_HEALTH + 40 * (level - 1));
 
 		Random random = new Random();
 
 		if (level == 1) {
-			addInventory(Weapon.getNuke(1));
+			addInventory(new WeaponLaser(1));
+			addInventory(new WeaponNuke(1));
 		} else if (level == 2) {
-			addInventory(Weapon.getNuke(1));
+			addInventory(new WeaponLaser(1));
+			addInventory(new WeaponNuke(1));
 		} else if (level == 3) {
-			addInventory(Weapon.getNuke(1));
-			addInventory(Weapon.getLaser(1));
+			addInventory(new WeaponNuke(1));
+			addInventory(new WeaponLaser(2));
 		} else if (level == 4) {
-			addInventory(Weapon.getNuke(1));
-			addInventory(Weapon.getNuke(1));
-			addInventory(Weapon.getLaser(2));
+			addInventory(new WeaponNuke(1));
+			addInventory(new WeaponNuke(1));
+			addInventory(new WeaponLaser(2));
 		} else if (level >= 6) {
-			addInventory(Weapon.getNuke(1));
-			addInventory(Weapon.getNuke(2));
-			addInventory(Weapon.getLaser(3));
+			addInventory(new WeaponNuke(1));
+			addInventory(new WeaponNuke(2));
+			addInventory(new WeaponLaser(3));
 		} else if (level >= 8) {
-			addInventory(Weapon.getNuke(2));
-			addInventory(Weapon.getNuke(3));
-			addInventory(Weapon.getLaser(3));
+			addInventory(new WeaponNuke(2));
+			addInventory(new WeaponNuke(3));
+			addInventory(new WeaponLaser(3));
 		} else if (level >= 10) {
-			addInventory(Weapon.getNuke(3 + level/10));
-			addInventory(Weapon.getNuke(1));
-			addInventory(Weapon.getLaser(level/2));
+			addInventory(new WeaponNuke(3 + level/10));
+			addInventory(new WeaponNuke(1));
+			addInventory(new WeaponLaser(level/2));
 		}
 
 	}
@@ -66,8 +69,8 @@ public class EnemyShipB extends AbsShip {
 	@Override
 	public Loot getLoot() {
 		Random random = new Random();
-		int randCash = (random.nextInt(150 - 100) + 100) * getLevel();
-		int randFuel = random.nextInt(4) + getLevel();
+		int randCash = (random.nextInt(150 - 100) + 100) + getLevel() *25;
+		int randFuel = random.nextInt(5)+3;
 
 		ArrayList<IInventoryItem> items = new ArrayList<>();
 		for (IInventoryItem item : getInventory()) {
@@ -113,37 +116,10 @@ public class EnemyShipB extends AbsShip {
 	protected ArrayList<AbsRoom> getInitRooms() {
 		ArrayList<AbsRoom> rooms = new ArrayList<>();
 
-		if (getLevel() <= 1) {
-			rooms.add(new NavigationRoom(this, 3));
-			rooms.add(new WeaponRoom(this, 2));
-			rooms.add(new MechanicRoom(this, 1));
-			rooms.add(new GeneratorRoom(this, 3));
-		} else if (getLevel() <= 2) {
-			rooms.add(new NavigationRoom(this, 4));
-			rooms.add(new WeaponRoom(this, 4));
-			rooms.add(new MechanicRoom(this, 2));
-			rooms.add(new GeneratorRoom(this, 5));
-		} else if (getLevel() <= 3) {
-			rooms.add(new NavigationRoom(this, 5));
-			rooms.add(new WeaponRoom(this, 5));
-			rooms.add(new MechanicRoom(this, 3));
-			rooms.add(new GeneratorRoom(this, 6));
-		} else if (getLevel() <= 4) {
-			rooms.add(new NavigationRoom(this, 6));
-			rooms.add(new WeaponRoom(this, 8));
-			rooms.add(new MechanicRoom(this, 4));
-			rooms.add(new GeneratorRoom(this, 7));
-		} else if (getLevel() <= 6) {
-			rooms.add(new NavigationRoom(this, 8));
-			rooms.add(new WeaponRoom(this, 12));
-			rooms.add(new MechanicRoom(this, 5));
-			rooms.add(new GeneratorRoom(this, 8));
-		} else {
-			rooms.add(new NavigationRoom(this, 8 + getLevel() / 2));
-			rooms.add(new WeaponRoom(this, 10 + getLevel() / 2));
-			rooms.add(new MechanicRoom(this, 6 + getLevel() / 2));
-			rooms.add(new GeneratorRoom(this, 8 + getLevel() / 2));
-		}
+		rooms.add(new NavigationRoom(this, (int) (Math.ceil((float) getLevel() / 2))));
+		rooms.add(new WeaponRoom(this, (int) Math.ceil((float) getLevel() / 2)));
+		rooms.add(new GeneratorRoom(this, (int) (Math.ceil((float) getLevel() / 2))));
+		rooms.add(new MechanicRoom(this, (int) Math.ceil((float) getLevel() / 2)));
 
 		return rooms;
 	}

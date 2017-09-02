@@ -20,4 +20,8 @@ public class Achievements {
 	final public static String ID_GALAXY_3 = "CgkI5LP25OEdEAIQEQ";
 	final public static String ID_GALAXY_5 = "CgkI5LP25OEdEAIQEw";
 	final public static String ID_GALAXY_10 = "CgkI5LP25OEdEAIQFA";
+
+	final public static String ID_FIRST_KARMA_PLUS_RED = "CgkI5LP25OEdEAIQFQ";
+	final public static String ID_FIRST_KARMA_PLUS_BLUE = "CgkI5LP25OEdEAIQFg";
+	final public static String ID_FIRST_KARMA_PLUS_GREEN = "CgkI5LP25OEdEAIQFw";
 }

@@ -4,7 +4,6 @@ import java.util.Random;
 
 import at.hakkon.space.datamodel.ship.EShipType;
 import at.hakkon.space.event.battle.BattleEvent;
-import at.hakkon.space.event.planet.CrystalEvent1;
 import at.hakkon.space.event.planet.FlyingAstronautEvent;
 import at.hakkon.space.event.planet.MineEvent;
 import at.hakkon.space.event.planet.ResourceBonusEvent;
@@ -68,12 +67,19 @@ public class EventGenerator {
 				case 3:
 					event = new MineEvent(level);
 					break;
+
 				case 4:
-					event = new CrystalEvent1(level);
-					break;
+					//if (ApplicationClass.getInstance().getCrystalSeriesPosition() >= level){
+				//		event = new CrystalEvent1(level);
+				//	}else{
+						return generateRandomEvent(level);
+				//	}
+
+				//	break;
 				default:
 					throw new RuntimeException("Invalid Event ID. I dont know any event with this ID: " + randId + ". :( ....");
 			}
+
 		}
 
 		return event;

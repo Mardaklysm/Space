@@ -6,10 +6,13 @@ import java.util.HashMap;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
+import at.hakkon.space.datamodel.inventory.BlueCrystal;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Loot;
+import at.hakkon.space.datamodel.inventory.RedCrystal;
 import at.hakkon.space.datamodel.inventory.weapon.AbsWeapon;
 import at.hakkon.space.datamodel.inventory.weapon.WeaponLaser;
+import at.hakkon.space.datamodel.inventory.weapon.WeaponNuke;
 import at.hakkon.space.datamodel.inventory.weapon.WeaponRocket;
 import at.hakkon.space.datamodel.person.Person;
 import at.hakkon.space.datamodel.room.AbsRoom;
@@ -49,14 +52,14 @@ public class PlayerShip extends AbsShip {
 		AbsWeapon rocket1 = new WeaponRocket(1);
 		rocket1.equip(true);
 		inventory.add(rocket1);
-/**
+
 		inventory.add(new RedCrystal(500));
 		inventory.add(new BlueCrystal(500));
 
 		AbsWeapon nuke1 = new WeaponNuke(1);
 		nuke1.equip(true);
 		inventory.add(nuke1);
-**/
+
 	}
 
 	protected ArrayList<Person> getInitPersons() {
@@ -79,7 +82,7 @@ public class PlayerShip extends AbsShip {
 	}
 
 	@Override
-	public HashMap<AbsWeapon, AbsRoom> getAttackMap(AbsShip target, int energy) {
+	public HashMap<AbsWeapon, AbsRoom> getAttackMap() {
 		return null;
 	}
 
@@ -225,6 +228,19 @@ public class PlayerShip extends AbsShip {
 		if (getHealth() <= 0) {
 			ApplicationClass.getInstance().gameOver(EGameOverReason.OutOfHealth);
 		}
+	}
+
+	@Override
+	public int getMaxEnergyCost() {
+		int maxEnergy = 0;
+		for (AbsWeapon weapon : getWeapons()) {
+			if (weapon.isEquipped()) {
+				maxEnergy += weapon.getEnergyCost();
+			}
+
+		}
+
+		return maxEnergy;
 	}
 
 

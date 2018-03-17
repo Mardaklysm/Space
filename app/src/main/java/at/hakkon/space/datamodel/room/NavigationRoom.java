@@ -26,21 +26,25 @@ public class NavigationRoom extends AbsRoom {
 		return value;
 	}
 
-	private double getEfficency(int level) {
-		double value = (double) level * 5f / 100f;
+	public String getName() {
+		return "Navigation";
+	}
 
-		value = Math.min(value, 0.75f); //Cap evasion at 75%
+	private double getEfficency(int level) {
+		double value = (double) level * 5f;
+
+		value = Math.min(value, 75f); //Cap evasion at 75%
 
 		return value;
 	}
 
 	@Override
 	public String getUpgradeInformationText() {
-		return "Evasion: " + (int)(getEfficency(getLevel()))*100 + "%" + " => " + (int)(((getEfficency(getLevel()+1)))*100) + "%";
+		return "Evasion: " + (int)(getEfficency(getLevel())) + "%" + " => " + (int)(((getEfficency(getLevel()+1)))) + "%";
 	}
 
 	@Override
 	protected int getMaxHealthForLevel(int level) {
-		return 5 + level * 5;
+		return 20 + level * 5;
 	}
 }

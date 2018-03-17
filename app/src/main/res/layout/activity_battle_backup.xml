@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/header"
-        android:background="@color/colorLightGrey1" android:text="Battle Log Title"
+        android:background="@color/colorLightGrey1"
+        android:text="Battle Log Title"
         android:textColor="@color/fontColorWhiteGray"/>
     <ScrollView
         android:id="@+id/scBattle"
@@ -91,25 +92,6 @@
                         android:id="@+id/llActionContainerHeaderTop"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" android:orientation="horizontal">
-                        <ProgressBar
-                            android:paddingLeft="4dp"
-                            android:paddingRight="2dp"
-                            android:id="@+id/pbBattleHealthPlayer"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"/>
-                        <ProgressBar
-                            android:paddingLeft="2dp"
-                            android:paddingRight="4dp"
-                            android:layoutDirection="rtl"
-                            android:id="@+id/pbBattleHealthEnemy"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"/>
-
-                        <!--
                         <TextView
                             android:id="@+id/tvBattleHealthPlayer"
                             android:layout_width="wrap_content"
@@ -123,30 +105,26 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1" android:text="0"
                             android:textAlignment="center" android:textColor="@color/colorHealth"/>
-                        -->
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/llActionContainerHeaderBottom"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
-                        <ProgressBar
-                            android:paddingLeft="4dp"
-                            android:paddingRight="2dp"
-                            android:id="@+id/pbBattleEnergyPlayer"
-                            style="?android:attr/progressBarStyleHorizontal"
+                        <TextView
+                            android:id="@+id/tvBattleEnergyPlayer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"/>
-                        <ProgressBar
-                            android:paddingLeft="2dp"
-                            android:paddingRight="4dp"
-                            android:layoutDirection="rtl"
-                            android:id="@+id/pbBattleEnergyEnemy"
-                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_weight="1"
+                            android:text="0"
+                            android:textAlignment="center" android:textColor="@color/colorEnergy"/>
+                        <TextView
+                            android:id="@+id/tvBattleEnergyEnemy"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"/>
+                            android:layout_weight="1"
+                            android:text="0"
+                            android:textAlignment="center" android:textColor="@color/colorEnergy"/>
                     </LinearLayout>
                 </LinearLayout>
                 <FrameLayout
@@ -187,12 +165,12 @@
         <LinearLayout android:id="@+id/llBattleWeaponBar"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:paddingBottom="10dp"
-                      android:paddingTop="10dp"
-
                       android:layout_weight="1"
                       android:background="@color/colorLightGrey1"
-                      android:orientation="horizontal">
+
+                      android:orientation="horizontal"
+                      android:paddingBottom="10dp"
+                      android:paddingTop="10dp">
             <Button
                 android:id="@+id/bBattleWeapon1"
                 android:layout_width="wrap_content"

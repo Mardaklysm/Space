@@ -72,7 +72,7 @@ public class FlyingAstronautEvent extends AbsEvent {
 				Person person = new Person("Hairy Mory");
 				ApplicationClass.getInstance().addShipMember(person);
 
-				String text = "As you get face to face with the survivor you notice it's not a monkey but a human engineer who hasn't shaved in a while.\nYou make sure that your new crew member gets some proper shaving equipment.\n\nYou can use his knowledge about " + lowestRoom.getName() + " to get a free upgrade!";
+				String text = "As you get face to face with the survivor you notice it's not a monkey but a human engineer who hasn't shaved in a while.\nYou make sure that your new crew member gets some proper shaving equipment.\n\nYou can use his knowledge about " + lowestRoom.getName() + " LVL." + lowestRoom.getLevel() + " to get a free upgrade!";
 				Utility.getInstance().showTextDialog(context, text);
 				ApplicationClass.getInstance().updateScore(getLevel() * 100);
 			} else {

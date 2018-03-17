@@ -1,4 +1,4 @@
-package at.hakkon.space.event.planet;
+package at.hakkon.space.event.planet.crystal;
 
 import android.content.Context;
 
@@ -31,12 +31,15 @@ public class CrystalEvent1 extends AbsEvent {
 		return EEventType.Question;
 	}
 
-	private int payedMinerals;
-
-	boolean[] hasOption = new boolean[3];
-
 	@Override
 	protected void executeImpl(Context context) {
+
+		if (ApplicationClass.getInstance().getCrystalSeriesPosition()!= 1){
+			CrystalEvent2 event = new CrystalEvent2(getLevel());
+			event.executeImpl(context);
+			return;
+		}
+
 		if (canBeExecuted()) {
 
 			ArrayList<CharSequence> optionsList = new ArrayList<>();
@@ -81,6 +84,7 @@ public class CrystalEvent1 extends AbsEvent {
 				Utility.getInstance().showTextDialog(context, text);
 				ApplicationClass.getInstance().updateKarma(EFaction.Red, 10);
 				ApplicationClass.getInstance().updateKarma(EFaction.Blue, -10);
+				ApplicationClass.getInstance().incCrystalSeriesPositon();
 				break;
 			case 1:
 				ApplicationClass.getInstance().updateScore(getLevel() * 50);
@@ -93,7 +97,7 @@ public class CrystalEvent1 extends AbsEvent {
 
 				ApplicationClass.getInstance().updateKarma(EFaction.Blue, 10);
 				ApplicationClass.getInstance().updateKarma(EFaction.Red, -10);
-
+				ApplicationClass.getInstance().incCrystalSeriesPositon();
 				break;
 			case 2:
 				ApplicationClass.getInstance().updateScore(getLevel() * 50);
@@ -101,6 +105,7 @@ public class CrystalEvent1 extends AbsEvent {
 				text = "As you get farther away from the battle scene you notice that the two ships managed to destroy each other.\n\nYou are not sure if this was the wisest decission";
 
 				Utility.getInstance().showTextDialog(context, text);
+				ApplicationClass.getInstance().incCrystalSeriesPositon();
 				break;
 			case 3:
 				ApplicationClass.getInstance().updateScore(getLevel() * 50);
@@ -126,8 +131,11 @@ public class CrystalEvent1 extends AbsEvent {
 
 
 				Utility.getInstance().showTextDialog(context, text);
+				ApplicationClass.getInstance().incCrystalSeriesPositon();
 				break;
 		}
+
+
 
 
 	}

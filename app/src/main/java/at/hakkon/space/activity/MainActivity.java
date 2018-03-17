@@ -13,6 +13,8 @@ import com.google.android.gms.games.Games;
 import at.hakkon.space.R;
 import at.hakkon.space.achievement.Achievements;
 import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.datamodel.inventory.IConsumableItem;
+import at.hakkon.space.datamodel.ship.AbsShip;
 import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.listener.IShipListener;
 import at.hakkon.space.navigation.PagingViewPager;
@@ -107,6 +109,8 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 		}else if (level == 11){
 			Games.Achievements.unlock(ApplicationClass.getInstance().getGoogleApiClient(), Achievements.ID_GALAXY_10);
 		}
+
+
 	}
 
 	public static MainActivity getInstance() {
@@ -128,6 +132,11 @@ public class MainActivity extends AppCompatActivity implements IShipListener {
 	@Override
 	public void shipUpdated(PlayerShip ship) {
 		updateHeader(ship);
+	}
+
+	@Override
+	public void itemUsed(AbsShip ship, IConsumableItem item) {
+
 	}
 
 	private void updateHeader(PlayerShip ship) {

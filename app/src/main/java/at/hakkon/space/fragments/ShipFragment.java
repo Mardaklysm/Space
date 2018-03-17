@@ -17,9 +17,11 @@ import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.application.IMetaDataListener;
 import at.hakkon.space.datamodel.EGameOverReason;
+import at.hakkon.space.datamodel.inventory.IConsumableItem;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.weapon.AbsWeapon;
 import at.hakkon.space.datamodel.room.AbsRoom;
+import at.hakkon.space.datamodel.ship.AbsShip;
 import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.event.management.RestartGameEvent;
 import at.hakkon.space.event.management.SellEvent;
@@ -70,6 +72,11 @@ public class ShipFragment extends Fragment implements IShipListener, IMetaDataLi
 
 	}
 
+	@Override
+	public void itemUsed(AbsShip ship, IConsumableItem item) {
+
+	}
+
 	private void refreshRooms(PlayerShip ship) {
 		LinearLayout llShipRooms = (LinearLayout) view.findViewById(R.id.llShipRooms);
 
@@ -79,7 +86,7 @@ public class ShipFragment extends Fragment implements IShipListener, IMetaDataLi
 
 		for (final AbsRoom room : rooms) {
 			final Button button = new Button(getActivity());
-			button.setText(room.getName() + " (" + room.getEfficency() + ")");
+			button.setText(room.getName() + " LVL." + room.getLevel() + " (" + room.getEfficency() + ")");
 
 			button.setOnClickListener(new View.OnClickListener() {
 				@Override

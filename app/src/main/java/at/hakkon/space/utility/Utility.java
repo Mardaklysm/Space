@@ -6,6 +6,8 @@ import android.support.v7.app.AlertDialog;
 import android.widget.TextView;
 
 import java.math.BigDecimal;
+import java.util.Map;
+import java.util.Objects;
 
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
@@ -104,6 +106,15 @@ public class Utility {
 		BigDecimal a = new BigDecimal(d);
 		BigDecimal roundOff = a.setScale(2, BigDecimal.ROUND_HALF_UP);
 		return roundOff.doubleValue();
+	}
+
+	public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
+		for (Map.Entry<T, E> entry : map.entrySet()) {
+			if (Objects.equals(value, entry.getValue())) {
+				return entry.getKey();
+			}
+		}
+		return null;
 	}
 }
 

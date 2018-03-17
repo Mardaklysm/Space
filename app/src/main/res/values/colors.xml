@@ -9,6 +9,7 @@
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorRed">#ff0000</color>
+    <color name="colorOrange">#ff9c00</color>
 
 
     <color name="colorDarkGrey1">#303030</color>
@@ -19,6 +20,7 @@
     <color name="fontColorGray1">#afafaf</color>
 
     <color name="colorHealth">#40bd3d</color>
+    <color name="colorHeal">#10bd3d</color>
 
     <color name="colorEnergy">#2869e1</color>
 </resources>

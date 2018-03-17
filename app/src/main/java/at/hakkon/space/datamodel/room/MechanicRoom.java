@@ -23,6 +23,9 @@ public class MechanicRoom extends AbsRoom {
 		return getEfficency(getLevel());
 	}
 
+	public String getName() {
+		return "Mechanic";
+	}
 
 	private double getEfficency(int level) {
 		if (level == 1) {
@@ -44,7 +47,7 @@ public class MechanicRoom extends AbsRoom {
 
 	@Override
 	protected int getMaxHealthForLevel(int level) {
-		return 15 + level * 5;
+		return 30 + level * 10;
 	}
 
 

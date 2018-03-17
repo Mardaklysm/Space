@@ -19,6 +19,11 @@ public class WeaponRoom extends AbsRoom {
 	}
 
 	@Override
+	public String getName() {
+		return "Armory";
+	}
+
+	@Override
 	public double getEfficency() {
 		return getEfficency(getLevel());
 	}
@@ -42,7 +47,7 @@ public class WeaponRoom extends AbsRoom {
 
 	@Override
 	protected int getMaxHealthForLevel(int level) {
-		return 30 + level * 15;
+		return 50 + level * 50;
 	}
 
 }

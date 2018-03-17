@@ -17,6 +17,10 @@ public class GeneratorRoom extends AbsRoom {
 		return ERoom.Generator;
 	}
 
+	public String getName() {
+		return "Generator";
+	}
+
 	@Override
 	public double getEfficency() {
 		return 3 + getLevel();
@@ -33,7 +37,7 @@ public class GeneratorRoom extends AbsRoom {
 
 	@Override
 	protected int getMaxHealthForLevel(int level) {
-		return 20 + level * 5;
+		return 40 + level * 10;
 	}
 
 

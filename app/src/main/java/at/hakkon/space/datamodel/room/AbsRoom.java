@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import at.hakkon.space.application.ApplicationClass;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.weapon.AbsWeapon;
+import at.hakkon.space.datamodel.inventory.weapon.EWeaponType;
 import at.hakkon.space.datamodel.ship.AbsShip;
 import at.hakkon.space.utility.Utility;
 
@@ -56,9 +57,7 @@ public abstract class AbsRoom implements Serializable {
 		items.remove(item);
 	}
 
-	public String getName() {
-		return getRoomType().name() + " Lv." + level;
-	}
+	public abstract String getName();
 
 
 	public String getInformationDump() {
@@ -89,7 +88,9 @@ public abstract class AbsRoom implements Serializable {
 			defender.updateHealth(-totalDamage);
 
 			//Update Room health
-			health = Math.max(health - totalDamage, 0);
+			int roomDamage = weapon.getWeaponType().equals(EWeaponType.Laser) ? totalDamage * 2 : totalDamage;
+
+			health = Math.max(health - roomDamage, 0);
 
 
 			return new AttackResult(true, false, Math.max(0, totalDamage));
@@ -127,7 +128,7 @@ public abstract class AbsRoom implements Serializable {
 
 		double result = efficiency * pOkay / 100;
 		result = Utility.roundTwoDecimals(result);
-		if (getRoomType() == ERoom.Mechanic) {
+		if (getRoomType() == ERoom.Mechanic || getRoomType() == ERoom.Generator) {
 			return Math.max(1f, result);
 		}
 
@@ -183,7 +184,7 @@ public abstract class AbsRoom implements Serializable {
 		return shieldValue > 0;
 	}
 
-	public void nextRound(){
+	public void nextRound() {
 		shieldValue--;
 	}
 }

@@ -40,7 +40,7 @@ public class RoomView extends android.support.v7.widget.AppCompatButton {
 	}
 
 	public void update() {
-		String text = room.getName() + "\n(" + Utility.roundTwoDecimals(room.getEffectiveEfficency()) + ")";
+		String text = room.getName() + " LVL." + room.getLevel() + "\n(" + Utility.roundTwoDecimals(room.getEffectiveEfficency()) + ")";
 		this.setText(text);
 
 		int health = room.getHealth();

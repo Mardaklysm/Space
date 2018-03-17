@@ -7,6 +7,7 @@ import java.util.Random;
 import at.hakkon.space.event.planet.FuelShopEvent;
 import at.hakkon.space.event.planet.GoToGalaxyEvent;
 import at.hakkon.space.event.planet.RepairShopEvent;
+import at.hakkon.space.event.planet.crystal.CrystalEvent1;
 
 /**
  * Created by Markus on 29.07.2017.
@@ -60,13 +61,16 @@ public class Galaxy implements Serializable {
 		addGoToGalaryEvent(lastPlanet);
 		lastPlanet.revealName();
 
+		int rndPlanetIdx;
 
+		rndPlanetIdx = random.nextInt(planets.size()-2) +1;
+		planets.get(rndPlanetIdx).setEvent(new CrystalEvent1(level));
 
-		int shopPlanetIdx = random.nextInt(planets.size()-2) +1;
-		planets.get(shopPlanetIdx).setEvent(new FuelShopEvent(level));
+		rndPlanetIdx = random.nextInt(planets.size()-2) +1;
+		planets.get(rndPlanetIdx).setEvent(new FuelShopEvent(level));
 
-		shopPlanetIdx = random.nextInt(planets.size()-2) +1;
-		planets.get(shopPlanetIdx).setEvent(new RepairShopEvent(level));
+		rndPlanetIdx = random.nextInt(planets.size()-2) +1;
+		planets.get(rndPlanetIdx).setEvent(new RepairShopEvent(level));
 
 	}
 

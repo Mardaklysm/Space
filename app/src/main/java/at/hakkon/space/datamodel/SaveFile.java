@@ -3,6 +3,7 @@ package at.hakkon.space.datamodel;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import at.hakkon.space.datamodel.faction.AbsFaction;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
 import at.hakkon.space.datamodel.ship.PlayerShip;
 
@@ -15,12 +16,15 @@ public class SaveFile implements Serializable {
 	private PlayerShip playerShip;
 	private Galaxy galaxy;
 
-	private  HashMap<EFaction, Integer> karmaMap = new HashMap<>();
+	private  HashMap<EFaction, AbsFaction> factionMap = new HashMap<>();
 
-	public SaveFile(PlayerShip playerShip, Galaxy galaxy, HashMap<EFaction, Integer> karmaMap) {
+	private int crystalSeriesPosition = 0;
+
+	public SaveFile(PlayerShip playerShip, Galaxy galaxy, HashMap<EFaction, AbsFaction> factionMap, int crystalSeriesPosition) {
 		this.playerShip = playerShip;
 		this.galaxy = galaxy;
-		this.karmaMap = karmaMap;
+		this.factionMap = factionMap;
+		this.crystalSeriesPosition = crystalSeriesPosition;
 	}
 
 	public PlayerShip getPlayerShip() {
@@ -31,8 +35,11 @@ public class SaveFile implements Serializable {
 		return galaxy;
 	}
 
-	public HashMap<EFaction, Integer> getKarmaMap() {
-		return karmaMap;
+	public HashMap<EFaction, AbsFaction> getFactionMap() {
+		return factionMap;
 	}
 
+	public int getCrystalSeriesPosition() {
+		return crystalSeriesPosition;
+	}
 }

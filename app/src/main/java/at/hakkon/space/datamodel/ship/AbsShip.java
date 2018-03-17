@@ -239,7 +239,7 @@ public abstract class AbsShip implements Serializable {
 		double evadeChanche = defender.getNavigationRoom().getEffectiveEfficency();
 
 		Random random = new Random();
-		double hitValue = random.nextDouble();
+		double hitValue = random.nextDouble() * 100;
 
 		Log.d("AbsShip", "hitValue(" + hitValue + ") > evadeChanche(" + evadeChanche + "). EVADE: " + (hitValue > evadeChanche));
 
@@ -254,32 +254,37 @@ public abstract class AbsShip implements Serializable {
 		return maxHealth;
 	}
 
-	public HashMap<AbsWeapon, AbsRoom> getAttackMap(AbsShip target, int energy) {
+	public HashMap<AbsWeapon, AbsRoom> generateNewAttackMap(AbsShip target, int energy) {
 
 		int energyCalc = energy;
 
-		HashMap<AbsWeapon, AbsRoom> map = new HashMap<>();
 
 		//First add all Nukes
 		for (AbsWeapon weapon : getWeapons()) {
 			if (weapon.isOneTimeWeapon()) {
 				if (energyCalc - weapon.getEnergyCost() < 0) {
-					return map;
+					return attackMap;
 				} else {
 					energyCalc -= weapon.getEnergyCost();
-					map.put(weapon, target.getRandomRoom());
+					attackMap.put(weapon, target.getRandomRoom());
 				}
 			}
 		}
 
 		for (AbsWeapon weapon : getWeapons()) {
-			if (!map.containsKey(weapon) && energyCalc - weapon.getEnergyCost() >= 0) {
+			if (!attackMap.containsKey(weapon) && energyCalc - weapon.getEnergyCost() >= 0) {
 				energyCalc -= weapon.getEnergyCost();
-				map.put(weapon, target.getRandomRoom());
+				attackMap.put(weapon, target.getRandomRoom());
 			}
 		}
 
-		return map;
+		return attackMap;
+	}
+
+	private HashMap<AbsWeapon, AbsRoom> attackMap = new HashMap<>();
+
+	public HashMap<AbsWeapon, AbsRoom> getAttackMap() {
+		return attackMap;
 	}
 
 	public AbsRoom getRandomRoom() {
@@ -319,24 +324,43 @@ public abstract class AbsShip implements Serializable {
 
 	public void useBlueCrystal(AbsRoom room, BlueCrystal crystal) {
 		removeInventory(crystal);
-		room.shield(5);
 
+		for (AbsRoom roomEntry : getRooms()) {
+			roomEntry.shield(8);
+		}
+		ApplicationClass.getInstance().itemConsumed(this, crystal);
 		ApplicationClass.getInstance().requestNotifyShipChangedEvent();
 	}
 
 	public void useRedCrystal(AbsRoom room, RedCrystal crystal) {
 		removeInventory(crystal);
-		room.regenerate(true);
 
+		for (AbsRoom roomEntry : getRooms()) {
+			roomEntry.regenerate(true);
+		}
+		//Update 50% of missing hp
+		int health = (getMaxHealth() - getHealth()) / 2;
+		updateHealth(health);
+
+		ApplicationClass.getInstance().itemConsumed(this, crystal);
 		ApplicationClass.getInstance().requestNotifyShipChangedEvent();
 	}
 
 	public boolean hasWeapon(EWeaponType weaponType) {
-		for(AbsWeapon weapon: getWeapons()){
-			if (weapon.getWeaponType() == weaponType){
+		for (AbsWeapon weapon : getWeapons()) {
+			if (weapon.getWeaponType() == weaponType) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public int getMaxEnergyCost(){
+		int maxEnergy = 0;
+		for (AbsWeapon weapon: getWeapons()){
+			maxEnergy += weapon.getEnergyCost();
+		}
+
+		return maxEnergy;
 	}
 }

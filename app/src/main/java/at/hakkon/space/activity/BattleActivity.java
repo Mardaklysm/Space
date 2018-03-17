@@ -2,9 +2,11 @@ package at.hakkon.space.activity;
 
 import android.animation.Animator;
 import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
@@ -17,9 +19,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -35,6 +39,7 @@ import java.util.TimerTask;
 
 import at.hakkon.space.R;
 import at.hakkon.space.application.ApplicationClass;
+import at.hakkon.space.datamodel.inventory.IConsumableItem;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.inventory.Loot;
 import at.hakkon.space.datamodel.inventory.weapon.AbsWeapon;
@@ -52,6 +57,9 @@ import at.hakkon.space.listener.IShipListener;
 import at.hakkon.space.utility.Utility;
 import at.hakkon.space.views.RoomView;
 
+/**
+ * Handles a battle between two ships.
+ */
 public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 	private static final String TAG = "BattleActivity";
@@ -83,11 +91,17 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	private int colorWeaponLocked = Color.parseColor("#42bc31");
 
 	private int colorGreen = Color.parseColor("#52bc35");
-	private int colorRed = Color.parseColor("#912416");
+	private int colorBlue = Color.parseColor("#0b16f9");
+	private int colorRed = Color.parseColor("#ff1e00");//912416"
 
 	private MediaPlayer music;
 
 	private Timer messageAnimationTimer = new Timer();
+
+	private ProgressBar pbHealthPlayer;
+	private ProgressBar pbHealthEnemy;
+	private ProgressBar pbEnergyPlayer;
+	private ProgressBar pbEnergyEnemy;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +148,43 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		startAnimationTimerTask(this);
 
 
+		initProgressBars();
+
+
+	}
+
+	private void initProgressBars() {
+		//Init Health ProgressBars
+		AbsShip playerShip = ApplicationClass.getInstance().getShip();
+		pbHealthPlayer = (ProgressBar) findViewById(R.id.pbBattleHealthPlayer);
+		pbHealthPlayer.setProgress(playerShip.getHealth() * 100);
+		pbHealthPlayer.setMax(playerShip.getMaxHealth() * 100);
+		pbHealthPlayer.setProgressTintList(ColorStateList.valueOf(colorGreen));
+
+		pbHealthEnemy = (ProgressBar) findViewById(R.id.pbBattleHealthEnemy);
+		pbHealthEnemy.setProgress(enemyShip.getHealth() * 100);
+		pbHealthEnemy.setMax(enemyShip.getMaxHealth() * 100);
+		pbHealthEnemy.setProgressTintList(ColorStateList.valueOf(colorGreen));
+
+		//Init Energy ProgressBars
+		pbEnergyPlayer = (ProgressBar) findViewById(R.id.pbBattleEnergyPlayer);
+		pbEnergyPlayer.setProgress(energyPlayer * 100);
+		pbEnergyPlayer.setMax(playerShip.getMaxEnergyCost() * 100);
+		pbEnergyPlayer.setProgressTintList(ColorStateList.valueOf(colorBlue));
+
+		pbEnergyEnemy = (ProgressBar) findViewById(R.id.pbBattleEnergyEnemy);
+		pbEnergyEnemy.setProgress(energyEnemy * 100);
+
+		pbEnergyEnemy.setProgressTintList(ColorStateList.valueOf(colorBlue));
+
+	}
+
+	private void animateProgresssBar(ProgressBar pb, int value) {
+
+		ObjectAnimator animation = ObjectAnimator.ofInt(pb, "progress", value);
+		animation.setDuration(500);
+		animation.setInterpolator(new DecelerateInterpolator());
+		animation.start();
 	}
 
 
@@ -153,7 +204,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			roomView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					UseCrystalEvent event = new UseCrystalEvent(room,level);
+					UseCrystalEvent event = new UseCrystalEvent(room, level);
 					event.execute(BattleActivity.this);
 				}
 			});
@@ -194,11 +245,11 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	private void nextRound() {
 
 		//Refresh rooms
-		for(AbsRoom room: appClass.getShip().getRooms()){
+		for (AbsRoom room : appClass.getShip().getRooms()) {
 			room.nextRound();
 		}
 
-		for(AbsRoom room: enemyShip.getRooms()){
+		for (AbsRoom room : enemyShip.getRooms()) {
 			room.nextRound();
 		}
 
@@ -207,42 +258,86 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		for (Map.Entry<AbsWeapon, AbsRoom> entry : mapWeaponRooms.entrySet()) {
 			AbsWeapon weapon = entry.getKey();
+
+			boolean hitsAll = weapon.attacksAll();
 			ArrayList<AbsRoom> targets = new ArrayList<>();
-			if (weapon.attacksAll()) {
+
+			if (hitsAll) {
 				targets.addAll(enemyShip.getRooms());
 			} else {
 				targets.add(entry.getValue());
 			}
 
+			int damage = 0;
+			int hitCnt = 0;
 			for (AbsRoom room : targets) {
 				AttackResult attackResult = room.attackWithWeapon(appClass.getShip(), enemyShip, weapon);
-				int damage = attackResult.getDamage();
-				playDamageAnimation(mapRooms.get(room));
+				if (attackResult.isHit()) {
+					damage = attackResult.getDamage();
+					playDamageAnimation(mapRooms.get(room));
+				}
 
-				if (attackResult.isShielded()) {
-					addActionMessage(new MessageData(1, colorGreen, "Shield"));
-				} else if (attackResult.isHit()) {
-					addActionMessage(new MessageData(1, colorGreen, String.valueOf(damage)));
-				} else {
+
+				if (hitsAll && attackResult.isHit()) {
+					hitCnt++;
+				}
+				if (!hitsAll) {
+					if (attackResult.isShielded()) {
+						addActionMessage(new MessageData(1, colorGreen, "Shield"));
+						addMessage("Enemy was shielded (" + weapon.getName() + ")");
+					} else if (attackResult.isHit()) {
+						addActionMessage(new MessageData(1, colorGreen, String.valueOf(damage)));
+						addMessage("Enemy took " + damage + " damage (" + weapon.getName() + ")");
+					} else {
+						addActionMessage(new MessageData(1, colorGreen, "Miss"));
+						addMessage("You missed (" + weapon.getName() + ")");
+					}
+				}
+
+			}
+
+			if (hitsAll) {
+				if (hitCnt > 0) {
+
+					String actionMessage = hitCnt + "x" + damage;
+					String message = "Enemy took " + actionMessage + " damage (" + weapon.getName() + ")";
+					addActionMessage(new MessageData(2, colorGreen, actionMessage));
+					addMessage(message);
+				}
+
+				for (int i = hitCnt; i < 4; i++) {
+					String message = "Enemy evaded (" + weapon.getName() + ")";
 					addActionMessage(new MessageData(1, colorGreen, "Miss"));
+					addMessage(message);
 				}
 			}
 
+			//	if (hitsAll){
+			//		String message = hitCnt + "x" + damage;
+			//		addActionMessage(new MessageData(2, colorRed, String.valueOf(damage)));
+			//		addMessage(message);
+			//	}else{
+			//	for (int i=hitCnt; i<4; i++){
+			//		addActionMessage(new MessageData(1, colorRed, "Miss"));
+			//	}
+			//	}
+
+			//TODO: What is this for?
 			entry.getKey().setTarget(null);
+
 		}
 
-
+		//Attack the Player => Fire weapons for Enemy AT the player
 		if (enemyShip.getHealth() > 0) {
-			//Fire weapons for Enemy AT the player
-			HashMap<AbsWeapon, AbsRoom> map = enemyShip.getAttackMap(appClass.getShip(), energyEnemy);
+			HashMap<AbsWeapon, AbsRoom> map = enemyShip.generateNewAttackMap(appClass.getShip(), energyEnemy);
 			for (Map.Entry<AbsWeapon, AbsRoom> entry : map.entrySet()) {
 				AbsWeapon weapon = entry.getKey();
 				AbsRoom target = entry.getValue();
 
 				if (energyEnemy - weapon.getEnergyCost() >= 0) {
-
+					boolean hitsAll = weapon.attacksAll();
 					ArrayList<AbsRoom> targets = new ArrayList<>();
-					if (weapon.attacksAll()) {
+					if (hitsAll) {
 						targets.addAll(appClass.getShip().getRooms());
 					} else {
 						targets.add(target);
@@ -250,17 +345,44 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 					energyEnemy -= weapon.getEnergyCost();
 
+					int hitCnt = 0;
+					int damage = 0;
 					for (AbsRoom room : targets) {
 						AttackResult attackResult = room.attackWithWeapon(enemyShip, appClass.getShip(), weapon);
-						int damage = attackResult.getDamage();
 						if (attackResult.isHit()) {
+							damage = attackResult.getDamage();
+							if (hitsAll) {
+								hitCnt++;
+							}
+
 							playDamageAnimation(mapRooms.get(room));
-							String message = "** " + room.getName() + " took " + damage + " damage (" + weapon.getName() + ")";
-							addActionMessage(new MessageData(2, colorRed, String.valueOf(damage)));
-							addMessage(message);
+
+							if (!hitsAll) {
+								String message = "You (" + room.getName() + ") took " + damage + " damage (" + weapon.getName() + ")";
+								addActionMessage(new MessageData(2, colorRed, String.valueOf(damage)));
+								addMessage(message);
+							}
 						} else {
-							String message = "** " + "You evaded (" + weapon.getName() + ")";
-							addActionMessage(new MessageData(1, colorRed, "Miss"));
+							if (!hitsAll) {
+								String message = "You evaded (" + weapon.getName() + ")";
+								addActionMessage(new MessageData(1, colorGreen, "Evasion"));
+								addMessage(message);
+							}
+
+						}
+					}
+					if (hitsAll) {
+						if (hitCnt > 0) {
+							String actionMessage = hitCnt + "x" + damage;
+							String message = "You took " + actionMessage + " damage (" + weapon.getName() + ")";
+							addActionMessage(new MessageData(2, colorRed, actionMessage));
+							addMessage(message);
+						}
+
+
+						for (int i = hitCnt; i < 4; i++) {
+							String message = "You evaded (" + weapon.getName() + ")";
+							addActionMessage(new MessageData(1, colorGreen, "Evasion"));
 							addMessage(message);
 						}
 					}
@@ -276,6 +398,8 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 
 		//Unselect weapons
+		//AbsWeapon lastSelectedWeapon = selectedWeapon;
+
 		selectWeapon(null);
 
 		//resetWeaponCommandLists();
@@ -304,17 +428,34 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		roundNr++;
 		addMessage("\n[Round " + roundNr + "]: Make your moves!");
 
+
+
 		//update UI
 		refreshUI();
 
 
 	}
 
-	private void playDamageAnimation(final RoomView roomView) {
-		int colorFrom = getResources().getColor(R.color.transparent);
-		int colorTo = getResources().getColor(R.color.colorRed);
+
+	private void playShieldActivatedAnimation(RoomView room) {
+		playBlinkAnimation(room, getResources().getColor(R.color.transparent), getResources().getColor(R.color.colorEnergy));
+	}
+
+	private void playRepairAnimation(RoomView room) {
+		playBlinkAnimation(room, getResources().getColor(R.color.transparent), getResources().getColor(R.color.colorHeal));
+	}
+
+	private void playDamageAnimation(RoomView room) {
+		playBlinkAnimation(room, getResources().getColor(R.color.transparent), getResources().getColor(R.color.colorRed));
+	}
+
+	private void playTargetedAnimation(RoomView room) {
+		playBlinkAnimation(room, getResources().getColor(R.color.transparent), getResources().getColor(R.color.colorOrange));
+	}
+
+	private void playBlinkAnimation(final RoomView roomView, int colorFrom, int colorTo) {
 		ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-		colorAnimation.setDuration(250);
+		colorAnimation.setDuration(500);
 		colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
 			@Override
@@ -333,11 +474,13 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			@Override
 			public void onAnimationEnd(Animator animation) {
 				roomView.getBackground().setColorFilter(null);
+				roomView.update();
 			}
 
 			@Override
 			public void onAnimationCancel(Animator animation) {
 				roomView.getBackground().setColorFilter(null);
+				roomView.update();
 			}
 
 			@Override
@@ -359,7 +502,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			if (weapon.isOneTimeWeapon()) {
 				weaponsForRemoval.add(weapon);
 			} else if (room != null) {
-				if (!selectTarget(weapon, room, false)) {
+				if (!selectTarget(weapon, room, false, false)) {
 					weaponsForRemoval.add(weapon);
 				}
 			}
@@ -454,12 +597,27 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 
 		PlayerShip ship = ApplicationClass.getInstance().getShip();
 
-		//Refresh health and energy counters
-		((TextView) findViewById(R.id.tvBattleHealthPlayer)).setText(String.valueOf(ship.getHealth()));
-		((TextView) findViewById(R.id.tvBattleEnergyPlayer)).setText(String.valueOf(energyPlayer));
+		//Refresh health and energy
+		animateProgresssBar(pbHealthPlayer, ship.getHealth() * 100);
+		pbEnergyPlayer.setMax(ApplicationClass.getInstance().getShip().getMaxEnergyCost() * 100);
+		animateProgresssBar(pbEnergyPlayer, energyPlayer * 100);
 
-		((TextView) findViewById(R.id.tvBattleHealthEnemy)).setText(String.valueOf(enemyShip.getHealth()));
-		((TextView) findViewById(R.id.tvBattleEnergyEnemy)).setText(String.valueOf(energyEnemy));
+
+		animateProgresssBar(pbHealthEnemy, enemyShip.getHealth() * 100);
+		pbEnergyEnemy.setMax(enemyShip.getMaxEnergyCost() * 100);
+		animateProgresssBar(pbEnergyEnemy, energyEnemy * 100);
+
+		//Update weapon button state
+		for (AbsWeapon weapon : ship.getWeapons()) {
+			if (weapon != null && mapWeaponButtons.get(weapon) != null){
+				if (mapWeaponRooms.containsKey(weapon)){
+					mapWeaponButtons.get(weapon).setEnabled(true);
+				}else{
+					mapWeaponButtons.get(weapon).setEnabled(canAffordWeapon(weapon, energyPlayer));
+				}
+			}
+		}
+
 	}
 
 
@@ -473,9 +631,9 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 	}
 
 	private void addMessage(String message) {
-		if (true) {
-			return;
-		}
+		//	if (true) {
+		//		return;
+		//	}
 		TextView textView = (TextView) findViewById(R.id.tvBattleLog);
 		textView.setText(textView.getText() + message + "\n");
 
@@ -531,7 +689,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 					if (selectedWeapon.getTarget() != null && selectedWeapon.getTarget().equals(room)) {
 						return;
 					}
-					selectTarget(selectedWeapon, room, true);
+					selectTarget(selectedWeapon, room, true, true);
 				}
 			});
 		}
@@ -539,29 +697,47 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		energyEnemy = (int) enemyShip.getGeneratorRoom().getEffectiveEfficency();
 	}
 
-	private boolean selectTarget(AbsWeapon weapon, AbsRoom target, boolean showDialogs) {
+	private boolean canAffordWeapon(AbsWeapon weapon, int energyCosts) {
+		return energyCosts - weapon.getEnergyCost() >= 0;
+	}
 
-		boolean canAffordToTarget = energyPlayer - weapon.getEnergyCost() >= 0;
+	private boolean selectTarget(AbsWeapon weapon, AbsRoom target, boolean showDialogs, boolean manualSelection) {
 
-		if (target != null && !canAffordToTarget) {
+
+		if (!weapon.hasTarget() && target != null && !canAffordWeapon(weapon, energyPlayer)) {
 			if (showDialogs) {
 				Utility.getInstance().showTextDialog(this, "Not have enough energy!");
 			}
 			return false;
 		}
-		//Refund
-		if (weapon.getTarget() != null && target == null) {
+
+		if (target == null){ //Refund
+			if (weapon.hasTarget()){
+				energyPlayer += weapon.getEnergyCost();
+			}
 			mapWeaponRooms.remove(weapon);
-			energyPlayer += weapon.getEnergyCost();//CHarge
-		} else if (weapon.getTarget() == null && target != null) {
+		}else{ //Target a Room
 			mapWeaponRooms.put(weapon, target);
-			energyPlayer += -weapon.getEnergyCost();
+			if (!weapon.hasTarget()){ //Drain energy if no room was selected yet
+				energyPlayer += -weapon.getEnergyCost();
+			}
+
 		}
 
 		weapon.setTarget(target);
 
 		mapWeaponButtons.get(weapon).getBackground().setColorFilter(target == null ? colorSelected : colorWeaponLocked, PorterDuff.Mode.DARKEN);
 		mapWeaponButtons.get(weapon).setText(weapon.getBattleLabel(ApplicationClass.getInstance().getShip().getWeaponRoom().getEffectiveEfficency()));
+
+		if (manualSelection && target != null) {
+			if (weapon.attacksAll()) {
+				for (AbsRoom room : target.getShip().getRooms()) {
+					playTargetedAnimation(mapRooms.get(room));
+				}
+			} else {
+				playTargetedAnimation(mapRooms.get(target));
+			}
+		}
 
 
 		refreshUI();
@@ -584,11 +760,13 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 			mapWeaponButtons.get(weapon).getBackground().setColorFilter(colorSelected, PorterDuff.Mode.DARKEN);
 		}
 
-		selectedWeapon = weapon;
+		if (weapon != null){
+			selectedWeapon = weapon;
+		}
 
 		//Reset target if the weapong ets reselected after already having a target selected previously
 		if (weapon != null && weapon.getTarget() != null) {
-			selectTarget(weapon, null, true);
+			selectTarget(weapon, null, true, false);
 		}
 
 		refreshUI();
@@ -640,6 +818,23 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 		updateHeader(ship);
 		updateWeaponButtons(ship);
 		refreshUI();
+	}
+
+	@Override
+	public void itemUsed(AbsShip ship, IConsumableItem item) {
+		switch (item.getConsumableItemType()) {
+			case BlueCrystal:
+				for (AbsRoom room : ship.getRooms()) {
+					playShieldActivatedAnimation(mapRooms.get(room));
+				}
+				break;
+			case RedCrystal:
+				for (AbsRoom room : ship.getRooms()) {
+					playRepairAnimation(mapRooms.get(room));
+				}
+				break;
+		}
+
 	}
 
 	private void updateHeader(PlayerShip ship) {
@@ -749,7 +944,7 @@ public class BattleActivity extends AppCompatActivity implements IShipListener {
 						animation.setAnimationListener(new Animation.AnimationListener() {
 							@Override
 							public void onAnimationStart(Animation animation) {
-								Log.i(TAG, "Damage animation started");
+								Log.i(TAG, "Text animation started");
 							}
 
 							@Override

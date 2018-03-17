@@ -18,6 +18,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import at.hakkon.space.R;
 import at.hakkon.space.achievement.Achievements;
@@ -25,15 +26,22 @@ import at.hakkon.space.activity.MainActivity;
 import at.hakkon.space.datamodel.EFaction;
 import at.hakkon.space.datamodel.EGameOverReason;
 import at.hakkon.space.datamodel.SaveFile;
+import at.hakkon.space.datamodel.faction.AbsFaction;
+import at.hakkon.space.datamodel.faction.BlueFaction;
+import at.hakkon.space.datamodel.faction.GreenFaction;
+import at.hakkon.space.datamodel.faction.RedFaction;
 import at.hakkon.space.datamodel.galaxy.AbsPlanet;
 import at.hakkon.space.datamodel.galaxy.Galaxy;
+import at.hakkon.space.datamodel.inventory.IConsumableItem;
 import at.hakkon.space.datamodel.inventory.IInventoryItem;
 import at.hakkon.space.datamodel.person.Person;
+import at.hakkon.space.datamodel.ship.AbsShip;
 import at.hakkon.space.datamodel.ship.PlayerShip;
 import at.hakkon.space.event.management.RestartGameEvent;
 import at.hakkon.space.listener.IGalaxyListener;
 import at.hakkon.space.listener.IPlanetVisitListener;
 import at.hakkon.space.listener.IShipListener;
+import at.hakkon.space.signin.GoogleSignInActivity;
 import at.hakkon.space.utility.Utility;
 
 public class ApplicationClass extends android.app.Application {
@@ -46,12 +54,15 @@ public class ApplicationClass extends android.app.Application {
 	private ArrayList<IPlanetVisitListener> planetVisitListeners = new ArrayList<>();
 	private ArrayList<IMetaDataListener> metaDataListeners = new ArrayList<>();
 
+	//Save START
 	private PlayerShip ship;
 	private Galaxy galaxy;
+	private int crystalSeriesPosition;
+	private HashMap<EFaction, AbsFaction> factionMap = new HashMap<>();
+	//Save END
 
 	public static boolean playMusic = true;
 
-	HashMap<EFaction, Integer> karmaMap = new HashMap<>();
 
 
 	public static ApplicationClass getInstance() {
@@ -75,11 +86,13 @@ public class ApplicationClass extends android.app.Application {
 			ship = new PlayerShip("Weinreise", 1);
 			ship.setStartPlanet(galaxy.getFirstPlanet());
 			ship.setCurrentPlanet(galaxy.getFirstPlanet());
+			crystalSeriesPosition = 1;
 		}
 
-		karmaMap.put(EFaction.Red, 0);
-		karmaMap.put(EFaction.Blue, 0);
-		karmaMap.put(EFaction.Green, 0);
+
+		factionMap.put(EFaction.Green, new GreenFaction(0));
+		factionMap.put(EFaction.Red, new RedFaction(0));
+		factionMap.put(EFaction.Blue, new BlueFaction(0));
 
 		isInitialized = true;
 
@@ -284,6 +297,15 @@ public class ApplicationClass extends android.app.Application {
 	private GoogleApiClient googleApiClient;
 
 	public GoogleApiClient getGoogleApiClient() {
+		if (googleApiClient == null || !googleApiClient.isConnected()){
+			Intent intent = new Intent(activeContext, GoogleSignInActivity.class);
+			Log.e(TAG,"Google CLIENT is null or not available (is null==" + (googleApiClient == null) + ") => Trying to reconnect by starting SignInActivity");
+
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+			activeContext.startActivity(intent);
+		}
 		return googleApiClient;
 	}
 
@@ -320,11 +342,12 @@ public class ApplicationClass extends android.app.Application {
 		music.stop();
 	}
 
+
 	private final String SAVE_FILE = "space_save_file";
 
 	private void saveGame() {
 		Log.i(TAG, "Saving Game!");
-		SaveFile saveFile = new SaveFile(ship, galaxy, karmaMap);
+		SaveFile saveFile = new SaveFile(ship, galaxy, factionMap, crystalSeriesPosition);
 
 		try {
 			FileOutputStream fos = MainActivity.getInstance().openFileOutput(SAVE_FILE, Context.MODE_PRIVATE);
@@ -339,6 +362,10 @@ public class ApplicationClass extends android.app.Application {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void incCrystalSeriesPositon(){
+		crystalSeriesPosition++;
 	}
 
 	/**
@@ -361,7 +388,8 @@ public class ApplicationClass extends android.app.Application {
 
 			this.galaxy = saveFile.getGalaxy();
 			this.ship = saveFile.getPlayerShip();
-			this.karmaMap = saveFile.getKarmaMap();
+			this.factionMap = saveFile.getFactionMap();
+			this.crystalSeriesPosition = saveFile.getCrystalSeriesPosition();
 
 			return true;
 
@@ -382,27 +410,7 @@ public class ApplicationClass extends android.app.Application {
 	}
 
 	public void updateKarma(EFaction faction, int karma) {
-		if (karmaMap.containsKey(faction)) {
-			karmaMap.put(faction, karmaMap.get(faction) + karma);
-		} else {
-			karmaMap.put(faction, karma);
-		}
-
-		if (karma > 0) {
-			switch (faction) {
-				case Blue:
-					Games.Achievements.unlock(googleApiClient, Achievements.ID_FIRST_KARMA_PLUS_BLUE);
-					break;
-				case Red:
-					Games.Achievements.unlock(googleApiClient, Achievements.ID_FIRST_KARMA_PLUS_RED);
-					break;
-				case Green:
-					Games.Achievements.unlock(googleApiClient, Achievements.ID_FIRST_KARMA_PLUS_GREEN);
-					break;
-				default: throw new RuntimeException("Unknown Faction!");
-			}
-		}
-
+		factionMap.get(faction).updateKarma(karma);
 	}
 
 	public boolean deleteSaveFile() {
@@ -412,5 +420,29 @@ public class ApplicationClass extends android.app.Application {
 		Log.i(TAG, "Deleted Save File: " + deleted);
 
 		return deleted;
+	}
+
+	public AbsFaction getHighestKarmaFaction() {
+		AbsFaction faction = null;
+		for (Map.Entry<EFaction, AbsFaction> entry : factionMap.entrySet()) {
+			if (faction == null || entry.getValue().getKarma() > faction.getKarma()) {
+				faction = entry.getValue();
+			}
+		}
+		return faction;
+	}
+
+	public AbsFaction getFaction(EFaction faction) {
+		return factionMap.get(faction);
+	}
+
+	public int getCrystalSeriesPosition() {
+		return crystalSeriesPosition;
+	}
+
+	public void itemConsumed(AbsShip ship, IConsumableItem item) {
+		for (IShipListener listener: shipListeners){
+			listener.itemUsed(ship, item);
+		}
 	}
 }

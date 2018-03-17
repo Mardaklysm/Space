@@ -7,7 +7,7 @@ package at.hakkon.space.datamodel.inventory.weapon;
 public class WeaponNuke extends AbsWeapon {
 
 	public WeaponNuke(int level){
-		super(level, "Nuke Lv." + level, 10 + 5 * level, 10 + 3 * level, true, true);
+		super(level, "Nuke Lv." + level, 5 + 4 * level, 5 + 4 * level, true, true);
 	}
 
 	@Override
